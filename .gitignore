@@ -1,17 +1,33 @@
-# Compiled output
-/build/
-/bin/
-/target/
-*.class
+# ============================================================
+# Monorepo root .gitignore
+# (le backend JEE garde son propre backend/.gitignore)
+# ============================================================
+
+# Dependencies
+node_modules/
+
+# Frontend build output
+frontend/dist/
+frontend/dist-ssr/
+*.local
 
 # Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
 
-# Packaged archives
-*.war
-*.jar
-*.ear
+# Editor / IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
 
-# OS-generated files
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
 .DS_Store
 Thumbs.db
