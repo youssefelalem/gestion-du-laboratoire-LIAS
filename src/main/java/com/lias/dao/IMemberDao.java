@@ -9,4 +9,6 @@ public interface IMemberDao {
     List<Member> findByTeam(String team);
     List<Member> findByStatus(String status);
     boolean save(Member member);
+    List<com.lias.beans.AffiliationPeriod> getAffiliationPeriods(String memberId);
+    boolean addAffiliationPeriod(com.lias.beans.AffiliationPeriod period);
 }

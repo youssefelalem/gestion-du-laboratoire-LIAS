@@ -124,4 +124,48 @@ public class MemberDaoImpl implements IMemberDao {
         DEMO_MEMBERS.add(member);
         return true;
     }
+
+    @Override
+    public List<com.lias.beans.AffiliationPeriod> getAffiliationPeriods(String memberId) {
+        List<com.lias.beans.AffiliationPeriod> list = new java.util.ArrayList<>();
+        String sql = "SELECT * FROM affiliation_periods WHERE member_id = ? ORDER BY date_debut ASC";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, memberId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    com.lias.beans.AffiliationPeriod ap = new com.lias.beans.AffiliationPeriod();
+                    ap.setId(rs.getLong("id"));
+                    ap.setMemberId(rs.getString("member_id"));
+                    java.sql.Date dDeb = rs.getDate("date_debut");
+                    if (dDeb != null) ap.setDateDebut(dDeb.toLocalDate());
+                    java.sql.Date dFin = rs.getDate("date_fin");
+                    if (dFin != null) ap.setDateFin(dFin.toLocalDate());
+                    ap.setRoleHistorique(rs.getString("role_historique"));
+                    list.add(ap);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public boolean addAffiliationPeriod(com.lias.beans.AffiliationPeriod period) {
+        String sql = "INSERT INTO affiliation_periods (member_id, date_debut, date_fin, role_historique) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, period.getMemberId());
+            ps.setDate(2, period.getDateDebut() != null ? java.sql.Date.valueOf(period.getDateDebut()) : null);
+            ps.setDate(3, period.getDateFin() != null ? java.sql.Date.valueOf(period.getDateFin()) : null);
+            ps.setString(4, period.getRoleHistorique());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

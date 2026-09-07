@@ -167,6 +167,13 @@
                                     <div class="gov-tile-name">Dr. Fatima Zahra Idrissi</div>
                                 </div>
                             </div>
+                            <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+                                <a href="<%= request.getContextPath() %>/mandats" style="color: var(--accent-2); font-weight: 600; text-decoration: none;">Historique des mandats →</a>
+                                <div style="display: flex; gap: 14px;">
+                                    <a href="<%= request.getContextPath() %>/conventions" style="color: var(--navy); font-weight: 500; text-decoration: none;">Conventions</a>
+                                    <a href="<%= request.getContextPath() %>/pv" style="color: var(--navy); font-weight: 500; text-decoration: none;">Procès-verbaux</a>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Card Agenda Scientifique -->

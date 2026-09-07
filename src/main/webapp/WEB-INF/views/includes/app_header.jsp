@@ -2,6 +2,7 @@
 <%@ page import="com.lias.beans.User"%>
 <%
     User navUser = (User) session.getAttribute("currentUser");
+    if (navUser == null) navUser = (User) session.getAttribute("user");
     String userInitials = "LI";
     if (navUser != null && navUser.getPrenom() != null && navUser.getNom() != null && !navUser.getPrenom().isEmpty() && !navUser.getNom().isEmpty()) {
         userInitials = ("" + navUser.getPrenom().charAt(0) + navUser.getNom().charAt(0)).toUpperCase();

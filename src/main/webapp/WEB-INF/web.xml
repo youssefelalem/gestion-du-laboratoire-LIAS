@@ -114,6 +114,46 @@
         <url-pattern>/rapport</url-pattern>
     </servlet-mapping>
 
+    <!-- 11. Servlet Mandats et Gouvernance (CDC §5) -->
+    <servlet>
+        <servlet-name>MandatServlet</servlet-name>
+        <servlet-class>com.lias.web.MandatServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MandatServlet</servlet-name>
+        <url-pattern>/mandats</url-pattern>
+    </servlet-mapping>
+
+    <!-- 12. Servlet Conventions et Partenariats (CDC §16) -->
+    <servlet>
+        <servlet-name>ConventionServlet</servlet-name>
+        <servlet-class>com.lias.web.ConventionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ConventionServlet</servlet-name>
+        <url-pattern>/conventions</url-pattern>
+    </servlet-mapping>
+
+    <!-- 13. Servlet Procès-Verbaux (CDC §17) -->
+    <servlet>
+        <servlet-name>PVServlet</servlet-name>
+        <servlet-class>com.lias.web.PVServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PVServlet</servlet-name>
+        <url-pattern>/pv</url-pattern>
+    </servlet-mapping>
+
+    <!-- 14. Servlet Administration Système (CDC §5.1) -->
+    <servlet>
+        <servlet-name>AdminServlet</servlet-name>
+        <servlet-class>com.lias.web.AdminServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminServlet</servlet-name>
+        <url-pattern>/admin</url-pattern>
+    </servlet-mapping>
+
     <!-- Filtre de sécurité JEE pour interdire l'accès direct sans session -->
     <filter>
         <filter-name>AuthFilter</filter-name>
@@ -123,6 +163,12 @@
         <filter-name>AuthFilter</filter-name>
         <url-pattern>/home</url-pattern>
         <url-pattern>/rapport</url-pattern>
+        <url-pattern>/mandats</url-pattern>
+        <url-pattern>/conventions</url-pattern>
+        <url-pattern>/pv</url-pattern>
+        <url-pattern>/adhesions</url-pattern>
+        <url-pattern>/materiel</url-pattern>
+        <url-pattern>/admin</url-pattern>
     </filter-mapping>
 
     <!-- Page d'accueil par défaut -->

@@ -2,6 +2,7 @@
 <%@ page import="com.lias.beans.User"%>
 <%
     User sbUser = (User) session.getAttribute("currentUser");
+    if (sbUser == null) sbUser = (User) session.getAttribute("user");
     String sbRole = sbUser != null ? sbUser.getRole() : "visiteur";
     boolean sbIsDir = "directeur".equalsIgnoreCase(sbRole) || "admin".equalsIgnoreCase(sbRole);
     String activeNav = (String) request.getAttribute("activeNav");
@@ -15,6 +16,10 @@
             else if (servletPath.contains("adhesion")) activeNav = "adhesions";
             else if (servletPath.contains("materiel")) activeNav = "materiel";
             else if (servletPath.contains("rapport")) activeNav = "rapport";
+            else if (servletPath.contains("mandat")) activeNav = "mandats";
+            else if (servletPath.contains("convention")) activeNav = "conventions";
+            else if (servletPath.contains("pv")) activeNav = "pv";
+            else if (servletPath.contains("admin")) activeNav = "admin";
         }
     }
 %>
@@ -34,7 +39,7 @@
                 <span class="nav-label">Profils</span>
             </a>
 
-            <a href="<%= request.getContextPath() %>/home#mandats" class="sidebar-nav-item <%= "mandats".equals(activeNav) ? "active" : "" %>">
+            <a href="<%= request.getContextPath() %>/mandats" class="sidebar-nav-item <%= "mandats".equals(activeNav) ? "active" : "" %>">
                 <span class="nav-glyph">⌗</span>
                 <span class="nav-label">Mandats</span>
             </a>
@@ -87,12 +92,12 @@
                 <span class="nav-label">Matériel</span>
             </a>
 
-            <a href="<%= request.getContextPath() %>/home#conventions" class="sidebar-nav-item">
+            <a href="<%= request.getContextPath() %>/conventions" class="sidebar-nav-item <%= "conventions".equals(activeNav) ? "active" : "" %>">
                 <span class="nav-glyph">⌘</span>
                 <span class="nav-label">Conventions</span>
             </a>
 
-            <a href="<%= request.getContextPath() %>/home#pv" class="sidebar-nav-item">
+            <a href="<%= request.getContextPath() %>/pv" class="sidebar-nav-item <%= "pv".equals(activeNav) ? "active" : "" %>">
                 <span class="nav-glyph">≡</span>
                 <span class="nav-label">Procès-verbaux</span>
             </a>
@@ -108,7 +113,7 @@
             </button>
 
             <% if ("admin".equalsIgnoreCase(sbRole)) { %>
-            <a href="<%= request.getContextPath() %>/home#admin" class="sidebar-nav-item">
+            <a href="<%= request.getContextPath() %>/admin" class="sidebar-nav-item <%= "admin".equals(activeNav) ? "active" : "" %>">
                 <span class="nav-glyph">⚙</span>
                 <span class="nav-label">Administration</span>
             </a>

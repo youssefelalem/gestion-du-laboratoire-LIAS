@@ -32,7 +32,7 @@ public class AuthFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
 
         HttpSession session = request.getSession(false);
-        boolean isLoggedIn = (session != null && session.getAttribute("currentUser") != null);
+        boolean isLoggedIn = (session != null && (session.getAttribute("currentUser") != null || session.getAttribute("user") != null));
 
         if (isLoggedIn) {
             // Utilisateur connecté -> autoriser l'accès
