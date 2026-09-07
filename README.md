@@ -80,7 +80,8 @@ Le projet dispose d'une suite documentaire complète et interactive consultable 
 | **3** | **Diagrammes de Séquence Boîte Blanche (DSBB)** | HTML + PlantUML | [Consulter](docs/diagrammes-sequence-boite-blanche.html) | Déroulement interne MVC 2 (JSP ⟵ Filter ⟵ Servlet ⟵ Métier ⟵ DAO ⟵ JDBC ⟵ MySQL). |
 | **4** | **Diagrammes de Classes UML** | HTML + PlantUML | [Consulter](docs/diagramme-de-classes.html) | Modèle de Domaine Métier (10 entités) & Architecture logicielle MVC 2. |
 | **5** | **Dictionnaire de Données Officiel** | HTML Interactif | [Consulter](docs/dictionnaire-de-donnees.html) | 10 tables, 58+ champs, types SQL/Java EE, contraintes, règles CDC et filtre temps réel. |
-| **6** | **Guide Complet & Préparation Soutenance** | HTML Documenté | [Consulter](docs/guide-complet-projet.html) | Argumentaire technique, points forts académiques et Q&R pour le jury. |
+| **6** | **Catalogue des Interfaces (IHM)** | HTML Interactif | [Consulter](docs/catalogue-des-interfaces.html) | 14 écrans IHM détaillés, sitemap, wireframes, matrice RBAC et traçabilité complète. |
+| **7** | **Guide Complet & Préparation Soutenance** | HTML Documenté | [Consulter](docs/guide-complet-projet.html) | Argumentaire technique, points forts académiques et Q&R pour le jury. |
 
 ---
 
