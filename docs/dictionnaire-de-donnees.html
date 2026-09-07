@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قاموس البيانات الشامل (Dictionnaire de Données) — مختبر LIAS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Spectral:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F8F9FA;
+            --surface-color: #FFFFFF;
+            --surface-2: #F1F5F9;
+            --border-color: #E2E8F0;
+            --border-dark: #CBD5E1;
+            --text-primary: #0F172A;
+            --text-secondary: #334155;
+            --text-muted: #64748B;
+            --navy-primary: #152B44;
+            --navy-dark: #0D1C2D;
+            --navy-light: #1E3A5F;
+            --gold-accent: #B89255;
+            --gold-bg: #FEF9EE;
+            --success: #059669;
+            --success-bg: #ECFDF5;
+            --warning: #D97706;
+            --warning-bg: #FFFBEB;
+            --danger: #DC2626;
+            --danger-bg: #FEF2F2;
+            --purple: #7C3AED;
+            --purple-bg: #F5F3FF;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 14px rgba(21, 43, 68, 0.08);
+            --shadow-lg: 0 12px 30px rgba(21, 43, 68, 0.12);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .brand { display: flex; align-items: center; gap: 14px; }
+
+        .logo-box {
+            background: var(--navy-primary);
+            color: #FAF8F5;
+            font-family: 'Spectral', serif;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 4px;
+            letter-spacing: 0.08em;
+        }
+
+        .header-meta .title { font-weight: 800; font-size: 15px; color: var(--navy-primary); }
+        .header-meta .subtitle { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--text-muted); direction: ltr; text-align: right; }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-link {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--navy-light);
+            text-decoration: none;
+            padding: 6px 11px;
+            border-radius: 4px;
+            background: var(--surface-2);
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-link:hover { background: #E2E8F0; color: var(--navy-dark); transform: translateY(-1px); }
+        .btn-link.active { background: var(--navy-primary); color: #FFF; }
+
+        .btn-print {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gold-accent);
+            color: #FFF;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 4px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .btn-print:hover { background: #9E7B44; }
+
+        .container {
+            max-width: 1440px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--navy-primary), var(--navy-dark));
+            color: #FFF;
+            border-radius: 8px;
+            padding: 36px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(184, 146, 85, 0.25);
+            color: #F8E7C9;
+            border: 1px solid #B89255;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11.5px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 3px;
+            margin-bottom: 12px;
+        }
+
+        .hero h1 { font-size: 28px; font-weight: 900; line-height: 1.4; margin-bottom: 12px; color: #FFF; }
+        .hero p { font-size: 15px; color: #E2E8F0; line-height: 1.75; }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px 22px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-icon {
+            font-size: 28px;
+            background: var(--surface-2);
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-content .stat-val {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--navy-primary);
+            line-height: 1.2;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-content .stat-lbl {
+            font-size: 12.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .controls-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px 24px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 14px;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 13.5px;
+            color: var(--text-primary);
+            width: 100%;
+            outline: none;
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--border-dark);
+            background: #FFF;
+            color: var(--navy-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--navy-primary);
+            color: #FFF;
+            border-color: var(--navy-primary);
+        }
+
+        .table-section {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 28px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .table-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .table-title h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--navy-primary);
+        }
+
+        .table-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            background: #E2E8F0;
+            color: var(--navy-dark);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .table-category-badge {
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+        .cat-sec { background: var(--danger-bg); color: var(--danger); border: 1px solid #FECACA; }
+        .cat-acad { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+        .cat-time { background: var(--purple-bg); color: var(--purple); border: 1px solid #DDD6FE; }
+        .cat-gov { background: var(--gold-bg); color: #B45309; border: 1px solid #FDE68A; }
+        .cat-res { background: var(--success-bg); color: var(--success); border: 1px solid #A7F3D0; }
+
+        .table-desc {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            margin-bottom: 18px;
+            line-height: 1.7;
+        }
+
+        .data-table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+
+        table.data-dict {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: right;
+        }
+
+        table.data-dict th {
+            background: #F8FAFC;
+            color: var(--navy-primary);
+            font-weight: 800;
+            padding: 12px 14px;
+            border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        table.data-dict td {
+            padding: 11px 14px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        table.data-dict tr:nth-child(even) { background-color: #FAFAFA; }
+        table.data-dict tr:hover { background-color: #F1F5F9; }
+
+        .badge-type {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11.5px;
+            font-weight: 600;
+            background: #E0E7FF;
+            color: #3730A3;
+            padding: 2px 7px;
+            border-radius: 3px;
+            display: inline-block;
+            direction: ltr;
+        }
+
+        .badge-java {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11.5px;
+            font-weight: 600;
+            background: #FEF3C7;
+            color: #92400E;
+            padding: 2px 7px;
+            border-radius: 3px;
+            display: inline-block;
+            direction: ltr;
+        }
+
+        .badge-pk {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 800;
+            background: #DC2626;
+            color: #FFF;
+            padding: 2px 6px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .badge-fk {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 800;
+            background: #2563EB;
+            color: #FFF;
+            padding: 2px 6px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .badge-unique {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            background: #059669;
+            color: #FFF;
+            padding: 2px 6px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .badge-nn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            font-weight: 600;
+            background: #E2E8F0;
+            color: #475569;
+            padding: 2px 5px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .field-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--navy-primary);
+            direction: ltr;
+            text-align: left;
+            display: inline-block;
+        }
+
+        .rule-badge {
+            font-size: 11.5px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .matrix-section {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 28px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .callout {
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 18px 0;
+            border-right: 4px solid;
+            font-size: 14px;
+        }
+        .callout-info { background: #EFF6FF; border-color: #3B82F6; color: #1E40AF; }
+        .callout-tip { background: var(--gold-bg); border-color: var(--gold-accent); color: #854D0E; }
+        .callout-success { background: var(--success-bg); border-color: var(--success); color: #065F46; }
+
+        @media print {
+            .btn-print, .btn-link, header, .controls-card { display: none !important; }
+            body { background: #FFF; color: #000; }
+            .table-section, .matrix-section { box-shadow: none; border: 1px solid #CCC; break-inside: avoid; margin-bottom: 20px; }
+            .hero { background: #F1F5F9 !important; color: #000 !important; }
+            .hero h1 { color: #000 !important; }
+            .hero p { color: #333 !important; }
+            table.data-dict th { background: #E2E8F0 !important; color: #000 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-inner">
+            <div class="brand">
+                <div class="logo-box">LIAS</div>
+                <div class="header-meta">
+                    <div class="title">قاموس البيانات الشامل (Dictionnaire de Données — LIAS)</div>
+                    <div class="subtitle">Laboratoire LIAS · Master Data Science & Big Data · FSBM</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a class="btn-link" href="diagrammes-cas-utilisation.html">🎯 حالات الاستخدام</a>
+                <a class="btn-link" href="diagrammes-sequence-boite-noire.html">⬛ العلبة السوداء</a>
+                <a class="btn-link" href="diagrammes-sequence-boite-blanche.html">⬜ العلبة البيضاء (MVC 2)</a>
+                <a class="btn-link" href="diagramme-de-classes.html">🔷 مخطط الأصناف</a>
+                <a class="btn-link active" href="dictionnaire-de-donnees.html">📖 قاموس البيانات</a>
+                <button class="btn-print" onclick="window.print()">
+                    <span>طباعة / حفظ PDF 🖨️</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Hero Section -->
+        <div class="hero">
+            <span class="hero-badge">CONCEPTION DU SYSTÈME D'INFORMATION · MODÈLE RELATIONNEL &amp; 3NF</span>
+            <h1>قاموس البيانات والمواصفات المرجعية (Dictionnaire de Données)</h1>
+            <p>
+                يُعد <strong>قاموس البيانات (Dictionnaire de Données)</strong> المرجع الهندسي الأسمى لتصميم قاعدة البيانات ونظام المعلومات.
+                يحدد هذا المستند المواصفات الدقيقة لجميع الكيانات، الجداول (<span style="font-family: 'JetBrains Mono';">Tables</span>)، الحقول (<span style="font-family: 'JetBrains Mono';">Colonnes</span>)،
+                الأنواع في SQL و Java EE، المفاتيح الأساسية والخارجية (<span style="font-family: 'JetBrains Mono';">PK / FK</span>)، القيود الحتمية (<span style="font-family: 'JetBrains Mono';">NOT NULL, UNIQUE</span>)،
+                وقواعد التدبير المهنية (<span style="font-family: 'JetBrains Mono';">Règles de Gestion</span>) المستنبطة نصاً من دفتر تحملات مختبر <strong>LIAS</strong>.
+            </p>
+        </div>
+
+        <!-- KPI Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-icon">🗄️</div>
+                <div class="stat-content">
+                    <div class="stat-val">10</div>
+                    <div class="stat-lbl">جداول وكيانات معيارية (Tables)</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📋</div>
+                <div class="stat-content">
+                    <div class="stat-val">58+</div>
+                    <div class="stat-lbl">حقول وخصائص موثقة (Champs)</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🛡️</div>
+                <div class="stat-content">
+                    <div class="stat-val">3NF / BCNF</div>
+                    <div class="stat-lbl">الدرجة المعيارية (Normalisation)</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-content">
+                    <div class="stat-val">100%</div>
+                    <div class="stat-lbl">تأريخ زمني غير هدام (Historisation)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search & Filter Controls -->
+        <div class="controls-card">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="searchInput" placeholder="ابحث عن اسم جدول، اسم حقل، نوع SQL، قيد أو قاعدة تدبير (مثال: email, password, team, FK)..." onkeyup="filterTables()">
+            </div>
+            <div class="filter-tags">
+                <button class="filter-btn active" onclick="setCategoryFilter('all', this)">الكل (10)</button>
+                <button class="filter-btn" onclick="setCategoryFilter('sec', this)">الأمان والمصادقة</button>
+                <button class="filter-btn" onclick="setCategoryFilter('acad', this)">الأعضاء والمسارات</button>
+                <button class="filter-btn" onclick="setCategoryFilter('gov', this)">الحوكمة والعتاد</button>
+                <button class="filter-btn" onclick="setCategoryFilter('res', this)">الإنتاج والشراكات</button>
+            </div>
+        </div>
+
+        <!-- Methodology Section : Derivation from Scenarios & CDC -->
+        <div class="callout callout-info" style="border-right-color: #2563EB; background: #EFF6FF; color: #1E3A8A; font-size: 14px; line-height: 1.8; margin-bottom: 25px;">
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 8px; color: #1E40AF; display: flex; align-items: center; gap: 8px;">
+                <span>🔬 المنهجية الأكاديمية الصارمة المعتمدة (Méthodologie d'Ingénierie Logicielle — UP / 2TUP)</span>
+            </h3>
+            <p>
+                <strong>كيف تم بناء قاموس البيانات ومخطط الأصناف؟ (De la modélisation dynamique à la structure statique) :</strong><br>
+                لم نكتفِ مطلقاً بنسخ الجداول البسيطة الموجودة في الكود البرمجي الأولي، بل اتبعنا <strong>دورة الهندسة الأكاديمية المعيارية دقة بدقة (Méthode rigoureuse pas-à-pas) :</strong>
+            </p>
+            <ol style="margin-right: 22px; margin-top: 8px;">
+                <li><strong>تفريغ معطيات السيناريوهات (Dépouillement des Scénarios de Séquence) :</strong> من خلال رسائل ومخططات التسلسل (DSS و DSBB)، قمنا باستخراج كافة الحقول المتبادلة في الاستمارات (مثل استمارة الانخراط: <code>nom</code>, <code>prenom</code>, <code>email</code>, <code>statutVise</code>, إلخ).</li>
+                <li><strong>التجميع الدلالي والترتيب حسب الانتماء (Regroupement par Entité Métier) :</strong> تم تجميع الحقول المترابطة وظيفياً لتتحول كل مجموعة متجانسة إلى <strong>صنف (Classe)</strong> في مخطط الأصناف و<strong>جدول (Table)</strong> في قاموس البيانات.</li>
+                <li><strong>الإكمال الشامل من دفتر التحملات (Complétion exhaustive depuis le CDC LIAS) :</strong> الحقول الزمنية العميقة التي لا تظهر في الاستمارات المباشرة (مثل فترات الانتساب <code>affiliation_periods</code>، عهود الإدارة <code>mandats</code>، محاضر الاجتماعات <code>reunions_pv</code>، والاتفاقيات <code>conventions</code>) تم استنباطها حرفياً من نصوص دفتر التحملات (§2، §3، §6، §8، §12-17).</li>
+            </ol>
+        </div>
+
+        <div class="callout callout-success">
+            <strong>💡 المبادئ الهندسية الأساسية المطبقة في قاموس بيانات مختبر LIAS :</strong><br>
+            <strong>1. الفصل الصارم بين العضوية والحساب (Découplage Compte / Profil) :</strong> جدول <code>users</code> مخصص للأمان وحفظ التجزئة، بينما جدول <code>members</code> مخصص للمعلومات الأكاديمية والإنتاج العلمي.<br>
+            <strong>2. مبدأ عدم المسح والتأريخ التراكمي (Historisation Temporelle Non-Destructive) :</strong> عند انتهاء انتساب عضو أو تقاعده، لا يُحذف سجله نهائياً بل يتم تجميد حسابه وتسجيل تاريخ انتهاء الفترة (<code>date_fin</code>).<br>
+            <strong>3. تعقيم وتأمين المدخلات (Sécurisation JDBC) :</strong> كل حقل في القاموس يمتلك حداً أقصى للطول (Taille Maximale) وقيداً للنزاهة لمنع فيض البيانات والحقن البرمجي.
+        </div>
+
+        <!-- 1. Table USERS -->
+        <div class="table-section" data-category="sec" id="tbl-users">
+            <div class="table-header">
+                <div class="table-title">
+                    <span class="table-code">users</span>
+                    <h2>1. حسابات المستخدمين والمصادقة الأمنية (Authentification & Sécurité)</h2>
+                </div>
+                <span class="table-category-badge cat-sec">أمان وتحكم بالصلاحيات (RBAC)</span>
+            </div>
+            <p class="table-desc">
+                تخزن هذه الفئة بيانات الولوج للمنصة. يطبق النظام آلية التحكم بالصلاحيات القائمة على الأدوار (Role-Based Access Control). الحسابات تديرها إدارة النظام، وترتبط بالملفات الأكاديمية ارتباطاً اختيارياً (0..1) لتمكين المشرفين غير الباحثين من الولوج.
+            </p>
+            <div class="data-table-wrapper">
+                <table class="data-dict">
+                    <thead>
+                        <tr>
+                            <th>اسم الحقل (Champ)</th>
+                            <th>البيان والتوصيف (Libellé)</th>
+                            <th>نوع SQL</th>
+                            <th>نوع Java EE</th>
+                            <th>القيود (Contraintes)</th>
+                            <th>قواعد التدبير والملاحظات (Règles de Gestion CDC)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="field-code">id</span></td>
+                            <td>المعرف الرقمي الفريد للمستخدم</td>
+                            <td><span class="badge-type">BIGINT</span></td>
+                            <td><span class="badge-java">Long</span></td>
+                            <td><span class="badge-pk">PK</span> <span class="badge-nn">AUTO_INC</span></td>
+                            <td class="rule-badge">تزايد تلقائي تسلسلي. مفتاح أساسي مطلق.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">nom</span></td>
+                            <td>اللقب العائلي للمستخدم</td>
+                            <td><span class="badge-type">VARCHAR(100)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">إجباري. يحتوي فقط على حروف ومسافات.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">prenom</span></td>
+                            <td>الاسم الشخصي للمستخدم</td>
+                            <td><span class="badge-type">VARCHAR(100)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">إجباري. يُستخدم في الترحيب والترويسة.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">email</span></td>
+                            <td>البريد الإلكتروني المهني (معرف الدخول)</td>
+                            <td><span class="badge-type">VARCHAR(150)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-unique">UNIQUE</span> <span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">مفتاح طبيعي للولوج (Login). فريد تماماً، نسق RFC 5322.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">password</span></td>
+                            <td>كلمة المرور المشفرة</td>
+                            <td><span class="badge-type">VARCHAR(255)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">مخزنة كـ Hash آمن (BCrypt/SHA-256). لا تُخزن نصاً صريحاً.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">role</span></td>
+                            <td>الدور الوظيفي في النظام</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">قيم معيارية: <code>directeur</code>, <code>permanent</code>, <code>doctorant</code>, <code>admin</code>, <code>visiteur</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">actif</span></td>
+                            <td>حالة تفعيل الحساب</td>
+                            <td><span class="badge-type">BOOLEAN</span></td>
+                            <td><span class="badge-java">boolean</span></td>
+                            <td><span class="badge-nn">DEFAULT TRUE</span></td>
+                            <td class="rule-badge">يُضبط على <code>FALSE</code> لتجميد حساب المتقاعدين أو المستقيلين.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2. Table MEMBERS -->
+        <div class="table-section" data-category="acad" id="tbl-members">
+            <div class="table-header">
+                <div class="table-title">
+                    <span class="table-code">members</span>
+                    <h2>2. الملفات الأكاديمية للباحثين (Membres & Profils Académiques)</h2>
+                </div>
+                <span class="table-category-badge cat-acad">الملفات الأكاديمية والعضوية</span>
+            </div>
+            <p class="table-desc">
+                تمثل هذه الفئة المركزية سجل الباحث العلمي داخل المختبر، متضمنة وضعه الأكاديمي، فريقه البحثي، ودرجته العلمية. تفصل بين وضعه الأكاديمي الدائم (Statut) ومسؤوليته التسييرية الراهنة (Rôle).
+            </p>
+            <div class="data-table-wrapper">
+                <table class="data-dict">
+                    <thead>
+                        <tr>
+                            <th>اسم الحقل (Champ)</th>
+                            <th>البيان والتوصيف (Libellé)</th>
+                            <th>نوع SQL</th>
+                            <th>نوع Java EE</th>
+                            <th>القيود (Contraintes)</th>
+                            <th>قواعد التدبير والملاحظات (Règles de Gestion CDC)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="field-code">id</span></td>
+                            <td>المعرف الأكاديمي الرمزي للعضو</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-pk">PK</span></td>
+                            <td class="rule-badge">معرف فريد كودي (مثل: <code>yea</code>, <code>sb</code>, <code>as</code>).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">firstName</span></td>
+                            <td>الاسم الشخصي للباحث</td>
+                            <td><span class="badge-type">VARCHAR(100)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">يُعرض في واجهة التعريف والبطاقات الشخصية.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">lastName</span></td>
+                            <td>اللقب العائلي للباحث</td>
+                            <td><span class="badge-type">VARCHAR(100)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">يُعتمد في الفهرسة الأبجدية للباحثين.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">email</span></td>
+                            <td>البريد الإلكتروني للاتصال العلمي</td>
+                            <td><span class="badge-type">VARCHAR(150)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">مطابق لبريد حساب <code>users.email</code> في حال امتلاكه حساباً.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">status</span></td>
+                            <td>الوضعية الأكاديمية (Statut d'appartenance)</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">القيم: <code>permanent</code>, <code>associe</code>, <code>doctorant</code>, <code>retraite</code>, <code>ancien</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">role</span></td>
+                            <td>المسؤولية الحالية في الحوكمة (Rôle)</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">القيم: <code>directeur</code>, <code>vice-directeur</code>, <code>chef-equipe</code>, <code>membre</code>, <code>aucun</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">team</span></td>
+                            <td>الفريق البحثي التابع له الباحث</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">إحدى الفرق الأربع: <code>IA</code>, <code>Big Data</code>, <code>NLP</code>, <code>Sécurité</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">grade</span></td>
+                            <td>الدرجة واللقب الجامعي</td>
+                            <td><span class="badge-type">VARCHAR(100)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">أمثلة: PES, Professeur Habilité, Maître de Conférences, Doctorant.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. Table AFFILIATION_PERIODS -->
+        <div class="table-section" data-category="acad" id="tbl-affiliations">
+            <div class="table-header">
+                <div class="table-title">
+                    <span class="table-code">affiliation_periods</span>
+                    <h2>3. فترات الانتساب والتأريخ الزمني للمسار (Historique des Affiliations)</h2>
+                </div>
+                <span class="table-category-badge cat-time">التأريخ الزمني (Historisation)</span>
+            </div>
+            <p class="table-desc">
+                تُجسد جوهر متطلبات دفتر التحملات في حفظ الذاكرة الأكاديمية للمختبر. تسمح بتسجيل فترات انضمام وخروج العضو وعودته لاحقاً، وبناء الخط الزمني الكامل (Cycle de vie) دون محو أي معطيات سابقة.
+            </p>
+            <div class="data-table-wrapper">
+                <table class="data-dict">
+                    <thead>
+                        <tr>
+                            <th>اسم الحقل (Champ)</th>
+                            <th>البيان والتوصيف (Libellé)</th>
+                            <th>نوع SQL</th>
+                            <th>نوع Java EE</th>
+                            <th>القيود (Contraintes)</th>
+                            <th>قواعد التدبير والملاحظات (Règles de Gestion CDC)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="field-code">id</span></td>
+                            <td>المعرف الفريد لفترة الانتساب</td>
+                            <td><span class="badge-type">BIGINT</span></td>
+                            <td><span class="badge-java">Long</span></td>
+                            <td><span class="badge-pk">PK</span> <span class="badge-nn">AUTO_INC</span></td>
+                            <td class="rule-badge">مفتاح ترقيمي تسلسلي لكل فترة انتساب.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">member_id</span></td>
+                            <td>معرف الباحث صاحب الفترة</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-fk">FK</span> <span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">مفتاح خارجي يشير إلى <code>members.id</code>. علاقة تركيب (1 ⟵ *).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">date_debut</span></td>
+                            <td>تاريخ بداية فترة الانتساب</td>
+                            <td><span class="badge-type">DATE</span></td>
+                            <td><span class="badge-java">LocalDate</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">تاريخ رسمي لبداية العقد أو الانتساب للمختبر.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">date_fin</span></td>
+                            <td>تاريخ نهاية فترة الانتساب</td>
+                            <td><span class="badge-type">DATE</span></td>
+                            <td><span class="badge-java">LocalDate</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">إذا كانت القيمة <code>NULL</code>، فهذا يعني أن العضوية <strong>سارية حالياً</strong>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">role_historique</span></td>
+                            <td>الصفة أو المسؤولية خلال هذه الفترة</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">تحفظ الدور الأكاديمي خلال الفترة لمنع فقدان السياق التاريخي.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 4. Table MANDATS -->
+        <div class="table-section" data-category="gov" id="tbl-mandats">
+            <div class="table-header">
+                <div class="table-title">
+                    <span class="table-code">mandats</span>
+                    <h2>4. عهود الحوكمة وإدارة المختبر (Mandats de Direction & Gouvernance)</h2>
+                </div>
+                <span class="table-category-badge cat-gov">حوكمة وإدارة مؤسساتية</span>
+            </div>
+            <p class="table-desc">
+                توثق عهود الإدارة المتعاقبة على قيادة مختبر LIAS. تفصل المنصب الإداري (Directeur en mandat) عن الصفة الأكاديمية الدائمة، وتحدد المسؤول المخول بالتوقيع على طلبات الانخراط، شراء المعدات والاتفاقيات.
+            </p>
+            <div class="data-table-wrapper">
+                <table class="data-dict">
+                    <thead>
+                        <tr>
+                            <th>اسم الحقل (Champ)</th>
+                            <th>البيان والتوصيف (Libellé)</th>
+                            <th>نوع SQL</th>
+                            <th>نوع Java EE</th>
+                            <th>القيود (Contraintes)</th>
+                            <th>قواعد التدبير والملاحظات (Règles de Gestion CDC)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="field-code">id</span></td>
+                            <td>المعرف الفريد للمأمورية الإدارية</td>
+                            <td><span class="badge-type">BIGINT</span></td>
+                            <td><span class="badge-java">Long</span></td>
+                            <td><span class="badge-pk">PK</span> <span class="badge-nn">AUTO_INC</span></td>
+                            <td class="rule-badge">تزايد تلقائي للمأموريات والولايات.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">titre</span></td>
+                            <td>عنوان المأمورية الانتخابية</td>
+                            <td><span class="badge-type">VARCHAR(150)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">مثال: "ولاية الإدارة 2024-2028: التحول نحو الذكاء الاصطناعي".</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">directeur_id</span></td>
+                            <td>معرف العضو المكلف بالإدارة</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-fk">FK</span> <span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">مفتاح خارجي يشير لـ <code>members.id</code> (يجب أن يكون عضواً دائماً).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">date_debut</span></td>
+                            <td>تاريخ سريان الولاية</td>
+                            <td><span class="badge-type">DATE</span></td>
+                            <td><span class="badge-java">LocalDate</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">بداية العهد الرسمي المعتمد من عمادة الكلية.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">date_fin</span></td>
+                            <td>تاريخ انتهاء الولاية</td>
+                            <td><span class="badge-type">DATE</span></td>
+                            <td><span class="badge-java">LocalDate</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">تكون فارغة أثناء سريان العهد وتُسجل عند انتخاب مدير جديد.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">actif</span></td>
+                            <td>مؤشر المأمورية الحالية</td>
+                            <td><span class="badge-type">BOOLEAN</span></td>
+                            <td><span class="badge-java">boolean</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">لا يمكن أن يكون هناك سوى مأمورية نشطة واحدة في ذات الوقت (<code class="badge-unique">actif=1</code>).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 5. Table PUBLICATIONS -->
+        <div class="table-section" data-category="res" id="tbl-publications">
+            <div class="table-header">
+                <div class="table-title">
+                    <span class="table-code">publications</span>
+                    <h2>5. الإنتاج العلمي والمنشورات البحثية (Publications Scientifiques)</h2>
+                </div>
+                <span class="table-category-badge cat-res">إنتاج علمي وببليوغرافيا</span>
+            </div>
+            <p class="table-desc">
+                مستودع الإنتاج الفكري للباحثين وطلبة الدكتوراه، يشمل المقالات المفهرسة في المجلات العالمية والمؤتمرات الدولية، مصنفة حسب السنة، الفريق البحثي، ونوع الوعاء النشر.
+            </p>
+            <div class="data-table-wrapper">
+                <table class="data-dict">
+                    <thead>
+                        <tr>
+                            <th>اسم الحقل (Champ)</th>
+                            <th>البيان والتوصيف (Libellé)</th>
+                            <th>نوع SQL</th>
+                            <th>نوع Java EE</th>
+                            <th>القيود (Contraintes)</th>
+                            <th>قواعد التدبير والملاحظات (Règles de Gestion CDC)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="field-code">id</span></td>
+                            <td>المعرف الفريد للمنشور العلمي</td>
+                            <td><span class="badge-type">BIGINT</span></td>
+                            <td><span class="badge-java">Long</span></td>
+                            <td><span class="badge-pk">PK</span> <span class="badge-nn">AUTO_INC</span></td>
+                            <td class="rule-badge">مفتاح ترقيمي تسلسلي لكل إنتاج علمي.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">titre</span></td>
+                            <td>عنوان المقال أو الورقة البحثية</td>
+                            <td><span class="badge-type">VARCHAR(255)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">العنوان الكامل للورقة المنشورة بالإنجليزية أو الفرنسية.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">auteurs</span></td>
+                            <td>قائمة المؤلفين والمشاركين</td>
+                            <td><span class="badge-type">VARCHAR(255)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">أسماء الباحثين وفق معايير الاقتباس الأكاديمي الدولية.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">annee</span></td>
+                            <td>سنة النشر والظهور</td>
+                            <td><span class="badge-type">INT</span></td>
+                            <td><span class="badge-java">int</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">تُعتمد في حساب مؤشرات تقرير الأداء وحصيلة المختبر السنوية.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">revue</span></td>
+                            <td>اسم المجلة أو وقائع المؤتمر</td>
+                            <td><span class="badge-type">VARCHAR(150)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">أمثلة: IEEE Transactions, ACM Surveys, Springer LNCS.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">doi</span></td>
+                            <td>المعرف الرقمي للمنشور (Digital Object ID)</td>
+                            <td><span class="badge-type">VARCHAR(100)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">معرف فريد للوصول المباشر للورقة عبر الإنترنت (الرابط الدائم).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">equipe</span></td>
+                            <td>الفريق البحثي الحاضن للورقة</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">ربط الورقة بإحدى فرق المختبر: IA, Big Data, NLP, Sécurité.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">type</span></td>
+                            <td>صنف الوعاء العلمي (Type de publication)</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">قيم معيارية: <code>Article</code> (مجلة محكمة), <code>Conférence</code> (مؤتمر دولي).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 6. Table EVENEMENTS -->
+        <div class="table-section" data-category="res" id="tbl-evenements">
+            <div class="table-header">
+                <div class="table-title">
+                    <span class="table-code">evenements</span>
+                    <h2>6. الفعاليات والتظاهرات العلمية (Évènements & Séminaires)</h2>
+                </div>
+                <span class="table-category-badge cat-res">تظاهرات وإشعاع علمي</span>
+            </div>
+            <p class="table-desc">
+                تدير الأنشطة العلمية المنظمة من قِبل المختبر أو فرقه (مؤتمرات سنوية، ورشات عمل، ندوات أسبوعية، ومناقشات أطروحات الدكتوراه) مع حالتها الزمنية.
+            </p>
+            <div class="data-table-wrapper">
+                <table class="data-dict">
+                    <thead>
+                        <tr>
+                            <th>اسم الحقل (Champ)</th>
+                            <th>البيان والتوصيف (Libellé)</th>
+                            <th>نوع SQL</th>
+                            <th>نوع Java EE</th>
+                            <th>القيود (Contraintes)</th>
+                            <th>قواعد التدبير والملاحظات (Règles de Gestion CDC)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="field-code">id</span></td>
+                            <td>المعرف الفريد للتظاهرة العلمية</td>
+                            <td><span class="badge-type">BIGINT</span></td>
+                            <td><span class="badge-java">Long</span></td>
+                            <td><span class="badge-pk">PK</span> <span class="badge-nn">AUTO_INC</span></td>
+                            <td class="rule-badge">مفتاح ترقيمي تسلسلي لكل فعالية.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">titre</span></td>
+                            <td>عنوان الفعالية أو موضوع الندوة</td>
+                            <td><span class="badge-type">VARCHAR(255)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">عنوان جذاب يوضح محور اللقاء العلمي.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">type</span></td>
+                            <td>نوع النشاط الأكاديمي</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">أمثلة: <code>Conférence</code>, <code>Workshop</code>, <code>Séminaire</code>, <code>Soutenance</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">date</span></td>
+                            <td>تاريخ انعقاد الفعالية</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">نسق ISO (YYYY-MM-DD). يُعتمد للفرز الزمني التلقائي.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">lieu</span></td>
+                            <td>مكان أو قاعة الانعقاد</td>
+                            <td><span class="badge-type">VARCHAR(150)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">مثال: المدرج الكبير، قاعة الأطروحات، مختبر 4B بكلية بن مسيك.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">description</span></td>
+                            <td>ملخص وأهداف التظاهرة</td>
+                            <td><span class="badge-type">TEXT</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">شرح مفصل للبرنامج العلمي والمحاضرين المدعوين.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">organisateur</span></td>
+                            <td>المنسق أو الباحث المشرف</td>
+                            <td><span class="badge-type">VARCHAR(100)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">اسم الأستاذ الباحث أو الفريق المنظم للتظاهرة.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">statut</span></td>
+                            <td>الوضعية الزمنية للفعالية</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">القيم: <code>À venir</code> (قادمة), <code>Passé</code> (منتهية), <code>En cours</code>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 7. Table DEMANDES_ADHESION -->
+        <div class="table-section" data-category="acad" id="tbl-demandes">
+            <div class="table-header">
+                <div class="table-title">
+                    <span class="table-code">demandes_adhesion</span>
+                    <h2>7. طلبات الانخراط والالتحاق بالمختبر (Demandes d'Adhésion)</h2>
+                </div>
+                <span class="table-category-badge cat-acad">انخراط وتسجيل الباحثين</span>
+            </div>
+            <p class="table-desc">
+                تستقبل طلبات الالتحاق المودعة من قِبل الباحثين وطلبة الدكتوراه الجدد، وتخضع للبت الحصري من قِبل مدير المختبر (Validation par le Directeur). في حال القبول، يتم آلياً إنشاء حساب مستخدم وملف أكاديمي.
+            </p>
+            <div class="data-table-wrapper">
+                <table class="data-dict">
+                    <thead>
+                        <tr>
+                            <th>اسم الحقل (Champ)</th>
+                            <th>البيان والتوصيف (Libellé)</th>
+                            <th>نوع SQL</th>
+                            <th>نوع Java EE</th>
+                            <th>القيود (Contraintes)</th>
+                            <th>قواعد التدبير والملاحظات (Règles de Gestion CDC)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="field-code">id</span></td>
+                            <td>المعرف الفريد لطلب الانخراط</td>
+                            <td><span class="badge-type">BIGINT</span></td>
+                            <td><span class="badge-java">Long</span></td>
+                            <td><span class="badge-pk">PK</span> <span class="badge-nn">AUTO_INC</span></td>
+                            <td class="rule-badge">مفتاح ترقيمي تسلسلي لكل طلب مقدم.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">nom</span></td>
+                            <td>اللقب العائلي للمترشح</td>
+                            <td><span class="badge-type">VARCHAR(100)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">بيانات الهوية الشخصية للمترشح.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">prenom</span></td>
+                            <td>الاسم الشخصي للمترشح</td>
+                            <td><span class="badge-type">VARCHAR(100)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">بيانات الهوية الشخصية للمترشح.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">email</span></td>
+                            <td>البريد الإلكتروني للاتصال بالمترشح</td>
+                            <td><span class="badge-type">VARCHAR(150)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">يُعتمد لإرسال قرار الإدارة وبيانات الولوج عند القبول.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">statutVise</span></td>
+                            <td>الصفة الأكاديمية المرغوبة</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">القيم: <code>Doctorant</code>, <code>Associé</code>, <code>Permanent</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">etablissement</span></td>
+                            <td>المؤسسة أو الجامعة الأصلية</td>
+                            <td><span class="badge-type">VARCHAR(150)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">الكلية أو المركز البحثي الذي ينتسب إليه الباحث خارجياً.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">motivation</span></td>
+                            <td>رسالة الدوافع والمشروع العلمي</td>
+                            <td><span class="badge-type">TEXT</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">تعليل الرغبة في الانضمام وأفق التعاون البحثي.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">dateSoumission</span></td>
+                            <td>تاريخ إيداع الطلب عبر المنصة</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">يسجل لحظة الإيداع للمفاضلة وترتيب الأولويات.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">decision</span></td>
+                            <td>قرار مدير المختبر النهائي</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">DEFAULT 'EN_ATTENTE'</span></td>
+                            <td class="rule-badge">قيم معيارية: <code>EN_ATTENTE</code> (قيد الدراسة), <code>ACCEPTEE</code> (مقبول), <code>REFUSEE</code>.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 8. Table MATERIELS -->
+        <div class="table-section" data-category="gov" id="tbl-materiels">
+            <div class="table-header">
+                <div class="table-title">
+                    <span class="table-code">materiels</span>
+                    <h2>8. تجهيزات المختبر وطلبات العتاد (Matériels & Équipements)</h2>
+                </div>
+                <span class="table-category-badge cat-gov">لوجستيك وعتاد علمي</span>
+            </div>
+            <p class="table-desc">
+                تُعنى بإدارة الموارد اللوجستية وتجهيزات البحث العلمي المتقدمة (محطات معالجة بالذكاء الاصطناعي GPU، حواسيب متنقلة، تجهيزات شبكية)، ومتابعة طلبات التخصيص المقدمة من الباحثين وتوزيعها العادل.
+            </p>
+            <div class="data-table-wrapper">
+                <table class="data-dict">
+                    <thead>
+                        <tr>
+                            <th>اسم الحقل (Champ)</th>
+                            <th>البيان والتوصيف (Libellé)</th>
+                            <th>نوع SQL</th>
+                            <th>نوع Java EE</th>
+                            <th>القيود (Contraintes)</th>
+                            <th>قواعد التدبير والملاحظات (Règles de Gestion CDC)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="field-code">id</span></td>
+                            <td>المعرف الفريد للمعدة أو الطلب</td>
+                            <td><span class="badge-type">BIGINT</span></td>
+                            <td><span class="badge-java">Long</span></td>
+                            <td><span class="badge-pk">PK</span> <span class="badge-nn">AUTO_INC</span></td>
+                            <td class="rule-badge">مفتاح ترقيمي تسلسلي لكل بند تجهيزي.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">designation</span></td>
+                            <td>اسم ومواصفات العتاد المطلوب</td>
+                            <td><span class="badge-type">VARCHAR(255)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">مثال: "Station de calcul GPU NVIDIA RTX 4090", "PC Dell Precision".</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">categorie</span></td>
+                            <td>صنف التجهيز اللوجستي</td>
+                            <td><span class="badge-type">VARCHAR(100)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">أصناف: <code>Calcul</code>, <code>Informatique</code>, <code>Réseau</code>, <code>Audiovisuel</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">demandeur</span></td>
+                            <td>اسم وصفة الباحث المستفيد</td>
+                            <td><span class="badge-type">VARCHAR(150)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">يحق للباحثين الدائمين والمشاركين وطلبة الدكتوراه تقديم طلبات.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">dateDemande</span></td>
+                            <td>تاريخ تقديم طلب العتاد</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">تاريخ إيداع الحاجيات العلمية في النظام.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">statut</span></td>
+                            <td>حالة الطلب والتخصيص الحالية</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">DEFAULT 'EN_ATTENTE'</span></td>
+                            <td class="rule-badge">القيم: <code>EN_ATTENTE</code>, <code>ACCORDE</code> (تمت الموافقة), <code>LIVRE</code> (تم التسليم), <code>REFUSE</code>.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">dateAttribution</span></td>
+                            <td>تاريخ تسليم العتاد للمستفيد</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">يُسجل لحظة توقيع وصل الاستلام الفعلي بالمختبر.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">commentaire</span></td>
+                            <td>ملاحظات الاستعمال والتبرير</td>
+                            <td><span class="badge-type">TEXT</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">بيان أسباب التخصيص والمشروع البحثي المعني باستغلال العتاد.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 9. Table REUNIONS_PV -->
+        <div class="table-section" data-category="gov" id="tbl-reunions">
+            <div class="table-header">
+                <div class="table-title">
+                    <span class="table-code">reunions_pv</span>
+                    <h2>9. محاضر اجتماعات المختبر والأرشفة (Procès-Verbaux de Réunions)</h2>
+                </div>
+                <span class="table-category-badge cat-gov">أرشفة إدارية وتوثيق</span>
+            </div>
+            <p class="table-desc">
+                تحتفظ بالمحاضر الرسمية (PV) للجمعيات العامة لمختبر LIAS ومجالس المختبر، متضمنة جدول الأعمال، التوصيات والقرارات المصادق عليها، مع رابط الوثيقة الممسوحة ضوئياً والموقعة.
+            </p>
+            <div class="data-table-wrapper">
+                <table class="data-dict">
+                    <thead>
+                        <tr>
+                            <th>اسم الحقل (Champ)</th>
+                            <th>البيان والتوصيف (Libellé)</th>
+                            <th>نوع SQL</th>
+                            <th>نوع Java EE</th>
+                            <th>القيود (Contraintes)</th>
+                            <th>قواعد التدبير والملاحظات (Règles de Gestion CDC)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="field-code">id</span></td>
+                            <td>المعرف الفريد للمحضر الإداري</td>
+                            <td><span class="badge-type">BIGINT</span></td>
+                            <td><span class="badge-java">Long</span></td>
+                            <td><span class="badge-pk">PK</span> <span class="badge-nn">AUTO_INC</span></td>
+                            <td class="rule-badge">مفتاح ترقيمي تسلسلي للمحاضر الرسمية.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">titre</span></td>
+                            <td>موضوع أو عنوان الاجتماع</td>
+                            <td><span class="badge-type">VARCHAR(255)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">مثال: "الجمع العام الاستثنائي لمناقشة ميزانية تجهيزات 2026".</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">dateReunion</span></td>
+                            <td>تاريخ انعقاد جلسة العمل</td>
+                            <td><span class="badge-type">DATE</span></td>
+                            <td><span class="badge-java">LocalDate</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">التاريخ الدقيق لانعقاد الجمع العام أو اجتماع الإدارة.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">ordreDuJour</span></td>
+                            <td>جدول الأعمال والنقاط المدرجة</td>
+                            <td><span class="badge-type">TEXT</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">قائمة القضايا المعروضة للنقاش والمصادقة.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">cheminFichierPV</span></td>
+                            <td>المسار النسبي لملف المحضر الممسوح</td>
+                            <td><span class="badge-type">VARCHAR(255)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">مسار تخزين وثيقة الـ PDF الموقعة داخل خادم الملفات الآمن.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 10. Table CONVENTIONS -->
+        <div class="table-section" data-category="res" id="tbl-conventions">
+            <div class="table-header">
+                <div class="table-title">
+                    <span class="table-code">conventions</span>
+                    <h2>10. الاتفاقيات والشراكات البحثية (Conventions & Partenariats)</h2>
+                </div>
+                <span class="table-category-badge cat-res">شراكات وتمويل بحثي</span>
+            </div>
+            <p class="table-desc">
+                توثق الشراكات والاتفاقيات المبرمة بين مختبر LIAS والمؤسسات الوطنية والدولية، سواء كانت قطاعات صناعية وتكنولوجية أو جامعات شريكة، محددة مدة السريان ومصادر التمويل المصاحبة.
+            </p>
+            <div class="data-table-wrapper">
+                <table class="data-dict">
+                    <thead>
+                        <tr>
+                            <th>اسم الحقل (Champ)</th>
+                            <th>البيان والتوصيف (Libellé)</th>
+                            <th>نوع SQL</th>
+                            <th>نوع Java EE</th>
+                            <th>القيود (Contraintes)</th>
+                            <th>قواعد التدبير والملاحظات (Règles de Gestion CDC)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="field-code">id</span></td>
+                            <td>المعرف الفريد لاتفاقية الشراكة</td>
+                            <td><span class="badge-type">BIGINT</span></td>
+                            <td><span class="badge-java">Long</span></td>
+                            <td><span class="badge-pk">PK</span> <span class="badge-nn">AUTO_INC</span></td>
+                            <td class="rule-badge">مفتاح ترقيمي تسلسلي لكل اتفاقية موقعة.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">organismePartenaire</span></td>
+                            <td>الهيئة أو المؤسسة الشريكة</td>
+                            <td><span class="badge-type">VARCHAR(150)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">اسم الشركة أو المركز الشريك (مثال: CNRST, IBM, OCP, UCD).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">objet</span></td>
+                            <td>موضوع ومحور الشراكة العلمية</td>
+                            <td><span class="badge-type">TEXT</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">ميدان التعاون (تطوير نماذج ذكاء اصطناعي، تبادل باحثين، إلخ).</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">dateSignature</span></td>
+                            <td>تاريخ توقيع الاتفاقية</td>
+                            <td><span class="badge-type">DATE</span></td>
+                            <td><span class="badge-java">LocalDate</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">تاريخ توقيع مدير المختبر ورئيس المؤسسة الشريكة.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">dateEcheance</span></td>
+                            <td>تاريخ انتهاء سريان الشراكة</td>
+                            <td><span class="badge-type">DATE</span></td>
+                            <td><span class="badge-java">LocalDate</span></td>
+                            <td><span class="badge-nn">NULLABLE</span></td>
+                            <td class="rule-badge">أجل انتهاء الاتفاقية أو موعد تجديدها الدوري.</td>
+                        </tr>
+                        <tr>
+                            <td><span class="field-code">statut</span></td>
+                            <td>الوضعية القانونية للاتفاقية</td>
+                            <td><span class="badge-type">VARCHAR(50)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><span class="badge-nn">NOT NULL</span></td>
+                            <td class="rule-badge">قيم معيارية: <code>Active</code> (سارية), <code>En négociation</code>, <code>Échue</code> (منتهية).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Matrice de Correspondance des Types -->
+        <div class="matrix-section">
+            <h2 style="font-size: 20px; font-weight: 800; color: var(--navy-primary); margin-bottom: 16px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
+                11. مصفوفة تطابق الأنواع المعيارية (Matrice de Correspondance SQL ⟷ Java EE ⟷ HTML5)
+            </h2>
+            <p style="font-size: 13.5px; color: var(--text-secondary); margin-bottom: 18px;">
+                لضمان الاتساق البرمجي الصارم عبر كافة طبقات الـ <strong>MVC 2</strong>، يعتمد التطبيق جدول المطابقة المعياري التالي بين قواعد البيانات ونماذج الجافا وحقول استمارات الـ JSP:
+            </p>
+            <div class="data-table-wrapper">
+                <table class="data-dict">
+                    <thead>
+                        <tr style="background: var(--navy-primary); color: #FFF;">
+                            <th>المفهوم المنطقي</th>
+                            <th>نوع البيانات في MySQL</th>
+                            <th>نوع البيانات في Java EE / Beans</th>
+                            <th>دالة الجلب في JDBC ResultSet</th>
+                            <th>نوع الحقل في استمارة JSP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>المعرفات الترقيمية (IDs)</td>
+                            <td><span class="badge-type">BIGINT AUTO_INCREMENT</span></td>
+                            <td><span class="badge-java">Long / long</span></td>
+                            <td><code style="font-family: 'JetBrains Mono';">rs.getLong("id")</code></td>
+                            <td><code style="font-family: 'JetBrains Mono';">&lt;input type="hidden"&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td>السلاسل النصية القصيرة</td>
+                            <td><span class="badge-type">VARCHAR(50 ... 255)</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><code style="font-family: 'JetBrains Mono';">rs.getString("col")</code></td>
+                            <td><code style="font-family: 'JetBrains Mono';">&lt;input type="text"&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td>النصوص الطويلة والتوصيفات</td>
+                            <td><span class="badge-type">TEXT / LONGTEXT</span></td>
+                            <td><span class="badge-java">String</span></td>
+                            <td><code style="font-family: 'JetBrains Mono';">rs.getString("col")</code></td>
+                            <td><code style="font-family: 'JetBrains Mono';">&lt;textarea&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td>التواريخ والتقويم</td>
+                            <td><span class="badge-type">DATE</span></td>
+                            <td><span class="badge-java">java.time.LocalDate</span></td>
+                            <td><code style="font-family: 'JetBrains Mono';">rs.getDate("col").toLocalDate()</code></td>
+                            <td><code style="font-family: 'JetBrains Mono';">&lt;input type="date"&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td>القيم المنطقية والثنائية</td>
+                            <td><span class="badge-type">BOOLEAN / TINYINT(1)</span></td>
+                            <td><span class="badge-java">boolean / Boolean</span></td>
+                            <td><code style="font-family: 'JetBrains Mono';">rs.getBoolean("col")</code></td>
+                            <td><code style="font-family: 'JetBrains Mono';">&lt;input type="checkbox"&gt;</code></td>
+                        </tr>
+                        <tr>
+                            <td>الأعداد الصحيحة (سنوات، كميات)</td>
+                            <td><span class="badge-type">INT</span></td>
+                            <td><span class="badge-java">int / Integer</span></td>
+                            <td><code style="font-family: 'JetBrains Mono';">rs.getInt("annee")</code></td>
+                            <td><code style="font-family: 'JetBrains Mono';">&lt;input type="number"&gt;</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript for Live Search & Categorization -->
+    <script>
+        let currentCategory = 'all';
+
+        function setCategoryFilter(category, buttonElement) {
+            currentCategory = category;
+            
+            // Toggle active state on buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            buttonElement.classList.add('active');
+            
+            filterTables();
+        }
+
+        function filterTables() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const sections = document.querySelectorAll('.table-section');
+
+            sections.forEach(section => {
+                const category = section.getAttribute('data-category');
+                const categoryMatch = (currentCategory === 'all' || currentCategory === category);
+                
+                // Text search match within section
+                const sectionText = section.innerText.toLowerCase();
+                const textMatch = query === '' || sectionText.includes(query);
+
+                if (categoryMatch && textMatch) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

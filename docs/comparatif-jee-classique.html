@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقارنة شاملة: مشروع LIAS الحديث مقابل مشاريع JEE الكلاسيكية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Spectral:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F9F8F5;
+            --surface-color: #FFFFFF;
+            --surface-2: #F2EFE9;
+            --border-color: #E2DDD4;
+            --border-light: #ECE8E0;
+            --text-primary: #1F2421;
+            --text-secondary: #5A6266;
+            --text-muted: #838C91;
+            --navy-primary: #152B44;
+            --navy-dark: #0D1C2D;
+            --navy-light: #234266;
+            --gold-accent: #B89255;
+            --gold-bg: #FDF9F2;
+            --classic-color: #B45309;
+            --classic-bg: #FEF3C7;
+            --modern-color: #047857;
+            --modern-bg: #D1FAE5;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(21, 43, 68, 0.06);
+            --shadow-lg: 0 12px 30px rgba(21, 43, 68, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.75;
+        }
+
+        /* Top Bar */
+        header {
+            background: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo-box {
+            background: var(--navy-primary);
+            color: #FAF8F5;
+            font-family: 'Spectral', serif;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 4px;
+            letter-spacing: 0.08em;
+        }
+
+        .header-meta {
+            border-right: 1px solid var(--border-color);
+            padding-right: 16px;
+        }
+
+        .header-meta .title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--navy-primary);
+        }
+
+        .header-meta .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            direction: ltr;
+            text-align: right;
+        }
+
+        .btn-print {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface-2);
+            color: var(--navy-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-print:hover {
+            background: var(--border-color);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 24px;
+        }
+
+        /* Hero */
+        .hero {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--gold-accent);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--gold-bg);
+            color: var(--gold-accent);
+            border: 1px solid #E8D7BE;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 3px;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--navy-primary);
+            margin-bottom: 12px;
+            line-height: 1.35;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            max-width: 980px;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .kpi-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .kpi-num {
+            font-family: 'Spectral', serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--navy-primary);
+            margin-bottom: 6px;
+        }
+
+        .kpi-label {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .kpi-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Section Titles */
+        .section-header {
+            margin: 48px 0 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-header h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--navy-primary);
+        }
+
+        .section-tag {
+            background: var(--navy-primary);
+            color: #FFF;
+            font-size: 12px;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        /* Comparison Cards */
+        .diff-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 28px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .diff-header {
+            background: #FAF9F6;
+            border-bottom: 1px solid var(--border-color);
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .diff-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .diff-index {
+            background: var(--navy-primary);
+            color: #FFF;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .diff-title h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy-primary);
+        }
+
+        .diff-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            background: var(--gold-bg);
+            color: var(--gold-accent);
+            border: 1px solid #E8D7BE;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .diff-body {
+            padding: 24px;
+        }
+
+        .diff-intro {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .comparison-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .col-classic, .col-modern {
+            border-radius: 6px;
+            padding: 20px;
+            border: 1px solid;
+        }
+
+        .col-classic {
+            background: #FFFDF8;
+            border-color: #FCD34D;
+        }
+
+        .col-modern {
+            background: #F8FDFB;
+            border-color: #6EE7B7;
+        }
+
+        .col-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid;
+        }
+
+        .col-classic .col-header {
+            color: var(--classic-color);
+            border-color: #FDE68A;
+        }
+
+        .col-modern .col-header {
+            color: var(--modern-color);
+            border-color: #A7F3D0;
+        }
+
+        .col-list {
+            list-style: none;
+            font-size: 13.5px;
+            color: var(--text-primary);
+        }
+
+        .col-list li {
+            position: relative;
+            padding-right: 20px;
+            margin-bottom: 8px;
+        }
+
+        .col-classic .col-list li::before {
+            content: "⚠️";
+            position: absolute;
+            right: 0;
+            font-size: 12px;
+        }
+
+        .col-modern .col-list li::before {
+            content: "✨";
+            position: absolute;
+            right: 0;
+            font-size: 12px;
+        }
+
+        .diff-impact {
+            margin-top: 18px;
+            background: var(--surface-2);
+            border-radius: 6px;
+            padding: 12px 18px;
+            font-size: 13.5px;
+            color: var(--navy-primary);
+            border-right: 4px solid var(--navy-primary);
+        }
+
+        /* Summary Table */
+        .table-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+            margin-bottom: 50px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: right;
+        }
+
+        th {
+            background: #F4F2EC;
+            color: var(--navy-primary);
+            font-weight: 700;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-primary);
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) td {
+            background: #FAF9F6;
+        }
+
+        /* Jury Advice Box */
+        .jury-box {
+            background: linear-gradient(135deg, #152B44, #1E3A5F);
+            color: #FAF8F5;
+            border-radius: 8px;
+            padding: 36px;
+            margin-bottom: 50px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .jury-box h3 {
+            font-family: 'Spectral', serif;
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #F6E6CC;
+        }
+
+        .jury-box p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #E2E8F0;
+            margin-bottom: 16px;
+        }
+
+        .jury-box ul {
+            padding-right: 24px;
+            font-size: 14.5px;
+            color: #F8FAFC;
+        }
+
+        .jury-box li {
+            margin-bottom: 8px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border-color);
+            background: var(--surface-color);
+            padding: 32px 24px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        @media print {
+            header .btn-print { display: none; }
+            body { background: #FFF; color: #000; }
+            .hero, .diff-card, .table-card, .jury-box {
+                box-shadow: none !important;
+                border: 1px solid #CCC !important;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-inner">
+            <div class="brand">
+                <div class="logo-box">LIAS</div>
+                <div class="header-meta">
+                    <div class="title">دليل المقارنة التقنية والمعمارية</div>
+                    <div class="subtitle">Architecture JEE Moderne vs Classique · Master DS&BD</div>
+                </div>
+            </div>
+            <div>
+                <button class="btn-print" onclick="window.print()">
+                    <span>طباعة / حفظ PDF 🖨️</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Hero -->
+        <section class="hero">
+            <span class="hero-badge">ETUDE ARCHITECTURALE COMPARATIVE</span>
+            <h1>ما هي الفروقات بين هذا المشروع والمشاريع الكلاسيكية JEE؟</h1>
+            <p>
+                يجمع مشروع إدارة مختبر <strong>LIAS</strong> بين قوة وموثوقية معايير <strong>Jakarta EE 10 / Tomcat 10.1</strong> في الجانب الخلفي (Backend)، وأحدث ممارسات الويب الحديثة بـ <strong>React 18, TypeScript, Tailwind, و Docker</strong> في الجانب الأمامي، مما يجعله مختلفاً جوهرياً عن النمط القديم المتبع في الجامعات منذ 15 سنة.
+            </p>
+        </section>
+
+        <!-- KPI Grid -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-num">7</div>
+                <div class="kpi-label">فروقات معمارية جذرية</div>
+                <div class="kpi-desc">شملت الواجهة، المعمارية، قواعد البيانات، الصلاحيات، والحاويات.</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-num">0%</div>
+                <div class="kpi-label">إعادة تحميل للصفحات (No Reload)</div>
+                <div class="kpi-desc">تصفح فوري وسريع بفضل تقنية Single Page Application (SPA).</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-num">100%</div>
+                <div class="kpi-label">توافق تام مع Eclipse و Docker</div>
+                <div class="kpi-desc">يمكن تشغيله داخل Eclipse كـ Dynamic Web Project أو كحاويات Docker.</div>
+            </div>
+        </div>
+
+        <!-- Section 1: Detailed Differences -->
+        <div class="section-header">
+            <span class="section-tag">المحور الأول</span>
+            <h2>المقارنة التفصيلية للنقاط الـ 7 بين النمطين</h2>
+        </div>
+
+        <!-- Diff 1 -->
+        <div class="diff-card">
+            <div class="diff-header">
+                <div class="diff-title">
+                    <div class="diff-index">1</div>
+                    <h3>المعمارية العامة: النمط المترابط (Monolithique) مقابل النمط المفصول (Découplée SPA + REST)</h3>
+                </div>
+                <span class="diff-badge">Architecture Globale</span>
+            </div>
+            <div class="diff-body">
+                <p class="diff-intro">
+                    في المشاريع الجامعية القديمة، يتولى خادم Tomcat كل شيء؛ بينما في هذا المشروع، تم فصل مسؤولية الواجهة (Client-side) عن المنطق الخلفي (Server-side API).
+                </p>
+                <div class="comparison-columns">
+                    <div class="col-classic">
+                        <div class="col-header">🏛️ في مشاريع JEE الكلاسيكية :</div>
+                        <ul class="col-list">
+                            <li>مشروع واحد موحد (Monolithe) داخل Eclipse.</li>
+                            <li>كل نقرة على رابط أو إرسال نموذج (Form) يُعيد تحميل الصفحة كاملة (Rechargement complet de page).</li>
+                            <li>خادم Tomcat يقوم برسم وتوليد الـ HTML على السيرفر (Server-Side Rendering - SSR).</li>
+                        </ul>
+                    </div>
+                    <div class="col-modern">
+                        <div class="col-header">🚀 في مشروع LIAS الحالي :</div>
+                        <ul class="col-list">
+                            <li>معمارية مفصولة حديثة (Monorepo: <code>frontend/</code> + <code>backend/</code>).</li>
+                            <li>تطبيق صفحة واحدة (Single Page Application - SPA) لا يُعيد تحميل الصفحة نهائياً.</li>
+                            <li>الـ Backend (Java Tomcat) يتكفل حصراً بـ <strong>API REST</strong> وتوزيع بيانات JSON دون توليد صفحات HTML.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="diff-impact">
+                    <strong>القيمة المضافة أمام اللجنة :</strong> سلاسة مذهلة في الاستخدام، استجابة فورية، ومواكبة تامة للمعايير المعتمدة في كبرى الشركات البرمجية.
+                </div>
+            </div>
+        </div>
+
+        <!-- Diff 2 -->
+        <div class="diff-card">
+            <div class="diff-header">
+                <div class="diff-title">
+                    <div class="diff-index">2</div>
+                    <h3>تقنيات الواجهة الأمامية: صفحات JSP و JSTL مقابل React 18 و TypeScript</h3>
+                </div>
+                <span class="diff-badge">Frontend Tech Stack</span>
+            </div>
+            <div class="diff-body">
+                <p class="diff-intro">
+                    الاستغناء عن السكربتات المضمنة في HTML وتعويضها بمكتبات المكونات الحديثة والمتحكم في حالتها (State Management).
+                </p>
+                <div class="comparison-columns">
+                    <div class="col-classic">
+                        <div class="col-header">🏛️ في مشاريع JEE الكلاسيكية :</div>
+                        <ul class="col-list">
+                            <li>صفحات <code>.jsp</code> مليئة بكود الجافا المباشر (Scriptlets: <code>&lt;% ... %&gt;</code>).</li>
+                            <li>استخدام مكتبات JSTL مثل <code>&lt;c:forEach&gt;</code> و <code>&lt;c:if&gt;</code>.</li>
+                            <li>كود JavaScript يدوي أو jQuery بسيط يصعب صيانته ويكثر فيه تكرار الأخطاء.</li>
+                        </ul>
+                    </div>
+                    <div class="col-modern">
+                        <div class="col-header">🚀 في مشروع LIAS الحالي :</div>
+                        <ul class="col-list">
+                            <li><strong>React 18</strong> المبني على المكونات المعيارية وإعادة الاستخدام (Components Reusability).</li>
+                            <li><strong>TypeScript 5</strong> الذي يوفر الأمان الصارم للأنواع (Static Type Safety) ويمنع أخطاء التشغيل.</li>
+                            <li><strong>Vite 5</strong> كمحرك بناء سريع يدعم التحديث الحي الفوري (Hot Module Replacement - HMR) في أجزاء من الثانية.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="diff-impact">
+                    <strong>القيمة المضافة :</strong> الحماية من أخطاء الـ Runtime بفضل TypeScript، مع إمكانية استخدام مكونات جاهزة وأيقونات متقدمة مثل Lucide Icons.
+                </div>
+            </div>
+        </div>
+
+        <!-- Diff 3 -->
+        <div class="diff-card">
+            <div class="diff-header">
+                <div class="diff-title">
+                    <div class="diff-index">3</div>
+                    <h3>التصميم وتجربة المستخدم: ملف CSS عشوائي مقابل نظام تصميم متكامل (Design System & Tailwind)</h3>
+                </div>
+                <span class="diff-badge">UI/UX & Styling</span>
+            </div>
+            <div class="diff-body">
+                <p class="diff-intro">
+                    الانتقال من واجهات رمادية غير منسقة إلى نظام تصميم أكاديمي فاخر مستوحى من كبرى الدوريات العلمية.
+                </p>
+                <div class="comparison-columns">
+                    <div class="col-classic">
+                        <div class="col-header">🏛️ في مشاريع JEE الكلاسيكية :</div>
+                        <ul class="col-list">
+                            <li>ملف <code>style.css</code> كلاسيكي أو Bootstrap 3 قديم.</li>
+                            <li>ألوان أساسية غير متناسقة (أزرق وأحمر وأخضر باهت).</li>
+                            <li>غياب التوافق المتجاوب الحقيقي مع مختلف الشاشات والأجهزة اللوحية.</li>
+                        </ul>
+                    </div>
+                    <div class="col-modern">
+                        <div class="col-header">🚀 في مشروع LIAS الحالي :</div>
+                        <ul class="col-list">
+                            <li><strong>Tailwind CSS 3</strong> مع متغيرات تصميم موحدة (Tokens) في <code>theme.css</code>.</li>
+                            <li>لوحة ألوان أكاديمية دقيقة (ورق كريمي <code>#FAF8F5</code>، كحلي بحري عميق <code>#152B44</code>، وذهب مؤسساتي <code>#C5A880</code>).</li>
+                            <li>طباعة راقية معتمدة على خطوط Google Fonts الاحترافية (خط السيريف <strong>Spectral</strong>، و <strong>DM Sans</strong>، ومونو <strong>JetBrains Mono</strong>).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diff 4 -->
+        <div class="diff-card">
+            <div class="diff-header">
+                <div class="diff-title">
+                    <div class="diff-index">4</div>
+                    <h3>إدارة الأدوار والصلاحيات (RBAC) ومحاكي العرض الحي</h3>
+                </div>
+                <span class="diff-badge">RBAC & Security</span>
+            </div>
+            <div class="diff-body">
+                <p class="diff-intro">
+                    في النمط القديم تحتاج لإنشاء حساب وتسجيل الدخول والخروج كل مرة؛ بينما في هذا المشروع تتوفر ميزة استعراض الأدوار الحية (Role Switcher).
+                </p>
+                <div class="comparison-columns">
+                    <div class="col-classic">
+                        <div class="col-header">🏛️ في مشاريع JEE الكلاسيكية :</div>
+                        <ul class="col-list">
+                            <li>الاعتماد فقط على <code>HttpSession.getAttribute("role")</code>.</li>
+                            <li>إخفاء الأزرار فقط عبر <code>&lt;c:if test="..."&gt;</code>.</li>
+                            <li>لتجربة دور المدير، يجب تسجيل الخروج ثم الدخول كمدير؛ ولتجربة الدكتورانت، يجب الخروج مرة أخرى.</li>
+                        </ul>
+                    </div>
+                    <div class="col-modern">
+                        <div class="col-header">🚀 في مشروع LIAS الحالي :</div>
+                        <ul class="col-list">
+                            <li>محرك صلاحيات ديناميكي في الواجهة (<code>SessionContext</code>) مبني على مصفوفة <code>MODULE_ACCESS</code>.</li>
+                            <li>مبدل أدوار فوري (<strong>RoleToggle</strong>) أعلى الشاشة يتيح للجنة التحكيم تجربة صلاحيات 5 أدوار بنقرة واحدة.</li>
+                            <li>ظهور علامة القفل (🔒) ديناميكياً على القوائم المحظورة لمنح إحساس بصري بأمان النظام.</li>
+                            <li>تأمين السيرفر في الخلفية عبر فلتر الأمان <code>AuthFilter</code> لقطع أي طلب غير مرخص.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diff 5 -->
+        <div class="diff-card">
+            <div class="diff-header">
+                <div class="diff-title">
+                    <div class="diff-index">5</div>
+                    <h3>البيئة والتشغيل: التثبيت اليدوي المضني مقابل الحاويات الجاهزة (Docker Compose)</h3>
+                </div>
+                <span class="diff-badge">DevOps & Containerization</span>
+            </div>
+            <div class="diff-body">
+                <p class="diff-intro">
+                    حل مشكلة "المشروع كان شغال عندي في لابتوبي لكنه لا يعمل في لابتوب الأستاذ" نهائياً عبر Docker.
+                </p>
+                <div class="comparison-columns">
+                    <div class="col-classic">
+                        <div class="col-header">🏛️ في مشاريع JEE الكلاسيكية :</div>
+                        <ul class="col-list">
+                            <li>تثبيت يدوي لـ JDK 21 و Apache Tomcat محلياً في الويندوز.</li>
+                            <li>تثبيت XAMPP أو MySQL Server وتكوين منفذ 3306 يدوياً.</li>
+                            <li>حتمية تصدير ملف WAR وضبط إعدادات السيرفر في Eclipse، وهو ما يفشل غالباً أثناء العرض.</li>
+                        </ul>
+                    </div>
+                    <div class="col-modern">
+                        <div class="col-header">🚀 في مشروع LIAS الحالي :</div>
+                        <ul class="col-list">
+                            <li>ملف <strong><code>docker-compose.yml</code></strong> موحد يجمع الخدمات الثلاث: (Frontend + Backend + MySQL).</li>
+                            <li>أمر واحد يطلق كل شيء بضغطة زر: <code>docker compose up --build</code>.</li>
+                            <li>يعمل في أي حاسوب (ويندوز، ماك، لينكس) دون الحاجة لتثبيت أي برامج وسيطة.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diff 6 -->
+        <div class="diff-card">
+            <div class="diff-header">
+                <div class="diff-title">
+                    <div class="diff-index">6</div>
+                    <h3>معيار الجافا: Java EE 8 (قديم) مقابل Jakarta EE 10 و Java 21 (حديث)</h3>
+                </div>
+                <span class="diff-badge">Java Specifications</span>
+            </div>
+            <div class="diff-body">
+                <p class="diff-intro">
+                    اعتماد الإصدارات الحالية المستقرة طويلة الأمد والتحديث الجذري لمكتبات السيرفلت.
+                </p>
+                <div class="comparison-columns">
+                    <div class="col-classic">
+                        <div class="col-header">🏛️ في مشاريع JEE الكلاسيكية :</div>
+                        <ul class="col-list">
+                            <li>حزم قديمة تبدأ بـ <code>javax.servlet.*</code> (Java EE).</li>
+                            <li>نسخ جافا قديمة (Java 8 أو Java 11) مع Tomcat 8 أو 9.</li>
+                            <li>ملفات <code>web.xml</code> بالإصدار القديم 3.1 أو 4.0.</li>
+                        </ul>
+                    </div>
+                    <div class="col-modern">
+                        <div class="col-header">🚀 في مشروع LIAS الحالي :</div>
+                        <ul class="col-list">
+                            <li>حزم حديثة تبدأ بالمعيار الجديد <strong><code>jakarta.servlet.*</code></strong>.</li>
+                            <li>الاعتماد على <strong>Java 21 LTS</strong> مع سيرفر <strong>Tomcat 10.1</strong>.</li>
+                            <li>تكوين <code>web.xml</code> وفق أحدث معيار رسمي <strong>Servlet 6.0 / Jakarta EE 10</strong>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diff 7 -->
+        <div class="diff-card">
+            <div class="diff-header">
+                <div class="diff-title">
+                    <div class="diff-index">7</div>
+                    <h3>منهجية التطوير: الارتباط الصلب بالقاعدة مقابل منهجية Mock-First / Contract-Driven</h3>
+                </div>
+                <span class="diff-badge">Development Methodology</span>
+            </div>
+            <div class="diff-body">
+                <p class="diff-intro">
+                    في المشاريع التقليدية، إذا توقفت قاعدة بيانات MySQL ينهار المشروع بالكامل؛ أما في هذا المشروع فالنظام مصمم بمرونة عالية.
+                </p>
+                <div class="comparison-columns">
+                    <div class="col-classic">
+                        <div class="col-header">🏛️ في مشاريع JEE الكلاسيكية :</div>
+                        <ul class="col-list">
+                            <li>ارتباط كلي (Tight Coupling) بوجود قاعدة بيانات ممتلئة مسبقاً.</li>
+                            <li>إذا حدث خطأ في استعلام SQL يتعطل مسار التطبيق وتظهر شاشة بيضاء أو خطأ 500.</li>
+                        </ul>
+                    </div>
+                    <div class="col-modern">
+                        <div class="col-header">🚀 في مشروع LIAS الحالي :</div>
+                        <ul class="col-list">
+                            <li>منهجية <strong>Contract-Driven</strong>: تم تحديد الأنواع (Types) والـ Endpoints مسبقاً، وتزويد النظام ببيانات محاكاة (Mock Data) غنية تعرض جميع الشاشات الـ 16 كاملة.</li>
+                            <li>الـ Backend يحتوي على آلية Fallback ذكية في <code>UserDaoImpl</code> تضمن نجاح تسجيل الدخول حتى لو كانت MySQL متوقفة.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Summary Matrix Table -->
+        <div class="section-header">
+            <span class="section-tag">المحور الثاني</span>
+            <h2>جدول المقارنة الشاملة (Tableau Récapitulatif)</h2>
+        </div>
+
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">وجه المقارنة</th>
+                        <th style="width: 40%; background: #FEF3C7; color: #92400E;">مشروع JEE الكلاسيكي التقليدي</th>
+                        <th style="width: 40%; background: #D1FAE5; color: #065F46;">مشروع مختبر LIAS المطور</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>نوع المعمارية</strong></td>
+                        <td>Monolithique (Tomcat ينشئ الـ HTML)</td>
+                        <td><strong>Découplée (SPA React + API REST Tomcat)</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>لغة وتقنية الواجهة</strong></td>
+                        <td>JSP + JSTL + HTML/CSS يدوي</td>
+                        <td><strong>React 18 + TypeScript 5 + Vite</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>سرعة التصفح</strong></td>
+                        <td>إعادة تحميل كاملة مع كل صفحة (Rechargement)</td>
+                        <td><strong>تصفح فوري وسلس (Single Page App)</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>نظام التصميم (Styling)</strong></td>
+                        <td>Bootstrap 3/4 أو ملف CSS واحد بسيط</td>
+                        <td><strong>Tailwind CSS 3 + Design Tokens + خطوط أكاديمية</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>محاكاة الأدوار (RBAC)</strong></td>
+                        <td>يتطلب تسجيل خروج ودخول لكل دور على حدة</td>
+                        <td><strong>مبدل أدوار فوري (RoleToggle) بضغطة زر</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>إصدار الجافا والسيرفلت</strong></td>
+                        <td>Java 8/11 مع <code>javax.servlet.*</code></td>
+                        <td><strong>Java 21 LTS مع <code>jakarta.servlet.*</code></strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>بيئة التشغيل والنشر</strong></td>
+                        <td>تثبيت يدوي محلي (Apache Tomcat + XAMPP)</td>
+                        <td><strong>حاويات Docker و Docker Compose كاملة</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>التوافق مع Eclipse</strong></td>
+                        <td>يعمل داخل Eclipse فقط</td>
+                        <td><strong>يعمل في Eclipse كـ Dynamic Web Project ويعمل في Docker</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 3: Advice for Defense / Jury -->
+        <div class="jury-box">
+            <h3>🎓 نصائح ذهبية لك أمام لجنة التحكيم (Soutenance) :</h3>
+            <p>
+                عند تقديم هذا المشروع أمام أستاذك أو لجنة المناقشة، ركّز على هذه النقاط لإبهارهم والتأكيد على تميز مشروعك:
+            </p>
+            <ul>
+                <li><strong>بيّن أنك احترمت متطلبات الـ JEE :</strong> وضّح للجنة أنك بنيت هيكلية Eclipse المعيارية (JavaBeans, DAO, Métier, Servlets, Filtre d'authentification) ولم تهمل الأساس الأكاديمي المطلوب في مادة JEE.</li>
+                <li><strong>اشرح سبب التطوير :</strong> أخبرهم أن مشاريع الشركات الحقيقية اليوم لا تستخدم JSP كواجهة، بل تفصل الـ Frontend بـ React لرفع الأداء وتترك الـ Backend كخادم API REST.</li>
+                <li><strong>استعرض ميزة الـ Role Switcher :</strong> في العرض التقديمي، غيّر الأدوار بين (Directeur, Doctorant, Permanent, Visiteur) واشرح كيف تتغير الصلاحيات في رمشة عين؛ فهذه النقطة تعطي انطباعاً مبهراً عن نضج النظام.</li>
+                <li><strong>أشر إلى الـ Docker :</strong> اذكر أن المشروع جاهز للنشر السحابي (Cloud-Ready) عبر Docker Compose بضغطة زر واحدة.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p><strong>Laboratoire d'Informatique et Applications Scientifiques (LIAS)</strong></p>
+        <p>Faculté des Sciences Ben M'Sik — Université Hassan II de Casablanca · Master Data Science & Big Data (2025–2026)</p>
+    </footer>
+
+</body>
+</html>

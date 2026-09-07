@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مخططات التسلسل للعلبة السوداء (Diagrammes de Séquence Système - Boîte Noire) — مختبر LIAS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Spectral:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F8F9FA;
+            --surface-color: #FFFFFF;
+            --surface-2: #F1F5F9;
+            --border-color: #E2E8F0;
+            --border-dark: #CBD5E1;
+            --text-primary: #0F172A;
+            --text-secondary: #334155;
+            --text-muted: #64748B;
+            --navy-primary: #152B44;
+            --navy-dark: #0D1C2D;
+            --navy-light: #1E3A5F;
+            --gold-accent: #B89255;
+            --gold-bg: #FEF9EE;
+            --success: #059669;
+            --success-bg: #ECFDF5;
+            --warning: #D97706;
+            --warning-bg: #FFFBEB;
+            --danger: #DC2626;
+            --danger-bg: #FEF2F2;
+            --code-bg: #0F172A;
+            --code-text: #E2E8F0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 14px rgba(21, 43, 68, 0.08);
+            --shadow-lg: 0 12px 30px rgba(21, 43, 68, 0.12);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand { display: flex; align-items: center; gap: 14px; }
+
+        .logo-box {
+            background: var(--navy-primary);
+            color: #FAF8F5;
+            font-family: 'Spectral', serif;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 4px;
+            letter-spacing: 0.08em;
+        }
+
+        .header-meta .title { font-weight: 800; font-size: 15px; color: var(--navy-primary); }
+        .header-meta .subtitle { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--text-muted); direction: ltr; text-align: right; }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--navy-light);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            background: var(--surface-2);
+            transition: all 0.2s;
+        }
+        .btn-link:hover { background: #E2E8F0; color: var(--navy-dark); }
+
+        .btn-print {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--navy-primary);
+            color: #FFF;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .btn-print:hover { background: var(--navy-dark); }
+
+        .container {
+            max-width: 1300px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--navy-primary), var(--navy-dark));
+            color: #FFF;
+            border-radius: 8px;
+            padding: 36px;
+            margin-bottom: 36px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(184, 146, 85, 0.25);
+            color: #F8E7C9;
+            border: 1px solid #B89255;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11.5px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 3px;
+            margin-bottom: 12px;
+        }
+
+        .hero h1 { font-size: 28px; font-weight: 900; line-height: 1.4; margin-bottom: 12px; color: #FFF; }
+        .hero p { font-size: 15px; color: #E2E8F0; line-height: 1.75; }
+
+        .section-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 36px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-title {
+            font-size: 21px;
+            font-weight: 800;
+            color: var(--navy-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .callout {
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 18px 0;
+            border-right: 4px solid;
+            font-size: 14px;
+        }
+        .callout-info { background: #EFF6FF; border-color: #3B82F6; color: #1E40AF; }
+        .callout-tip { background: var(--gold-bg); border-color: var(--gold-accent); color: #854D0E; }
+        .callout-warning { background: var(--warning-bg); border-color: var(--warning); color: #92400E; }
+
+        .diagram-container {
+            background: #FAFAF9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+            overflow-x: auto;
+        }
+
+        .diagram-container img {
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+        }
+
+        .diagram-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface-2);
+            color: var(--navy-primary);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+        .btn-action:hover {
+            background: var(--navy-primary);
+            color: #FFF;
+        }
+
+        details {
+            margin-top: 14px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        summary {
+            padding: 10px 16px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--navy-primary);
+            user-select: none;
+            outline: none;
+        }
+        summary:hover { background: #E2E8F0; }
+
+        .code-block {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            direction: ltr;
+            text-align: left;
+            overflow-x: auto;
+            line-height: 1.6;
+            margin: 0;
+            border-top: 1px solid #334155;
+        }
+
+        .scenario-meta {
+            background: var(--surface-2);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: 13.5px;
+        }
+
+        .scenario-meta strong { color: var(--navy-primary); }
+
+        @media print {
+            .btn-print, .btn-action, .btn-link, header, details { display: none !important; }
+            body { background: #FFF; color: #000; }
+            .section-card { box-shadow: none; border: 1px solid #CCC; break-inside: avoid; margin-bottom: 20px; }
+            .hero { background: #F1F5F9 !important; color: #000 !important; }
+            .hero h1 { color: #000 !important; }
+            .hero p { color: #333 !important; }
+            .diagram-container img { max-width: 95% !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-inner">
+            <div class="brand">
+                <div class="logo-box">LIAS</div>
+                <div class="header-meta">
+                    <div class="title">مخططات التسلسل للعلبة السوداء (Diagrammes de Séquence Système - Boîte Noire)</div>
+                    <div class="subtitle">Laboratoire LIAS · Master Data Science & Big Data · FSBM</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a class="btn-link" href="diagrammes-cas-utilisation.html">🎯 حالات الاستخدام</a>
+                <a class="btn-link active" href="diagrammes-sequence-boite-noire.html">⬛ العلبة السوداء</a>
+                <a class="btn-link" href="diagrammes-sequence-boite-blanche.html">⬜ العلبة البيضاء (MVC 2)</a>
+                <a class="btn-link" href="diagramme-de-classes.html">🔷 مخطط الأصناف</a>
+                <a class="btn-link" href="dictionnaire-de-donnees.html">📖 قاموس البيانات</a>
+                <button class="btn-print" onclick="window.print()">
+                    <span>طباعة / حفظ PDF 🖨️</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Hero Section -->
+        <div class="hero">
+            <span class="hero-badge">CONCEPTION UML · DIAGRAMMES DE SÉQUENCE SYSTÈME (DSS)</span>
+            <h1>مخططات سيناريوهات العلبة السوداء (Scénarios Boîte Noire)</h1>
+            <p>
+                في هندسة البرمجيات (Génie Logiciel)، يمثل <strong>مخطط التسلسل للعلبة السوداء (Diagramme de Séquence Système - Boîte Noire)</strong> 
+                تتابع الرسائل والأحداث بين <strong>الفاعلين الخارجيين (Acteurs)</strong> و<strong>النظام ككتلة واحدة غير مجزأة (Système: Boîte Noire)</strong>.
+                توضح هذه المخططات كيف يعالج النظام مختلف السيناريوهات الاسمية (Nominal) والبديلة (Alternatif) واستثناءات الخطأ (Exceptions) المستخرجة حرفياً من <strong>دفتر التحملات الرسمي (GestionLaboratoireLIAS.pdf)</strong>.
+            </p>
+        </div>
+
+        <div class="callout callout-info">
+            <strong>🎓 ما معنى "مخطط العلبة السوداء" (Boîte Noire) للأستاذ؟</strong><br>
+            يعني أننا <strong>لا ننظر إلى الكود الداخلي</strong> (مثل كلاسات الـ Controller أو DAO أو قاعدة البيانات)، بل نعامل التطبيق ككتلة موحدة <code>:Système LIAS</code> تستقبل طلبات الفاعلين (Events / Requêtes) وترد عليهم باستجابات وشاشات (Responses / Écrans). هذا يسبق مرحلة التصميم الداخلي (Boîte Blanche).
+        </div>
+
+        <!-- 0. السيناريو الكلي الشامل -->
+        <div class="section-card">
+            <h2 class="section-title">0. المخطط الشامل لدورة حياة الباحث (Macro-Scénario Global)</h2>
+            <p>
+                يعرض هذا المخطط تسلسل أهم المراحل الكبرى لمسار الباحث داخل المختبر: من تقديم طلب الانضمام إلى إيداع الأبحاث والاستفادة من العتاد وحتى إنتاج التقرير السنوي:
+            </p>
+
+            <div class="scenario-meta">
+                <p><strong>🎯 الهدف المحوري :</strong> تتبع مسار الباحث وحفظ الذاكرة المؤسسية للمختبر.</p>
+                <p><strong>👥 الفاعلون المشاركون :</strong> المترشح/الباحث (Chercheur) ومدير المختبر (Directeur).</p>
+            </div>
+
+            <div class="diagram-container">
+                <img src="diagrams/dss_0_macro_cycle_vie.svg" alt="DSS Macro Scénario" />
+                <div class="diagram-actions">
+                    <a class="btn-action" href="diagrams/dss_0_macro_cycle_vie.svg" target="_blank">🔍 فتح الصورة بدقة كاملة</a>
+                </div>
+            </div>
+
+            <details>
+                <summary>💻 كود PlantUML الأصلي لهذا المخطط</summary>
+                <pre class="code-block">@startuml
+autonumber
+skinparam style strictuml
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+skinparam BoxPadding 10
+skinparam ParticipantPadding 15
+
+actor "Candidat / Chercheur" as Chercheur #EFF6FF
+actor "Directeur" as Dir #FEF2F2
+box "Système LIAS (Boîte Noire)" #FAFAFA
+    participant "Système LIAS" as System #152B44
+end box
+
+== 1. Candidature & Affiliation ==
+Chercheur -> System : soumettreCandidature(nom, email, CV, motivation)
+System --> Dir : notifierNouvelleCandidature()
+Dir -> System : validerCandidature(idCandidat, equipeAffectee)
+System -> System : creerCompteEtAffiliation()
+System --> Chercheur : envoyerIdentifiantsAcces()
+
+== 2. Activités Scientifiques & Matériel ==
+Chercheur -> System : deposerPublication(titre, revue, DOI)
+System --> Chercheur : confirmerEnregistrement()
+Chercheur -> System : demanderMateriel(type, justification)
+Dir -> System : allouerMateriel(idDemande)
+System --> Chercheur : notifierMiseADisposition()
+
+== 3. Bilan Annuel Institutionnel ==
+Dir -> System : genererRapportAnnuel(anneeUniversitaire)
+System -> System : agregerPublicationsEtActivites()
+System --> Dir : afficherRapportCompletEtPDF()
+@enduml</pre>
+            </details>
+        </div>
+
+        <!-- 1. طلب الانخراط والقبول -->
+        <div class="section-card">
+            <h2 class="section-title">1. سيناريو طلب الانضمام ومعالجته من المدير (CDC §6 ⭐)</h2>
+            <p>
+                يمثل السيناريو الكامل للترشح عبر البوابة، مع تفريع مسار القبول (السيناريو الاسمي) ومسار الرفض (السيناريو البديل):
+            </p>
+
+            <div class="scenario-meta">
+                <p><strong>المحفز (Déclencheur) :</strong> رغبة باحث أو طالب في الانضمام إلى مختبر LIAS عبر البوابة العامة.</p>
+                <p><strong>الشروط المسبقة (Préconditions) :</strong> توفر سيرة ذاتية (CV) ورسالة تحفيزية وحساب بريدي صالح.</p>
+                <p><strong>الشروط اللاحقة (Postconditions) :</strong> في حال القبول: إنشاء حساب مستخدم، تأريخ أول فترة انتساب رسمي، وإشعار المترشح بمعلومات الدخول.</p>
+            </div>
+
+            <div class="diagram-container">
+                <img src="diagrams/dss_1_adhesion_candidature.svg" alt="DSS Adhésion et Candidature" />
+                <div class="diagram-actions">
+                    <a class="btn-action" href="diagrams/dss_1_adhesion_candidature.svg" target="_blank">🔍 فتح الصورة بدقة كاملة</a>
+                </div>
+            </div>
+
+            <details>
+                <summary>💻 كود PlantUML الأصلي لهذا المخطط</summary>
+                <pre class="code-block">@startuml
+autonumber
+skinparam style strictuml
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+
+actor "Candidat (Visiteur)" as Candidat #EFF6FF
+actor "Directeur (Mandat actif)" as Dir #FEF2F2
+box "Système LIAS (Boîte Noire)" #FAFAFA
+    participant "Système LIAS" as System #152B44
+end box
+
+Candidat -> System : accederFormulaireAdhesion()
+System --> Candidat : afficherFormulaire()
+
+Candidat -> System : soumettreDossier(identite, email, etablissement, CV, motivation)
+System -> System : enregistrerDemande("EN_ATTENTE")
+System --> Candidat : accuserReception("Dossier soumis avec succès")
+System --> Dir : notifierNouvelleDemande(idDemande, nomCandidat)
+
+== Phase de Décision par le Directeur ==
+Dir -> System : consulterDemandesEnAttente()
+System --> Dir : afficherListeEtDossiersComplets()
+
+alt Scénario Nominal : Acceptation de la candidature
+    Dir -> System : accepterDemande(idDemande, equipeAffectee)
+    System -> System : creerCompteUtilisateur()
+    System -> System : initialiserPeriodeAffiliation(dateDebut=Aujourd'hui)
+    System -> System : mettreAJourStatut("ACCEPTEE")
+    System --> Dir : confirmerAcceptation("Compte chercheur créé")
+    System --> Candidat : envoyerEmailBienvenue(identifiants, lienConnexion)
+else Scénario Alternatif : Rejet de la candidature
+    Dir -> System : refuserDemande(idDemande, motifRejet)
+    System -> System : mettreAJourStatut("REFUSEE")
+    System -> System : archiverDossier()
+    System --> Dir : confirmerRejet()
+    System --> Candidat : envoyerEmailNotification(motifRejet)
+end
+@enduml</pre>
+            </details>
+        </div>
+
+        <!-- 2. تسجيل الدخول والأمان -->
+        <div class="section-card">
+            <h2 class="section-title">2. سيناريو تسجيل الدخول ومصفوفة الصلاحيات والحالات المعطلة (CDC §2, §5.1, §8)</h2>
+            <p>
+                يوضح كيف يعالج النظام مختلف سيناريوهات تسجيل الدخول: الحساب النشط، كلمة المرور الخاطئة، وحسابات المتقاعدين المجمدة (Compte gelé):
+            </p>
+
+            <div class="diagram-container">
+                <img src="diagrams/dss_2_authentification_rbac.svg" alt="DSS Authentification et RBAC" />
+                <div class="diagram-actions">
+                    <a class="btn-action" href="diagrams/dss_2_authentification_rbac.svg" target="_blank">🔍 فتح الصورة بدقة كاملة</a>
+                </div>
+            </div>
+
+            <div class="callout callout-warning">
+                <strong>حالات الاستثناء في دفتر التحملات (§8.1 و §8.2) :</strong>
+                <ul style="padding-right: 20px; margin-top: 6px;">
+                    <li><strong>حساب متقاعد (Retraité) :</strong> الحساب مجمد (Compte gelé). ينبه النظام المستخدم بأن الحساب أرشيفي ولا يتيح إجراء تعديلات أو طلبات نشطة.</li>
+                    <li><strong>عضو مغادر (Ancien membre) :</strong> الحساب معطل (Désactivé) ويُمنع من تسجيل الدخول إلا بقرار من الإدارة.</li>
+                </ul>
+            </div>
+
+            <details>
+                <summary>💻 كود PlantUML الأصلي لهذا المخطط</summary>
+                <pre class="code-block">@startuml
+autonumber
+skinparam style strictuml
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+
+actor "Utilisateur" as User #EFF6FF
+box "Système LIAS (Boîte Noire)" #FAFAFA
+    participant "Système LIAS" as System #152B44
+end box
+
+User -> System : saisirIdentifiants(email, motDePasse)
+System -> System : verifierAuthenticite()
+
+alt Cas 1 : Identifiants corrects et Compte Actif
+    System -> System : identifierRole(Directeur, Permanent, Doctorant)
+    System -> System : creerSessionUtilisateur()
+    System --> User : redirigerVersTableauDeBord(droitsAssocies)
+
+else Cas 2 (Exception E1) : Identifiants erronés
+    System --> User : afficherMessageErreur("Email ou mot de passe invalide")
+
+else Cas 3 (Exception E2) : Compte Retraité (Gelé - CDC §8.1)
+    System -> System : detecterStatutRetraite()
+    System --> User : afficherAlerte("Compte gelé pour départ en retraite. Historique consultable en lecture seule.")
+
+else Cas 4 (Exception E3) : Ancien Membre (Désactivé - CDC §8.2)
+    System --> User : afficherAlerte("Compte désactivé. Veuillez contacter la direction.")
+end
+@enduml</pre>
+            </details>
+        </div>
+
+        <!-- 3. تدبير وتوزيع العتاد -->
+        <div class="section-card">
+            <h2 class="section-title">3. سيناريو طلب العتاد والتوزيع العادل (CDC §14, §15 ⭐)</h2>
+            <p>
+                يوضح كيف يقدم الباحث أو طالب الدكتوراه طلب العتاد، وكيف يستعلم المدير عن سجل المستفيدين السابقين (Qui a reçu quoi) لتحقيق التوزيع العادل:
+            </p>
+
+            <div class="diagram-container">
+                <img src="diagrams/dss_3_materiel_distribution.svg" alt="DSS Matériel et Distribution" />
+                <div class="diagram-actions">
+                    <a class="btn-action" href="diagrams/dss_3_materiel_distribution.svg" target="_blank">🔍 فتح الصورة بدقة كاملة</a>
+                </div>
+            </div>
+
+            <details>
+                <summary>💻 كود PlantUML الأصلي لهذا المخطط</summary>
+                <pre class="code-block">@startuml
+autonumber
+skinparam style strictuml
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+
+actor "Chercheur / Doctorant" as Demandeur #EFF6FF
+actor "Directeur" as Dir #FEF2F2
+box "Système LIAS (Boîte Noire)" #FAFAFA
+    participant "Système LIAS" as System #152B44
+end box
+
+Demandeur -> System : soumettreDemandeMateriel(typeEquipement, justificationRecherche)
+System -> System : enregistrerDemande("SOUMISE")
+System --> Demandeur : confirmerSoumission()
+System --> Dir : notifierBesoinMateriel(idDemandeur, typeEquipement)
+
+== Traitement & Distribution Équitable ==
+Dir -> System : consulterBesoinsExprimes()
+System --> Dir : listerDemandesEnAttente()
+
+Dir -> System : demanderHistoriqueAttribution(idDemandeur)
+note right of System: Exigence CDC §14:\n"Qui a reçu quoi / Qui n'a pas reçu"
+System --> Dir : afficherHistoriqueRecepteur(equipementsPrecedents, dates)
+
+alt Décision d'Allocation
+    Dir -> System : validerAllocation(idDemande, numeroInventaire)
+    System -> System : affecterMaterielAuMembre()
+    System -> System : mettreAJourInventaireStock()
+    System --> Dir : confirmerAllocation()
+    System --> Demandeur : notifierDisponibiliteMateriel(instructionsRecuperation)
+else Demande Rejetée / Reportée
+    Dir -> System : rejeterOuReporterDemande(idDemande, motif)
+    System --> Demandeur : notifierDecision(motif)
+end
+@enduml</pre>
+            </details>
+        </div>
+
+        <!-- 4. تنظيم الفعاليات -->
+        <div class="section-card">
+            <h2 class="section-title">4. سيناريو تنظيم حدث علمي وتأكيد الحضور (CDC §9, §20)</h2>
+            <p>
+                يوضح كيفية برمجة مؤتمر أو ندوة، التحقق من عدم تعارض المواعيد، نشرها في التقويم، وتأكيد الحضور من الباحثين:
+            </p>
+
+            <div class="diagram-container">
+                <img src="diagrams/dss_4_evenement_scientifique.svg" alt="DSS Événement Scientifique" />
+                <div class="diagram-actions">
+                    <a class="btn-action" href="diagrams/dss_4_evenement_scientifique.svg" target="_blank">🔍 فتح الصورة بدقة كاملة</a>
+                </div>
+            </div>
+
+            <details>
+                <summary>💻 كود PlantUML الأصلي لهذا المخطط</summary>
+                <pre class="code-block">@startuml
+autonumber
+skinparam style strictuml
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+
+actor "Organisateur (Membre)" as Org #EFF6FF
+actor "Participant (Chercheur)" as Part #FEF9EE
+box "Système LIAS (Boîte Noire)" #FAFAFA
+    participant "Système LIAS" as System #152B44
+end box
+
+Org -> System : initierCreationEvenement(type: Conference/Seminaire/Workshop)
+System --> Org : afficherFormulaireEvenement()
+
+Org -> System : enregistrerEvenement(titre, dateDebut, dateFin, lieu, organisateurs[])
+System -> System : validerChevauchementCalendrier()
+System -> System : creerEditionEvenement()
+System -> System : publierAuCalendrierScientifique()
+System --> Org : confirmerPublicationEvenement()
+
+== Inscription et Confirmation ==
+Part -> System : consulterCalendrierScientifique()
+System --> Part : afficherDetailsEvenement(programme, intervenants)
+
+Part -> System : confirmerPresence(idEvenement)
+System -> System : enregistrerInscriptionParticipant()
+System --> Part : accuserConfirmation("Présence confirmée")
+@enduml</pre>
+            </details>
+        </div>
+
+        <!-- 5. التقرير السنوي -->
+        <div class="section-card">
+            <h2 class="section-title">5. سيناريو التوليد الآلي للتقرير السنوي وتصدير PDF (CDC §11 ⭐)</h2>
+            <p>
+                يجسد الوظيفة الأكثر حساسية للمختبر: التجميع التلقائي للأبحاث والمؤشرات وحساب نسبة التقدم وتصدير التقرير النهائي للجامعة:
+            </p>
+
+            <div class="diagram-container">
+                <img src="diagrams/dss_5_rapport_annuel.svg" alt="DSS Rapport Annuel" />
+                <div class="diagram-actions">
+                    <a class="btn-action" href="diagrams/dss_5_rapport_annuel.svg" target="_blank">🔍 فتح الصورة بدقة كاملة</a>
+                </div>
+            </div>
+
+            <details>
+                <summary>💻 كود PlantUML الأصلي لهذا المخطط</summary>
+                <pre class="code-block">@startuml
+autonumber
+skinparam style strictuml
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+
+actor "Directeur (Mandat actif)" as Dir #FEF2F2
+box "Système LIAS (Boîte Noire)" #FAFAFA
+    participant "Système LIAS" as System #152B44
+end box
+
+Dir -> System : accederModuleRapportAnnuel()
+System --> Dir : afficherTableauDeBordRapport(statutAnneeEnCours)
+
+Dir -> System : lancerGenerationRapport(anneeUniversitaire: "2025-2026")
+note over System #FEF9EE
+    Agrégation automatique CDC §11:
+    - Publications indexées de l'année
+    - Événements et journées doctorales
+    - Bilan des conventions et matériel
+end note
+
+System -> System : agregerPublicationsDeLAnnee()
+System -> System : agregerEvenementsEtSeminaires()
+System -> System : calculerIndicateursKPIs(tauxAvancement=78%)
+System -> System : genererSyntheseAnnuelle()
+
+System --> Dir : afficherRapportInteractif(graphiques, statistiques, bilans)
+
+opt Exportation Institutionnelle
+    Dir -> System : demanderExportationPDF()
+    System -> System : compilerDocumentOfficielPDF()
+    System --> Dir : telechargerFichierPDF("Rapport_Activite_LIAS_2025_2026.pdf")
+end
+@enduml</pre>
+            </details>
+        </div>
+
+    </div>
+
+</body>
+</html>

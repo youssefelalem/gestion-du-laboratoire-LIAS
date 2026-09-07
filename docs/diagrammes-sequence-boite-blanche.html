@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مخططات التسلسل للعلبة البيضاء (Diagrammes de Séquence Boîte Blanche - MVC 2) — مختبر LIAS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Spectral:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F8F9FA;
+            --surface-color: #FFFFFF;
+            --surface-2: #F1F5F9;
+            --border-color: #E2E8F0;
+            --border-dark: #CBD5E1;
+            --text-primary: #0F172A;
+            --text-secondary: #334155;
+            --text-muted: #64748B;
+            --navy-primary: #152B44;
+            --navy-dark: #0D1C2D;
+            --navy-light: #1E3A5F;
+            --gold-accent: #B89255;
+            --gold-bg: #FEF9EE;
+            --success: #059669;
+            --success-bg: #ECFDF5;
+            --warning: #D97706;
+            --warning-bg: #FFFBEB;
+            --danger: #DC2626;
+            --danger-bg: #FEF2F2;
+            --code-bg: #0F172A;
+            --code-text: #E2E8F0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 14px rgba(21, 43, 68, 0.08);
+            --shadow-lg: 0 12px 30px rgba(21, 43, 68, 0.12);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1350px;
+            margin: 0 auto;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand { display: flex; align-items: center; gap: 14px; }
+
+        .logo-box {
+            background: var(--navy-primary);
+            color: #FAF8F5;
+            font-family: 'Spectral', serif;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 4px;
+            letter-spacing: 0.08em;
+        }
+
+        .header-meta .title { font-weight: 800; font-size: 15px; color: var(--navy-primary); }
+        .header-meta .subtitle { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--text-muted); direction: ltr; text-align: right; }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-link {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--navy-light);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            background: var(--surface-2);
+            transition: all 0.2s;
+        }
+        .btn-link:hover { background: #E2E8F0; color: var(--navy-dark); }
+
+        .btn-print {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--navy-primary);
+            color: #FFF;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .btn-print:hover { background: var(--navy-dark); }
+
+        .container {
+            max-width: 1350px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--navy-primary), var(--navy-dark));
+            color: #FFF;
+            border-radius: 8px;
+            padding: 36px;
+            margin-bottom: 36px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(184, 146, 85, 0.25);
+            color: #F8E7C9;
+            border: 1px solid #B89255;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11.5px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 3px;
+            margin-bottom: 12px;
+        }
+
+        .hero h1 { font-size: 28px; font-weight: 900; line-height: 1.4; margin-bottom: 12px; color: #FFF; }
+        .hero p { font-size: 15px; color: #E2E8F0; line-height: 1.75; }
+
+        .section-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 36px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-title {
+            font-size: 21px;
+            font-weight: 800;
+            color: var(--navy-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .callout {
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 18px 0;
+            border-right: 4px solid;
+            font-size: 14px;
+        }
+        .callout-info { background: #EFF6FF; border-color: #3B82F6; color: #1E40AF; }
+        .callout-tip { background: var(--gold-bg); border-color: var(--gold-accent); color: #854D0E; }
+        .callout-success { background: var(--success-bg); border-color: var(--success); color: #065F46; }
+
+        .diagram-container {
+            background: #FAFAF9;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+            overflow-x: auto;
+        }
+
+        .diagram-container img {
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+        }
+
+        .diagram-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface-2);
+            color: var(--navy-primary);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+        .btn-action:hover {
+            background: var(--navy-primary);
+            color: #FFF;
+        }
+
+        details {
+            margin-top: 14px;
+            background: var(--surface-2);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        summary {
+            padding: 10px 16px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            color: var(--navy-primary);
+            user-select: none;
+            outline: none;
+        }
+        summary:hover { background: #E2E8F0; }
+
+        .code-block {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            direction: ltr;
+            text-align: left;
+            overflow-x: auto;
+            line-height: 1.6;
+            margin: 0;
+            border-top: 1px solid #334155;
+        }
+
+        .tech-path {
+            background: var(--surface-2);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            color: var(--navy-dark);
+            direction: ltr;
+            text-align: left;
+        }
+
+        .tech-path span { color: var(--gold-accent); font-weight: bold; }
+
+        @media print {
+            .btn-print, .btn-action, .btn-link, header, details { display: none !important; }
+            body { background: #FFF; color: #000; }
+            .section-card { box-shadow: none; border: 1px solid #CCC; break-inside: avoid; margin-bottom: 20px; }
+            .hero { background: #F1F5F9 !important; color: #000 !important; }
+            .hero h1 { color: #000 !important; }
+            .hero p { color: #333 !important; }
+            .diagram-container img { max-width: 95% !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-inner">
+            <div class="brand">
+                <div class="logo-box">LIAS</div>
+                <div class="header-meta">
+                    <div class="title">مخططات التسلسل للعلبة البيضاء (Diagrammes de Séquence Boîte Blanche — MVC 2)</div>
+                    <div class="subtitle">Laboratoire LIAS · Master Data Science & Big Data · FSBM</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a class="btn-link" href="diagrammes-cas-utilisation.html">🎯 حالات الاستخدام</a>
+                <a class="btn-link" href="diagrammes-sequence-boite-noire.html">⬛ العلبة السوداء</a>
+                <a class="btn-link active" href="diagrammes-sequence-boite-blanche.html">⬜ العلبة البيضاء (MVC 2)</a>
+                <a class="btn-link" href="diagramme-de-classes.html">🔷 مخطط الأصناف</a>
+                <a class="btn-link" href="dictionnaire-de-donnees.html">📖 قاموس البيانات</a>
+                <button class="btn-print" onclick="window.print()">
+                    <span>طباعة / حفظ PDF 🖨️</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Hero Section -->
+        <div class="hero">
+            <span class="hero-badge">CONCEPTION TECHNIQUE DÉTAILLÉE · ARCHITECTURE JEE MVC 2</span>
+            <h1>مخططات سيناريوهات العلبة البيضاء (Scénarios Boîte Blanche)</h1>
+            <p>
+                إذا كانت مخططات العلبة السوداء تكتفي بالنظر للنظام من الخارج، فإن <strong>مخططات العلبة البيضاء (Diagrammes de Séquence de Conception / Boîte Blanche)</strong>
+                تكشف **الهندسة المعمارية الداخلية لتطبيق الـ JEE الكلاسيكي (MVC 2)**.
+                توضح هذه المخططات بدقة كيف تتعاون طبقات النظام: 
+                <strong>صفحات الـ JSP (Vue)</strong> ⟵ <strong>فلاتر الأمان (AuthFilter)</strong> ⟵ <strong>المتحكمات (Servlets)</strong> ⟵ <strong>طبقة المنطق (Métier)</strong> ⟵ <strong>طبقة البيانات (DAO & JDBC)</strong> ⟵ وصولاً إلى <strong>قاعدة البيانات (MySQL)</strong>.
+            </p>
+        </div>
+
+        <div class="callout callout-success">
+            <strong>🎓 القيمة الأكاديمية الكبرى لهذه المخططات أمام الأستاذ (Validation du Module JEE) :</strong><br>
+            هذه هي المخططات المفضلة لدى أساتذة مادة JEE؛ لأنها تثبت احترامك التام لمعمارية <strong>MVC 2</strong>: فصل العرض (JSP) عن التحكم (Servlets) والبيانات (DAO/JDBC) مع استخدام نمط الـ Singleton في <code>DBConnection</code> والـ Sessions لإدارة الدخول الآمن.
+        </div>
+
+        <!-- 1. المصادقة والأمان -->
+        <div class="section-card">
+            <h2 class="section-title">1. دورة حياة المصادقة وتسجيل الدخول في MVC 2 (Login & AuthFilter)</h2>
+            <p>
+                يوضح هذا المخطط رحلة طلب تسجيل الدخول من نقرة المستخدم في <code>login.jsp</code>، مروراً بـ <code>AuthFilter</code> و <code>LoginServlet</code>، والتحقق عبر طبقة الـ <code>Métier</code> واستعلام <code>PreparedStatement</code> في قاعدة البيانات، وصولاً إلى إنشاء الـ <code>HttpSession</code> والتوجيه إلى <code>/home</code>:
+            </p>
+
+            <div class="tech-path">
+                User ⟶ <span>login.jsp</span> ⟶ <span>AuthFilter</span> ⟶ <span>LoginServlet</span> ⟶ <span>MetierImpl</span> ⟶ <span>UserDaoImpl</span> ⟶ <span>DBConnection</span> ⟶ <span>MySQL</span>
+            </div>
+
+            <div class="diagram-container">
+                <img src="diagrams/dsbb_1_authentification_mvc.svg" alt="DSBB Authentification MVC 2" />
+                <div class="diagram-actions">
+                    <a class="btn-action" href="diagrams/dsbb_1_authentification_mvc.svg" target="_blank">🔍 فتح الصورة بدقة كاملة</a>
+                </div>
+            </div>
+
+            <details>
+                <summary>💻 كود PlantUML الأصلي لهذا المخطط</summary>
+                <pre class="code-block">@startuml
+autonumber
+skinparam style strictuml
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+skinparam BoxPadding 8
+skinparam ParticipantPadding 10
+
+actor "Utilisateur" as User #EFF6FF
+boundary "login.jsp\\n(Vue)" as Vue #FEF9EE
+control "AuthFilter\\n(Filtre Sécurité)" as Filter #F1F5F9
+control "LoginServlet\\n(Contrôleur)" as Servlet #E0E7FF
+entity "MetierImpl\\n(Couche Métier)" as Metier #ECFDF5
+entity "UserDaoImpl\\n(DAO)" as DAO #FDF4FF
+entity "DBConnection\\n(Singleton)" as DB #FEF2F2
+database "MySQL\\n(lias_db)" as SQL #FFFBEB
+
+User -> Vue : 1. Saisir email et password
+Vue -> Filter : Requête POST /login
+Filter -> Filter : doFilter() : Vérifier URL publique
+Filter -> Servlet : chain.doFilter() -> doPost(request, response)
+
+Servlet -> Servlet : getParameter("email"), getParameter("password")
+Servlet -> Metier : authentifier(email, password)
+Metier -> DAO : findByEmail(email)
+DAO -> DB : getConnection()
+DB --> DAO : Connection JDBC
+DAO -> SQL : PreparedStatement: SELECT * FROM users WHERE email = ?
+SQL --> DAO : ResultSet (données de l'utilisateur)
+
+alt Succès : Mot de passe valide et Compte actif
+    DAO --> Metier : return User bean
+    Metier --> Servlet : return User authentifié
+    Servlet -> Servlet : session.setAttribute("currentUser", user)
+    Servlet -> Vue : response.sendRedirect(contextPath + "/home")
+    Vue --> User : Afficher le tableau de bord (/home)
+else Échec : Identifiants invalides ou Compte inactif
+    Metier --> Servlet : return null
+    Servlet -> Servlet : request.setAttribute("error", "Identifiants invalides")
+    Servlet -> Vue : dispatcher.forward("/WEB-INF/views/login.jsp")
+    Vue --> User : Réafficher formulaire avec message d'erreur
+end
+@enduml</pre>
+            </details>
+        </div>
+
+        <!-- 2. قبول الانخراط وإنشاء الحساب والتأريخ -->
+        <div class="section-card">
+            <h2 class="section-title">2. المعالجة الداخلية لقرار قبول الانخراط (AdhesionServlet & DAOs) ⭐</h2>
+            <p>
+                يوضح كيف يعالج <code>AdhesionServlet</code> قرار المدير بالقبول: تحديث حالة الطلب في <code>demandes_adhesion</code>، إنشاء حساب المستخدم في <code>users</code>، تسجيل أول فترة انتساب في <code>affiliation_periods</code>، ومحاكاة إرسال البريد ببيانات الدخول:
+            </p>
+
+            <div class="tech-path">
+                Directeur ⟶ <span>adhesions.jsp</span> ⟶ <span>AdhesionServlet</span> ⟶ <span>DemandeDaoImpl</span> & <span>UserDaoImpl</span> ⟶ <span>MySQL (3 tables)</span>
+            </div>
+
+            <div class="diagram-container">
+                <img src="diagrams/dsbb_2_validation_adhesion.svg" alt="DSBB Validation Adhésion" />
+                <div class="diagram-actions">
+                    <a class="btn-action" href="diagrams/dsbb_2_validation_adhesion.svg" target="_blank">🔍 فتح الصورة بدقة كاملة</a>
+                </div>
+            </div>
+
+            <details>
+                <summary>💻 كود PlantUML الأصلي لهذا المخطط</summary>
+                <pre class="code-block">@startuml
+autonumber
+skinparam style strictuml
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+
+actor "Directeur" as Dir #FEF2F2
+boundary "adhesions.jsp\\n(Vue)" as Vue #FEF9EE
+control "AdhesionServlet\\n(Contrôleur)" as Servlet #E0E7FF
+entity "DemandeDaoImpl\\n(DAO Adhésion)" as DemandeDAO #FDF4FF
+entity "UserDaoImpl\\n(DAO Utilisateurs)" as UserDAO #ECFDF5
+database "MySQL\\n(lias_db)" as SQL #FFFBEB
+
+Dir -> Vue : Cliquer "Accepter" sur une candidature (id, equipe)
+Vue -> Servlet : POST /adhesions (action="decision", id=12, decision="ACCEPTEE")
+
+Servlet -> DemandeDAO : updateDecisionAdhesion(12, "ACCEPTEE")
+DemandeDAO -> SQL : UPDATE demandes_adhesion SET decision='ACCEPTEE' WHERE id=12
+SQL --> DemandeDAO : 1 ligne modifiée
+DemandeDAO --> Servlet : return true
+
+alt Si acceptation confirmée
+    Servlet -> UserDAO : save(new User(nom, prenom, email, role="PERMANENT"))
+    UserDAO -> SQL : INSERT INTO users (nom, prenom, email, role, actif) VALUES (?, ?, ?, ?, 1)
+    SQL --> UserDAO : Generated Key (idUser)
+    UserDAO --> Servlet : return User créé
+    
+    Servlet -> SQL : INSERT INTO affiliation_periods (member_id, date_debut, role) VALUES (?, NOW(), ?)
+    SQL --> Servlet : Confirmation affiliation
+
+    Servlet -> Servlet : simulerEnvoiEmail(email, motDePasseTemporaire)
+end
+
+Servlet -> Vue : response.sendRedirect("/adhesions?msg=decision_enregistree")
+Vue --> Dir : Réafficher la liste actualisée avec badge "ACCEPTÉE"
+@enduml</pre>
+            </details>
+        </div>
+
+        <!-- 3. لوحة التحكم وتجميع البيانات المتعددة -->
+        <div class="section-card">
+            <h2 class="section-title">3. تجميع مؤشرات لوحة التحكم الرئيسية (HomeServlet & Multi-DAOs)</h2>
+            <p>
+                يوضح كيف يقوم <code>HomeServlet</code> بفحص الجلسة عبر الفلتر، واستدعاء عدة DAOs في آن واحد لتجميع المؤشرات وتمريرها عبر <code>request.setAttribute()</code> إلى <code>home.jsp</code> لعرضها عبر لغة الـ EL:
+            </p>
+
+            <div class="diagram-container">
+                <img src="diagrams/dsbb_3_consultation_dashboard.svg" alt="DSBB HomeServlet Dashboard" />
+                <div class="diagram-actions">
+                    <a class="btn-action" href="diagrams/dsbb_3_consultation_dashboard.svg" target="_blank">🔍 فتح الصورة بدقة كاملة</a>
+                </div>
+            </div>
+
+            <details>
+                <summary>💻 كود PlantUML الأصلي لهذا المخطط</summary>
+                <pre class="code-block">@startuml
+autonumber
+skinparam style strictuml
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+
+actor "Membre Connecté" as Membre #EFF6FF
+boundary "home.jsp\\n(Vue)" as Vue #FEF9EE
+control "AuthFilter" as Filter #F1F5F9
+control "HomeServlet\\n(Contrôleur)" as Servlet #E0E7FF
+entity "MemberDao" as MemDao #ECFDF5
+entity "PublicationDao" as PubDao #FDF4FF
+entity "EvenementDao" as EvtDao #FEF9EE
+database "MySQL" as SQL #FFFBEB
+
+Membre -> Servlet : Requête GET /home
+Servlet -> Filter : doFilter()
+Filter -> Filter : session.getAttribute("currentUser") != null ?
+
+alt Session valide
+    Filter -> Servlet : doGet(request, response)
+    
+    Servlet -> MemDao : findAll()
+    MemDao -> SQL : SELECT * FROM members
+    SQL --> MemDao : List<Member>
+    MemDao --> Servlet : size() -> 24 membres
+
+    Servlet -> PubDao : findAll()
+    PubDao -> SQL : SELECT * FROM publications
+    SQL --> PubDao : List<Publication>
+    PubDao --> Servlet : size() -> 18 publications
+
+    Servlet -> EvtDao : findAll()
+    EvtDao -> SQL : SELECT * FROM evenements
+    SQL --> EvtDao : List<Evenement>
+    EvtDao --> Servlet : size() -> 6 événements
+
+    Servlet -> Servlet : request.setAttribute("totalMembres", 24)
+    Servlet -> Servlet : request.setAttribute("totalPublications", 18)
+    Servlet -> Servlet : request.setAttribute("upcomingEvents", events)
+    Servlet -> Vue : dispatcher.forward("/WEB-INF/views/home.jsp")
+    Vue --> Membre : Rendu HTML avec jauge SVG (78%) et KPI en EL (${totalMembres})
+else Session expirée ou inexistante
+    Filter -> Vue : response.sendRedirect(contextPath + "/login?error=session_expired")
+    Vue --> Membre : Redirection forcée vers la page de connexion
+end
+@enduml</pre>
+            </details>
+        </div>
+
+        <!-- 4. تدبير العتاد والتوزيع العادل -->
+        <div class="section-card">
+            <h2 class="section-title">4. التحكيم وتوزيع العتاد مع فحص السجل السابق (MaterielServlet & Traçabilité) ⭐</h2>
+            <p>
+                تطبيق قاعدة دفتر التحملات (§14): يستعلم <code>MaterielServlet</code> عن سجل الاستفادة السابق للعضو (Qui a reçu quoi) قبل تنفيذ المصادقة والتحديث في جدول <code>materiel_allocations</code>:
+            </p>
+
+            <div class="diagram-container">
+                <img src="diagrams/dsbb_4_gestion_materiel_equitable.svg" alt="DSBB Matériel Distribution" />
+                <div class="diagram-actions">
+                    <a class="btn-action" href="diagrams/dsbb_4_gestion_materiel_equitable.svg" target="_blank">🔍 فتح الصورة بدقة كاملة</a>
+                </div>
+            </div>
+
+            <details>
+                <summary>💻 كود PlantUML الأصلي لهذا المخطط</summary>
+                <pre class="code-block">@startuml
+autonumber
+skinparam style strictuml
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+
+actor "Directeur" as Dir #FEF2F2
+boundary "materiel.jsp\\n(Vue)" as Vue #FEF9EE
+control "MaterielServlet\\n(Contrôleur)" as Servlet #E0E7FF
+entity "DemandeDaoImpl\\n(DAO)" as DAO #FDF4FF
+database "MySQL\\n(lias_db)" as SQL #FFFBEB
+
+Dir -> Vue : Consulter les demandes et cliquer "Allouer"
+Vue -> Servlet : POST /materiel (action="allouer", idDemande=5, idMembre=3)
+
+Servlet -> DAO : findAttributionsPrecedentes(idMembre=3)
+note right of DAO: Règle CDC §14: Vérifier "Qui a reçu quoi"
+DAO -> SQL : SELECT * FROM materiel_allocations WHERE member_id = 3
+SQL --> DAO : Historique des équipements déjà attribués
+DAO --> Servlet : List<Allocation> (Historique d'attribution)
+
+alt Attribution validée par la Direction
+    Servlet -> DAO : updateStatutMateriel(5, "ATTRIBUE", date=NOW())
+    DAO -> SQL : UPDATE materiels SET statut='ATTRIBUE', date_attribution=NOW() WHERE id=5
+    SQL --> DAO : 1 row updated
+    DAO --> Servlet : return true
+
+    Servlet -> SQL : INSERT INTO materiel_allocations (materiel_id, member_id, date) VALUES (5, 3, NOW())
+    SQL --> Servlet : Confirmation historisation
+
+    Servlet -> Vue : response.sendRedirect("/materiel?msg=alloue_avec_succes")
+    Vue --> Dir : Actualisation du tableau avec mise à jour du stock
+else Refus ou quota dépassé
+    Servlet -> Vue : response.sendRedirect("/materiel?msg=demande_rejetee")
+    Vue --> Dir : Message d'information : quota atteint pour ce chercheur
+end
+@enduml</pre>
+            </details>
+        </div>
+
+        <!-- 5. التوليد الآلي للتقرير السنوي وتصدير PDF -->
+        <div class="section-card">
+            <h2 class="section-title">5. التوليد الآلي للتقرير السنوي وتصدير PDF (RapportServlet & Couche Métier) ⭐</h2>
+            <p>
+                يوضح كيف يقوم <code>RapportServlet</code> بتجميع المنشورات والأحداث لسنة معينة، واستدعاء دالة الحسابات في طبقة الـ <code>Métier</code> لحساب مؤشرات الأداء (KPIs) ومعدل التقدم (78%)، ثم إما إرسالها لـ <code>rapport.jsp</code> أو ضخها كملف PDF رسمي:
+            </p>
+
+            <div class="diagram-container">
+                <img src="diagrams/dsbb_5_rapport_annuel_generation.svg" alt="DSBB Rapport Annuel" />
+                <div class="diagram-actions">
+                    <a class="btn-action" href="diagrams/dsbb_5_rapport_annuel_generation.svg" target="_blank">🔍 فتح الصورة بدقة كاملة</a>
+                </div>
+            </div>
+
+            <details>
+                <summary>💻 كود PlantUML الأصلي لهذا المخطط</summary>
+                <pre class="code-block">@startuml
+autonumber
+skinparam style strictuml
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+
+actor "Directeur" as Dir #FEF2F2
+boundary "rapport.jsp\\n(Vue)" as Vue #FEF9EE
+control "RapportServlet\\n(Contrôleur)" as Servlet #E0E7FF
+entity "PublicationDao" as PubDao #FDF4FF
+entity "EvenementDao" as EvtDao #ECFDF5
+entity "MetierImpl\\n(Calculs & KPIs)" as Metier #FEF9EE
+database "MySQL" as SQL #FFFBEB
+
+Dir -> Vue : Sélectionner "2025-2026" et cliquer "Générer Rapport"
+Vue -> Servlet : GET /rapport?annee=2025
+
+Servlet -> PubDao : findPublicationsByYear(2025)
+PubDao -> SQL : SELECT * FROM publications WHERE annee = 2025
+SQL --> PubDao : List<Publication> 2025
+PubDao --> Servlet : return publicationsAnnee
+
+Servlet -> EvtDao : findEvenementsByYear(2025)
+EvtDao -> SQL : SELECT * FROM evenements WHERE date LIKE '2025%'
+SQL --> EvtDao : List<Evenement> 2025
+EvtDao --> Servlet : return evenementsAnnee
+
+Servlet -> Metier : calculerIndicateursRapport(publicationsAnnee, evenementsAnnee)
+Metier -> Metier : calculerTauxAvancement() -> 78%
+Metier -> Metier : agregerParEquipe(IA: 42%, BigData: 28%...)
+Metier --> Servlet : return BilanAnnuelBean
+
+Servlet -> Servlet : request.setAttribute("bilan", BilanAnnuelBean)
+Servlet -> Servlet : request.setAttribute("tauxProgression", 78)
+
+alt Consultation à l'écran
+    Servlet -> Vue : dispatcher.forward("/WEB-INF/views/rapport.jsp")
+    Vue --> Dir : Affichage du rapport interactif (Graphiques, jauge SVG 78%, bilans)
+else Exportation PDF officielle
+    Dir -> Servlet : GET /rapport?action=export_pdf&annee=2025
+    Servlet -> Servlet : GenerateurPDF.compilerRapport(BilanAnnuelBean)
+    Servlet --> Dir : Flux binaire PDF (Content-Type: application/pdf)
+end
+@enduml</pre>
+            </details>
+        </div>
+
+        <!-- 6. إيداع المنشورات العلمية -->
+        <div class="section-card">
+            <h2 class="section-title">6. إيداع وفهرسة منشور علمي (PublicationServlet & PublicationDao)</h2>
+            <p>
+                يوضح كيف يعالج <code>PublicationServlet</code> استمارة إضافة مقال جديد: التحقق من المعاملات (Titre, Revue, DOI)، بناء كائن الـ JavaBean، وحفظه في جدول <code>publications</code> عبر <code>PreparedStatement</code>:
+            </p>
+
+            <div class="diagram-container">
+                <img src="diagrams/dsbb_6_depot_publication.svg" alt="DSBB Publication Dépôt" />
+                <div class="diagram-actions">
+                    <a class="btn-action" href="diagrams/dsbb_6_depot_publication.svg" target="_blank">🔍 فتح الصورة بدقة كاملة</a>
+                </div>
+            </div>
+
+            <details>
+                <summary>💻 كود PlantUML الأصلي لهذا المخطط</summary>
+                <pre class="code-block">@startuml
+autonumber
+skinparam style strictuml
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam roundcorner 8
+
+actor "Chercheur" as Chercheur #EFF6FF
+boundary "publications.jsp\\n(Vue)" as Vue #FEF9EE
+control "PublicationServlet\\n(Contrôleur)" as Servlet #E0E7FF
+entity "PublicationDaoImpl\\n(DAO)" as DAO #FDF4FF
+database "MySQL\\n(lias_db)" as SQL #FFFBEB
+
+Chercheur -> Vue : Remplir formulaire d'ajout (titre, revue, DOI, annee, equipe)
+Vue -> Servlet : POST /publications (action="ajouter")
+
+Servlet -> Servlet : getParameter("titre"), getParameter("revue"), getParameter("doi")...
+Servlet -> Servlet : Construire objet new Publication(...)
+
+Servlet -> DAO : save(publication)
+DAO -> SQL : INSERT INTO publications (titre, auteurs, revue, doi, annee, equipe_id) VALUES (?, ?, ?, ?, ?, ?)
+SQL --> DAO : 1 ligne insérée (ID auto-généré)
+DAO --> Servlet : return true
+
+Servlet -> Vue : response.sendRedirect(contextPath + "/publications?msg=pub_ajoutee")
+Vue --> Chercheur : Afficher le catalogue actualisé avec le nouvel article
+@enduml</pre>
+            </details>
+        </div>
+
+    </div>
+
+</body>
+</html>

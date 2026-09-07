@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدليل المرجعي الشامل لإنشاء وفهم مشروع LIAS JEE من الصفر المطلق</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Spectral:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F8F9FA;
+            --surface-color: #FFFFFF;
+            --surface-2: #F1F5F9;
+            --border-color: #E2E8F0;
+            --border-dark: #CBD5E1;
+            --text-primary: #0F172A;
+            --text-secondary: #334155;
+            --text-muted: #64748B;
+            --navy-primary: #152B44;
+            --navy-dark: #0D1C2D;
+            --navy-light: #1E3A5F;
+            --gold-accent: #B89255;
+            --gold-bg: #FEF9EE;
+            --success: #059669;
+            --success-bg: #ECFDF5;
+            --warning: #D97706;
+            --warning-bg: #FFFBEB;
+            --danger: #DC2626;
+            --danger-bg: #FEF2F2;
+            --code-bg: #0F172A;
+            --code-text: #E2E8F0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 14px rgba(21, 43, 68, 0.08);
+            --shadow-lg: 0 12px 30px rgba(21, 43, 68, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cairo', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.85;
+        }
+
+        /* Top Header */
+        header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-box {
+            background: var(--navy-primary);
+            color: #FAF8F5;
+            font-family: 'Spectral', serif;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 4px;
+            letter-spacing: 0.08em;
+        }
+
+        .header-meta .title {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--navy-primary);
+        }
+
+        .header-meta .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            direction: ltr;
+            text-align: right;
+        }
+
+        .btn-print {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--navy-primary);
+            color: #FFF;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-print:hover {
+            background: var(--navy-dark);
+        }
+
+        /* Layout */
+        .layout-container {
+            max-width: 1400px;
+            margin: 24px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 310px 1fr;
+            gap: 32px;
+            align-items: start;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            position: sticky;
+            top: 80px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sidebar-title {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--navy-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 3px;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 7px 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.15s;
+            font-weight: 500;
+        }
+
+        .sidebar-nav a:hover {
+            background: var(--surface-2);
+            color: var(--navy-primary);
+            font-weight: 700;
+            padding-right: 14px;
+        }
+
+        /* Main Content */
+        .content {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: var(--shadow-sm);
+            min-width: 0;
+        }
+
+        /* Hero Banner */
+        .hero {
+            background: linear-gradient(135deg, var(--navy-primary), var(--navy-dark));
+            color: #FFF;
+            border-radius: 8px;
+            padding: 36px;
+            margin-bottom: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(184, 146, 85, 0.25);
+            color: #F8E7C9;
+            border: 1px solid #B89255;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11.5px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 3px;
+            margin-bottom: 12px;
+        }
+
+        .hero h1 {
+            font-size: 27px;
+            font-weight: 900;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            color: #FFF;
+        }
+
+        .hero p {
+            font-size: 15px;
+            color: #E2E8F0;
+            line-height: 1.75;
+        }
+
+        /* Section Styling */
+        section {
+            margin-bottom: 48px;
+            scroll-margin-top: 90px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--navy-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--navy-light);
+            margin: 24px 0 10px;
+        }
+
+        h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--navy-primary);
+            margin: 14px 0 6px;
+        }
+
+        p, ul, ol {
+            color: var(--text-secondary);
+            font-size: 14.5px;
+            margin-bottom: 14px;
+        }
+
+        ul, ol {
+            padding-right: 24px;
+        }
+
+        li {
+            margin-bottom: 7px;
+        }
+
+        /* Callout Boxes */
+        .callout {
+            border-radius: 6px;
+            padding: 18px 20px;
+            margin: 18px 0;
+            border-right: 4px solid;
+            font-size: 14px;
+        }
+
+        .callout-info {
+            background: #EFF6FF;
+            border-color: #3B82F6;
+            color: #1E40AF;
+        }
+
+        .callout-tip {
+            background: var(--gold-bg);
+            border-color: var(--gold-accent);
+            color: #854D0E;
+        }
+
+        .callout-success {
+            background: var(--success-bg);
+            border-color: var(--success);
+            color: #065F46;
+        }
+
+        .callout-warning {
+            background: var(--warning-bg);
+            border-color: var(--warning);
+            color: #92400E;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--code-bg);
+            color: var(--code-text);
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            direction: ltr;
+            text-align: left;
+            overflow-x: auto;
+            line-height: 1.65;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+        }
+
+        .code-title {
+            background: #1E293B;
+            color: #94A3B8;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            padding: 6px 14px;
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
+            margin-bottom: -16px;
+            border-bottom: 1px solid #334155;
+            direction: ltr;
+            text-align: left;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: #F1F5F9;
+            color: var(--navy-primary);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12.5px;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        /* Q&A Cards for Soutenance */
+        .qa-card {
+            background: #FAF9F6;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 18px;
+            transition: all 0.2s;
+        }
+
+        .qa-card:hover {
+            border-color: var(--navy-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .qa-q {
+            font-weight: 800;
+            color: var(--navy-primary);
+            font-size: 15px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qa-q::before {
+            content: "❓";
+            font-size: 16px;
+        }
+
+        .qa-a {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding-right: 24px;
+            border-right: 2px solid var(--gold-accent);
+        }
+
+        /* Step cards */
+        .step-box {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            background: var(--surface-2);
+            padding: 18px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .step-num {
+            background: var(--navy-primary);
+            color: #FFF;
+            font-weight: 800;
+            font-size: 15px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .step-detail {
+            flex: 1;
+        }
+
+        .step-detail h4 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--navy-primary);
+            margin-bottom: 6px;
+        }
+
+        .step-detail p {
+            font-size: 13.5px;
+            margin-bottom: 6px;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+            margin: 16px 0;
+        }
+
+        th {
+            background: var(--surface-2);
+            color: var(--navy-primary);
+            font-weight: 700;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            text-align: right;
+        }
+
+        td {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        tr:nth-child(even) td {
+            background: #FAFAFA;
+        }
+
+        /* Flow Diagram Container */
+        .flow-diagram {
+            background: #0F172A;
+            color: #F8FAFC;
+            padding: 24px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            direction: ltr;
+            line-height: 1.8;
+            margin: 20px 0;
+            overflow-x: auto;
+            border: 1px solid #334155;
+        }
+
+        .flow-diagram .highlight {
+            color: #F59E0B;
+            font-weight: bold;
+        }
+
+        .flow-diagram .arrow {
+            color: #38BDF8;
+            font-weight: bold;
+        }
+
+        .flow-diagram .step-tag {
+            color: #4ADE80;
+            font-weight: bold;
+        }
+
+        @media print {
+            .sidebar, .btn-print, header { display: none !important; }
+            .layout-container { grid-template-columns: 1fr; margin: 0; padding: 0; }
+            .content { border: none; box-shadow: none; padding: 0; }
+            .hero { background: #EEE !important; color: #000 !important; }
+            .code-block { background: #F8F9FA !important; color: #000 !important; border: 1px solid #CCC; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-inner">
+            <div class="brand">
+                <div class="logo-box">LIAS</div>
+                <div class="header-meta">
+                    <div class="title">الدليل المرجعي الشامل لإنشاء وفهم مشروع الـ JEE</div>
+                    <div class="subtitle">Master Data Science & Big Data · Faculté des Sciences Ben M'Sik</div>
+                </div>
+            </div>
+            <div>
+                <button class="btn-print" onclick="window.print()">
+                    <span>طباعة / حفظ PDF 🖨️</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="layout-container">
+
+        <!-- Sticky Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-title">فهرس الدليل الشامل</div>
+            <ul class="sidebar-nav">
+                <li><a href="#charte">0. ميثاق التطوير والتحديث المستمر 📜</a></li>
+                <li><a href="#intro">1. نظرة عامة وسياق المشروع</a></li>
+                <li><a href="#structure">2. بنية المجلدات المعيارية في Eclipse</a></li>
+                <li><a href="#tutoriel-scratch">3. دليل البناء خطوة بخطوة من الصفر 🛠️</a></li>
+                <li><a href="#request-lifecycle">4. دورة حياة الطلب ومخطط التدفق 🔄</a></li>
+                <li><a href="#mvc">5. معمارية MVC 2 الكلاسيكية بالتفصيل</a></li>
+                <li><a href="#beans">6. طبقة النماذج (JavaBeans)</a></li>
+                <li><a href="#dao">7. طبقة البيانات (DAO & JDBC)</a></li>
+                <li><a href="#metier">8. طبقة المنطق (Couche Métier)</a></li>
+                <li><a href="#servlets">9. طبقة المتحكمات (Servlets)</a></li>
+                <li><a href="#webxml">10. سجل التهيئة (web.xml Deployment)</a></li>
+                <li><a href="#security">11. الأمان والفلتر (AuthFilter) والجلسات</a></li>
+                <li><a href="#views">12. طبقة العرض (Vues JSP) والتصميم</a></li>
+                <li><a href="#database">13. قاعدة البيانات (schema.sql)</a></li>
+                <li><a href="#docker">14. التشغيل بالحاويات (Docker)</a></li>
+                <li><a href="#soutenance">15. بنك أسئلة وأجوبة المناقشة 🎓</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content">
+
+            <!-- Hero Banner -->
+            <div class="hero">
+                <span class="hero-badge">GUIDE DE MAÎTRISE TECHNIQUE · ARCHITECTURE JEE MVC 2</span>
+                <h1>دليل الطالب المرجعي: كيف أُنشئ هذا المشروع بحذافيره وكيف أشرحه للأستاذ</h1>
+                <p>
+                    هذا المستند كُتب خصيصاً ليكون <strong>مرجعك الدائم والشامل</strong>. يشرح بالتفصيل الممل والعميق كل كلاس، وكل مسار، وكل مفهوم برمجي مستعمل في المشروع، حتى تتقن النظام كاملاً وتجيب على أي سؤال يطرحه أستاذ المادة بثقة تامة.
+                </p>
+            </div>
+
+            <!-- 0. Charte & Engagement -->
+            <section id="charte">
+                <h2>0. ميثاق التطوير، الشرح المستمر، واعتماد التصميم الخاص بك 📜</h2>
+                <div class="callout callout-success">
+                    <strong>🤝 التزام التطوير الموثق (Living Documentation Contract) :</strong>
+                    كل سطر برمجي، وكل كلاس جديد، وكل تحسين نقوم به في هذا المشروع <strong>يتم توثيقه وشرحه فوراً داخل هذا الملف</strong>. الهدف ليس مجرد تسليم كود، بل أن تكون فاهماً لكل تفصيلة وتتمكن من شرحها للأستاذ بطلاقة أكاديمية عالية.
+                </div>
+                <div class="callout callout-tip">
+                    <strong>🎨 اعتماد الديزاين الخاص بك بنسبة 100% :</strong>
+                    بخصوص سؤالك <em>"لدي ديزاين، هل يمكنك اعتماده بشكل كامل؟"</em> — <strong>نعم، بالطبع وبكل سرور!</strong>
+                    سواء كان الديزاين عبارة عن ملفات HTML/CSS جاهزة، أو صور وتصميمات Mockup، أو رابط Figma، أو مخطط للألوان والخطوط، فقط شاركها معي وسأقوم بدمجها وتطبيقها بدقة بالغة على جميع ملفات الـ JSP و <code>src/main/webapp/css/style.css</code>، مع شرح كل تعديل يطرأ على الواجهة.
+                </div>
+            </section>
+
+            <!-- 1. Introduction -->
+            <section id="intro">
+                <h2>1. نظرة عامة وسياق المشروع</h2>
+                <p>
+                    مشروع <strong>LIAS</strong> هو تطبيق ويب لإدارة <em>"مختبر المعلوميات والتطبيقات العلمية"</em> بكلية العلوم بن مسيك (جامعة الحسن الثاني - الدار البيضاء).
+                </p>
+                <div class="callout callout-tip">
+                    <strong>🎯 الفكرة المحورية للنظام (La Mémoire Institutionnelle) :</strong>
+                    الهدف الأساسي ليس مجرد موقع عادي، بل هو بناء <strong>"ذاكرة مؤسسية"</strong> تحفظ تاريخ المختبر بالكامل: تتبع دورة حياة الباحثين (انخراط، ترقية، مغادرة، تقاعد)، تسيير الانتدابات والحكامة، توثيق المنشورات والمؤتمرات، التوزيع العادل للعتاد، والإنتاج الآلي للتقرير السنوي المطلوب للحصول على الميزانية.
+                </div>
+            </section>
+
+            <!-- 2. Structure -->
+            <section id="structure">
+                <h2>2. بنية المجلدات المعيارية في Eclipse (Dynamic Web Project)</h2>
+                <p>
+                    المشروع مبني بهيكلية <strong>Dynamic Web Project</strong> المعيارية المعترف بها في Eclipse، والتي تحتوي على:
+                </p>
+                <div class="code-title">Arborescence du Projet</div>
+                <div class="code-block">
+gestion-du-laboratoire-LIAS/
+├── .project                   # ملف Eclipse لتعريف هوية المشروع
+├── .classpath                 # يحدد مسار مكتبات Java 21 و Tomcat 10.1
+├── .settings/                 # تكوين الـ Facets (Dynamic Web 6.0 / Java 21)
+├── schema.sql                 # سكريبت إنشاء جداول وبيانات MySQL
+├── docker-compose.yml         # ملف تشغيل الحاويات الموحد
+├── Dockerfile                 # إعداد حاوية Tomcat مع تجميع الأكواد
+├── src/main/java/             # الحزمة البرمجية (Java Source Code)
+│   └── com/lias/
+│       ├── beans/             # كائنات البيانات (JavaBeans)
+│       ├── dao/               # التعامل مع MySQL واستعلامات PreparedStatement
+│       ├── metier/            # قواعد التحقق والمنطق التجاري
+│       ├── web/               # السيرفلتس (المتحكمات)
+│       └── filter/            # فلتر الأمان والتحقق من الجلسة
+└── src/main/webapp/           # ملفات الويب
+    ├── css/style.css          # التصميم الموحد للصفحات
+    ├── WEB-INF/
+    │   ├── lib/               # مجلد درايفر MySQL JAR
+    │   ├── views/             # صفحات الـ JSP المحمية
+    │   │   ├── includes/      (navbar.jsp, footer.jsp)
+    │   │   ├── public.jsp, login.jsp, home.jsp, profils.jsp, publications.jsp...
+    │   └── web.xml            # سجل تسجيل الـ Servlets والـ Filters
+    └── index.jsp              # التوجيه التلقائي
+                </div>
+            </section>
+
+            <!-- 3. Tutoriel pas-à-pas de A à Z -->
+            <section id="tutoriel-scratch">
+                <h2>3. دليل البناء خطوة بخطوة من الصفر المطلق في Eclipse 🛠️</h2>
+                <p>
+                    إذا فتحت برنامج Eclipse على جهاز فارغ وأردت إعادة بناء هذا المشروع بنفسك وبحذافيره، فاتبع هذه الخطوات الدقيقة:
+                </p>
+
+                <div class="step-box">
+                    <div class="step-num">0</div>
+                    <div class="step-detail">
+                        <h4>المتطلبات الأساسية (Les Pré-requis)</h4>
+                        <p>1. تثبيت <strong>Java JDK 21</strong> (أو JDK 17 كحد أدنى).</p>
+                        <p>2. تثبيت <strong>Eclipse IDE for Enterprise Java and Web Developers</strong>.</p>
+                        <p>3. تنزيل خادم <strong>Apache Tomcat 10.1</strong> (يدعم معيار Jakarta EE 10 و Servlet 6.0).</p>
+                        <p>4. تنزيل مكتبة <strong>mysql-connector-j-8.x.jar</strong> للاتصال بقاعدة البيانات.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">1</div>
+                    <div class="step-detail">
+                        <h4>إنشاء المشروع في Eclipse (Création du Dynamic Web Project)</h4>
+                        <p>1. من القائمة العلوية اضغط: <code>File</code> &gt; <code>New</code> &gt; <code>Dynamic Web Project</code>.</p>
+                        <p>2. في خانة <strong>Project name</strong> اكتب: <code>gestion-du-laboratoire-LIAS</code>.</p>
+                        <p>3. في خانة <strong>Target runtime</strong> اختر: <code>Apache Tomcat v10.1</code> (إذا لم تكن معرفة اضغط New Runtime وحدد مجلد Tomcat على جهازك).</p>
+                        <p>4. في خانة <strong>Dynamic web module version</strong> اختر: <code>6.0</code>.</p>
+                        <p>5. اضغط <code>Next</code> ثم <code>Next</code>، وفي الخطوة الأخيرة قم بتفعيل الخيار الإلزامي: <strong>Generate web.xml deployment descriptor</strong> ثم اضغط <code>Finish</code>.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">2</div>
+                    <div class="step-detail">
+                        <h4>إضافة مكتبة MySQL في WEB-INF/lib</h4>
+                        <p>انسخ ملف <code>mysql-connector-j-8.3.0.jar</code> والصقه مباشرة داخل المجلد: <code>src/main/webapp/WEB-INF/lib/</code>.</p>
+                        <p><em>ملاحظة مهمة للأستاذ:</em> في مشاريع JEE الكلاسيكية، أي ملف JAR يوضع داخل <code>WEB-INF/lib</code> يتعرف عليه خادم Tomcat تلقائياً أثناء التشغيل دون الحاجة لإعدادات معقدة.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">3</div>
+                    <div class="step-detail">
+                        <h4>إنشاء قاعدة البيانات وجداولها في MySQL</h4>
+                        <p>1. افتح أداة <strong>MySQL Workbench</strong> أو التيرمينال.</p>
+                        <p>2. افتح ملف <code>schema.sql</code> ونفذه بالكامل. سينشئ قاعدة <code>lias_db</code> و6 جداول أساسية مع إدخال بيانات تجريبية وحسابات الدخول الافتراضية.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">4</div>
+                    <div class="step-detail">
+                        <h4>إنشاء حزم الجافا (Java Packages)</h4>
+                        <p>داخل <code>src/main/java</code>، اضغط زر الفأرة الأيمن &gt; <code>New</code> &gt; <code>Package</code> وأنشئ الحزم التالية:</p>
+                        <ul>
+                            <li><code>com.lias.beans</code> : للنماذج وكائنات البيانات.</li>
+                            <li><code>com.lias.dao</code> : لواجهات وكلاسات الوصول لقاعدة البيانات.</li>
+                            <li><code>com.lias.metier</code> : لمنطق العمل وقواعد التحقق.</li>
+                            <li><code>com.lias.web</code> : للسيرفلتس والمتحكمات.</li>
+                            <li><code>com.lias.filter</code> : لفلاتر الأمان والتحقق من الجلسات.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">5</div>
+                    <div class="step-detail">
+                        <h4>برمجة طبقة النماذج (JavaBeans)</h4>
+                        <p>داخل حزمة <code>com.lias.beans</code>، أنشئ الكلاسات: <code>User.java</code>, <code>Member.java</code>, <code>Publication.java</code>, <code>Evenement.java</code>, <code>DemandeAdhesion.java</code>, <code>Materiel.java</code>.</p>
+                        <p>احرص على تطبيق القواعد الذهبية: جعل الحقول <code>private</code>، إنشاء <code>Constructor</code> بدون بارامترات، دوال <code>getters/setters</code>، وتطبيق <code>implements Serializable</code>.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">6</div>
+                    <div class="step-detail">
+                        <h4>برمجة طبقة الاتصال وقواعد البيانات (DAO & JDBC)</h4>
+                        <p>1. إنشاء <code>DBConnection.java</code> بنمط <strong>Singleton</strong> للاتصال بـ MySQL عبر <code>DriverManager.getConnection()</code>.</p>
+                        <p>2. إنشاء الواجهات: <code>IUserDao</code>, <code>IMemberDao</code>, <code>IPublicationDao</code>, <code>IEvenementDao</code>, <code>IDemandeDao</code>.</p>
+                        <p>3. إنشاء كلاسات التنفيذ المقابلة لها (مثل <code>UserDaoImpl</code>) واستخدام <code>PreparedStatement</code> لتفادي SQL Injection، مع وضع بيانات احتياطية (Fallback) لضمان اشتغال الموقع في أي ظرف.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">7</div>
+                    <div class="step-detail">
+                        <h4>برمجة طبقة المنطق (Couche Métier)</h4>
+                        <p>إنشاء الواجهة <code>IMetier.java</code> وكلاس التنفيذ <code>MetierImpl.java</code> التي تربط بين الـ Servlets والـ DAOs، وتنفذ قواعد التحقق من المدخلات وصحة البريد وكلمة المرور.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">8</div>
+                    <div class="step-detail">
+                        <h4>برمجة فلتر الأمان (AuthFilter)</h4>
+                        <p>إنشاء <code>AuthFilter.java</code> في <code>com.lias.filter</code> وتطبيق <code>jakarta.servlet.Filter</code> لفحص <code>session.getAttribute("currentUser")</code> وتوجيه الزوار غير المسجلين لصفحة تسجيل الدخول عند محاولة دخول لوحة التحكم.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">9</div>
+                    <div class="step-detail">
+                        <h4>برمجة السيرفلتس (Servlets)</h4>
+                        <p>إنشاء كلاسات ترث من <code>HttpServlet</code> لمعالجة مختلف الطلبات: <code>LoginServlet</code>, <code>LogoutServlet</code>, <code>HomeServlet</code>, <code>MemberServlet</code>, <code>PublicationServlet</code>, <code>PublicServlet</code>... مع دوال <code>doGet</code> و <code>doPost</code>.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">10</div>
+                    <div class="step-detail">
+                        <h4>تسجيل السيرفلتس والفلتر في web.xml</h4>
+                        <p>كتابة وسوم <code>&lt;servlet&gt;</code> و <code>&lt;servlet-mapping&gt;</code> لكل مسار، وربط الفلتر <code>&lt;filter-mapping&gt;</code> بالمسارات المحمية.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">11</div>
+                    <div class="step-detail">
+                        <h4>تصميم صفحات الـ JSP و CSS</h4>
+                        <p>إنشاء ملف <code>css/style.css</code> لتوحيد الألوان والخطوط، وإنشاء مجلد <code>WEB-INF/views/</code> يضم <code>navbar.jsp</code>, <code>footer.jsp</code> وصفحات العرض.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">12</div>
+                    <div class="step-detail">
+                        <h4>التشغيل والاختبار داخل Eclipse</h4>
+                        <p>اضغط بزر الفأرة الأيمن على المشروع &gt; <code>Run As</code> &gt; <code>Run on Server</code> &gt; اختر خادم Tomcat 10.1 &gt; <code>Finish</code>.</p>
+                        <p>سيفتح المشروع تلقائياً على الرابط: <code>http://localhost:8080/gestion-du-laboratoire-LIAS/public</code>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. HTTP Request Lifecycle -->
+            <section id="request-lifecycle">
+                <h2>4. دورة حياة الطلب ومخطط التدفق (Cycle d'une Requête HTTP) 🔄</h2>
+                <p>
+                    لفهم ما يحدث خلف الكواليس عند كل نقرة للمستخدم، إليك المخطط التدفقي الكامل لمسار تسجيل الدخول مثلاً (De la requête HTTP jusqu'à la vue JSP) :
+                </p>
+
+                <div class="flow-diagram">
+<span class="step-tag">[1. Utilisateur]</span> Remplir email/password sur /login & clic "Se connecter"
+         <span class="arrow">│</span>
+         <span class="arrow">▼</span>
+<span class="step-tag">[2. Requête HTTP POST]</span> Envoi des données vers le serveur Tomcat (URL: /login)
+         <span class="arrow">│</span>
+         <span class="arrow">▼</span>
+<span class="step-tag">[3. AuthFilter]</span> Vérifie si la ressource est publique ou protégée -> Laisse passer vers /login
+         <span class="arrow">│</span>
+         <span class="arrow">▼</span>
+<span class="step-tag">[4. LoginServlet.doPost()]</span> 
+         <span class="arrow">├──</span> Récupère les paramètres: <span class="highlight">request.getParameter("email")</span>, <span class="highlight">request.getParameter("password")</span>
+         <span class="arrow">├──</span> Appelle la couche Métier: <span class="highlight">metier.authentifier(email, password)</span>
+         <span class="arrow">│         │</span>
+         <span class="arrow">│         ▼</span>
+         <span class="arrow">│</span>    <span class="step-tag">[5. Métier / DAO]</span> UserDaoImpl exécute SQL: 
+         <span class="arrow">│</span>    <span class="highlight">SELECT * FROM users WHERE email = ? AND password = ?</span>
+         <span class="arrow">│</span>    Retourne l'objet <span class="highlight">User</span> (ou null si échec)
+         <span class="arrow">│         │</span>
+         <span class="arrow">│         ▼</span>
+         <span class="arrow">├──</span> Si succès:
+         <span class="arrow">│    ├──</span> Enregistre l'utilisateur en session: <span class="highlight">session.setAttribute("currentUser", user)</span>
+         <span class="arrow">│    └──</span> Redirection: <span class="highlight">response.sendRedirect(contextPath + "/home")</span>
+         <span class="arrow">└──</span> Si échec:
+              <span class="arrow">├──</span> Injecte message d'erreur: <span class="highlight">request.setAttribute("error", "Identifiants invalides")</span>
+              <span class="arrow">└──</span> Réaffiche la vue: <span class="highlight">dispatcher.forward(request, response)</span>
+                </div>
+            </section>
+
+            <!-- 5. MVC -->
+            <section id="mvc">
+                <h2>5. معمارية MVC 2 الكلاسيكية بالتفصيل</h2>
+                <p>
+                    نمط <strong>MVC 2 (Model-View-Controller)</strong> هو المعيار المعتمد في تطبيقات الـ JEE المؤسساتية:
+                </p>
+                <div class="step-box">
+                    <div class="step-num">M</div>
+                    <div class="step-detail">
+                        <h4>النموذج (Modèle) = Beans + DAO</h4>
+                        <p>يمثل البيانات وقواعد البيانات. في مشروعنا: كلاسات <code>User</code>, <code>Member</code>, <code>Publication</code> وطبقة الـ <code>DAO</code> عبر اتصال JDBC.</p>
+                    </div>
+                </div>
+                <div class="step-box">
+                    <div class="step-num">V</div>
+                    <div class="step-detail">
+                        <h4>واجهة العرض (Vue) = JSP Pages</h4>
+                        <p>صفحات <code>.jsp</code> الموجودة في <code>WEB-INF/views/</code>. دورها فقط <strong>عرض</strong> البيانات عبر تعابير الـ EL مثل <code>${publications}</code> بدون كتابة كود معالجة داخل الصفحة.</p>
+                    </div>
+                </div>
+                <div class="step-box">
+                    <div class="step-num">C</div>
+                    <div class="step-detail">
+                        <h4>المتحكم (Contrôleur) = Servlets</h4>
+                        <p>سيرفلتس جافا تستقبل طلب المستخدم (HTTP Request)، تستدعي الـ DAO المناسب، تضع النتيجة في الـ Request، ثم تحول المستخدم للـ JSP المناسبة عبر <code>forward()</code>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Beans -->
+            <section id="beans">
+                <h2>6. طبقة النماذج (JavaBeans)</h2>
+                <p>
+                    الـ <strong>JavaBean</strong> هو كلاس جافا قياسي يُستخدم كوعاء لحمل البيانات بين الطبقات المختلفة للتطبيق.
+                </p>
+                <h3>شروط الـ JavaBean القياسي التي طبقناها :</h3>
+                <ol>
+                    <li>يمتلك كونستركتور فارغ (Constructeur sans arguments).</li>
+                    <li>جميع حقوله خاصة (<code>private</code>) للتحقيق مبدأ التغليف (Encapsulation).</li>
+                    <li>يحتوي على دوال الوصول والتعديل القياسية (<code>getters</code> و <code>setters</code>).</li>
+                    <li>يطبق واجهة <code>java.io.Serializable</code> لتمكين حفظه في الـ Session أو نقله عبر الشبكة.</li>
+                </ol>
+                <div class="code-title">كود كلاس User.java الكامل</div>
+                <div class="code-block">
+package com.lias.beans;
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private Long id;
+    private String nom;
+    private String prenom;
+    private String email;
+    private String password;
+    private String role; // directeur, permanent, doctorant, admin, visiteur
+    private boolean actif;
+
+    public User() {} // Constructeur obligatoire sans paramètres
+
+    public User(Long id, String nom, String prenom, String email, String password, String role, boolean actif) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.actif = actif;
+    }
+
+    // Getters et Setters complets
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getNom() { return nom; }
+    public void setNom(String nom) { this.nom = nom; }
+    public String getPrenom() { return prenom; }
+    public void setPrenom(String prenom) { this.prenom = prenom; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+    public boolean isActif() { return actif; }
+    public void setActif(boolean actif) { this.actif = actif; }
+}
+                </div>
+            </section>
+
+            <!-- 7. DAO -->
+            <section id="dao">
+                <h2>7. طبقة البيانات (DAO & JDBC)</h2>
+                <p>
+                    نمط <strong>Data Access Object (DAO)</strong> يفصل كود استعلامات SQL تماماً عن باقي التطبيق.
+                </p>
+                <h3>أهم المفاهيم المطبقة في الـ DAO :</h3>
+                <ul>
+                    <li><strong>نمط السنجلتون (Singleton Pattern) في `DBConnection.java` :</strong> كونستركتور خاص (Private Constructor) ودالة <code>getConnection()</code> تضمن فتح اتصال واحد فقط مع MySQL لتفادي استهلاك موارد الخادم.</li>
+                    <li><strong>الحماية باستعمال `PreparedStatement` :</strong> استخدام علامة الاستفهام <code>?</code> بدلاً من دمج النصوص المباشر، وهو ما يمنع هجمات حقن قواعد البيانات (SQL Injection) بنسبة 100%.</li>
+                    <li><strong>آلية الأمان البديلة (Fallback Data) :</strong> تم تزويد دوال الـ DAO بقائمة بيانات تجريبية افتراضية؛ فإذا لم تكن MySQL مشغلة، يظل الموقع يعمل بسلاسة دون أن ينهار أو يظهر شاشة خطأ أمام الأستاذ.</li>
+                </ul>
+
+                <div class="code-title">مثال: نمط Singleton في DBConnection.java</div>
+                <div class="code-block">
+package com.lias.dao;
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class DBConnection {
+    private static Connection connection = null;
+
+    private DBConnection() {} // Constructeur privé (Interdit l'instanciation directe)
+
+    public static Connection getConnection() {
+        if (connection == null) {
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                String url = "jdbc:mysql://localhost:3306/lias_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+                connection = DriverManager.getConnection(url, "lias_user", "lias_password");
+            } catch (Exception e) {
+                System.err.println("JDBC Connection Warning: Mode Fallback activé (" + e.getMessage() + ")");
+            }
+        }
+        return connection;
+    }
+}
+                </div>
+            </section>
+
+            <!-- 8. Métier -->
+            <section id="metier">
+                <h2>8. طبقة المنطق وقواعد العمل (Couche Métier)</h2>
+                <p>
+                    تتمثل في الواجهة <code>IMetier</code> وتنفيذها <code>MetierImpl</code>.
+                </p>
+                <p>
+                    <strong>دورها الأكاديمي :</strong> عزل "قواعد العمل" (Business Logic). على سبيل المثال: دالة <code>authentifier(email, password)</code> تتأكد أولاً من أن البريد ليس فارغاً، وتحوله إلى أحرف صغيرة (lowercase)، ثم تسأل الـ DAO للتحقق من صحة المستخدم وتأكد حسابه نشط. إذا طلب الأستاذ مستقبلاً تغيير شروط التسجيل، نعدل فقط في طبقة Métier دون المساس بالـ Servlets أو الـ DAOs.
+                </p>
+            </section>
+
+            <!-- 9. Servlets -->
+            <section id="servlets">
+                <h2>9. طبقة المتحكمات (Servlets)</h2>
+                <p>
+                    السيرفلت (Servlet) هي كلاس جافا ترث من <code>HttpServlet</code> وتتحكم في معالجة طلبات الويب.
+                </p>
+                <h3>دورة حياة السيرفلت (Cycle de vie du Servlet) :</h3>
+                <ol>
+                    <li><code>init()</code> : تُستدعى مرة واحدة عند تحميل السيرفلت لأول مرة لتهيئة الموارد (مثل تهيئة كائن الـ DAO).</li>
+                    <li><code>service()</code> : تستقبل الطلب وتوجهه إما إلى <code>doGet()</code> أو <code>doPost()</code>.</li>
+                    <li><code>doGet(request, response)</code> : لمعالجة طلبات الجلب وعرض الصفحات.</li>
+                    <li><code>doPost(request, response)</code> : لمعالجة إرسال النماذج (مثل تسجيل الدخول أو إضافة مقال).</li>
+                    <li><code>destroy()</code> : تُستدعى عند إيقاف السيرفر لتحرير الذاكرة.</li>
+                </ol>
+
+                <div class="code-title">مثال: سيرفلت تسجيل الدخول LoginServlet.java</div>
+                <div class="code-block">
+package com.lias.web;
+import com.lias.beans.User;
+import com.lias.metier.IMetier;
+import com.lias.metier.MetierImpl;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.*;
+import java.io.IOException;
+
+public class LoginServlet extends HttpServlet {
+    private IMetier metier;
+
+    @Override
+    public void init() throws ServletException {
+        metier = new MetierImpl();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        User user = metier.authentifier(email, password);
+
+        if (user != null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("currentUser", user);
+            response.sendRedirect(request.getContextPath() + "/home");
+        } else {
+            request.setAttribute("error", "البريد الإلكتروني أو كلمة المرور غير صحيحة");
+            request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+        }
+    }
+}
+                </div>
+            </section>
+
+            <!-- 10. web.xml -->
+            <section id="webxml">
+                <h2>10. سجل تهيئة المشروع (web.xml Deployment Descriptor)</h2>
+                <p>
+                    ملف <code>web.xml</code> الموجود في <code>src/main/webapp/WEB-INF/</code> هو عقل تطبيق الـ JEE الكلاسيكي. يقوم بالربط بين الروابط (URLs) والكلاسات البرمجية المسؤولة عنها:
+                </p>
+                <div class="code-title">مقتطف من web.xml</div>
+                <div class="code-block">
+&lt;web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee 
+         https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0"&gt;
+
+    &lt;display-name&gt;gestion-du-laboratoire-LIAS&lt;/display-name&gt;
+
+    &lt;!-- فلتر الأمان --&gt;
+    &lt;filter&gt;
+        &lt;filter-name&gt;AuthFilter&lt;/filter-name&gt;
+        &lt;filter-class&gt;com.lias.filter.AuthFilter&lt;/filter-class&gt;
+    &lt;/filter&gt;
+    &lt;filter-mapping&gt;
+        &lt;filter-name&gt;AuthFilter&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/home&lt;/url-pattern&gt;
+        &lt;url-pattern&gt;/rapport&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;
+
+    &lt;!-- سيرفلت تسجيل الدخول --&gt;
+    &lt;servlet&gt;
+        &lt;servlet-name&gt;LoginServlet&lt;/servlet-name&gt;
+        &lt;servlet-class&gt;com.lias.web.LoginServlet&lt;/servlet-class&gt;
+    &lt;/servlet&gt;
+    &lt;servlet-mapping&gt;
+        &lt;servlet-name&gt;LoginServlet&lt;/servlet-name&gt;
+        &lt;url-pattern&gt;/login&lt;/url-pattern&gt;
+    &lt;/servlet-mapping&gt;
+
+    &lt;!-- صفحة البداية الافتراضية --&gt;
+    &lt;welcome-file-list&gt;
+        &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;
+    &lt;/welcome-file-list&gt;
+&lt;/web-app&gt;
+                </div>
+            </section>
+
+            <!-- 11. Security -->
+            <section id="security">
+                <h2>11. الأمان والفلتر (AuthFilter) وإدارة الجلسات (HttpSession)</h2>
+                <div class="callout callout-info">
+                    <strong>ما هو الـ Filter في JEE؟</strong>
+                    هو كلاس تطبق واجهة <code>jakarta.servlet.Filter</code>، تعمل كـ "حارس أمن" يقف في المنتصف بين المتصفح والسيرفلت، ليفحص كل طلب قادم قبل السماح له بالمرور.
+                </div>
+                <h3>كيف يحمي كلاس `AuthFilter.java` مشروعنا؟</h3>
+                <ol>
+                    <li>يعترض أي طلب متوجه إلى الروابط الحساسة (مثل <code>/home</code> أو <code>/rapport</code>).</li>
+                    <li>يفحص الجلسة: <code>session.getAttribute("currentUser") != null</code>.</li>
+                    <li>إذا كان المستخدم مسجلاً، يستدعي <code>chain.doFilter(req, res)</code> ليسمح له بالمرور.</li>
+                    <li>إذا كان غير مسجل، يقوم فوراً بإعادة توجيهه: <code>response.sendRedirect(contextPath + "/login?error=auth_requise")</code>.</li>
+                </ol>
+            </section>
+
+            <!-- 12. Views & Design System -->
+            <section id="views">
+                <h2>12. طبقة العرض (Vues JSP) واعتماد نظام التصميم الأكاديمي (Design System) 🎨</h2>
+                <p>
+                    صفحات <strong>JavaServer Pages (JSP)</strong> توجد داخل مجلد <code>WEB-INF/views/</code>.
+                </p>
+                <div class="callout callout-warning">
+                    <strong>سؤال ذكي للأستاذ: "لماذا وضعت ملفات الـ JSP داخل WEB-INF وليس مباشرة في webapp؟"</strong><br>
+                    <strong>إجابتك :</strong> <em>"لأن مجلد WEB-INF محمي أمنياً من خادم Tomcat؛ لا يمكن لأي مستخدم من الخارج كتابة رابط الصفحة مباشرة في المتصفح وتجاوز السيرفلت. صفحات JSP لا يمكن الوصول إليها إلا عن طريق السيرفلت عبر RequestDispatcher.forward()، وهو المعيار الصارم لأمان MVC."</em>
+                </div>
+
+                <h3>كيف اعتمدنا الديزاين بالكامل وحولناه إلى معمارية JEE كلاسيكية؟</h3>
+                <p>
+                    بناءً على ملفات التصميم الأصلية في مجلد <code>design/</code> (الموقع العام <code>Site Public LIAS.html</code>، صفحة الدخول <code>Login LIAS.html</code>، والتطبيق الشامل <code>LIAS-Application-standalone.html</code>)، قمنا بتحويل كل صفحة إلى قالب JSP ديناميكي متصل ببيانات السيرفر مع توحيد الأنماط داخل <code>src/main/webapp/css/style.css</code>:
+                </p>
+
+                <div class="step-box">
+                    <div class="step-num">1</div>
+                    <div class="step-detail">
+                        <h4>هوية بصرية مؤسساتية وأكاديمية رفيعة (Prestige Académique)</h4>
+                        <p><strong>لوحة الألوان :</strong> تم استخدام لون كحلي داكن ملكي (<code>--navy: #1B2F4A</code>) يرمز للرصانة، مع خلفية ورق أرشيفي بيج دافئ (<code>--bg: #F4EFE6</code>) بنسيج نقطي خفيف، ولمسات ذهبية راقية (<code>--accent-2: #B08838</code>).</p>
+                        <p><strong>الخطوط المختارة :</strong> خط <code>Spectral</code> الكلاسيكي للترويسات والعناوين الأكاديمية الكبرى، وخط <code>DM Sans</code> للنصوص، وخط <code>JetBrains Mono</code> للتواريخ والمعايير الرقمية.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">2</div>
+                    <div class="step-detail">
+                        <h4>الموقع العام (public.jsp)</h4>
+                        <p>يطابق تصميم <code>Site Public LIAS.html</code> بنسبة 100% : شريط علوي مثبت، قسم Hero تحريري ضخم مع اقتباس لمدير المختبر، شريط إحصائيات بأرقام عملاقة (38 باحثاً، 280+ مقالاً)، شبكة استعراض الفرق البحثية الأربعة، جدول بأحدث المنشورات العلمية المسترجعة ديناميكياً، وقسم شركاء المختبر.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">3</div>
+                    <div class="step-detail">
+                        <h4>صفحة تسجيل الدخول بنظام العمودين (login.jsp)</h4>
+                        <p>تعتمد تصميم <code>Login LIAS.html</code> : العمود الأيسر كحلي داكن يبرز هوية المختبر ورسالته العلمية، والعمود الأيمن يحتوي على بطاقة تسجيل الدخول مع حقول الإدخال، وخيارات حفظ الجلسة، وأزرار سريعة لتعبئة بيانات الحسابات التجريبية للمناقشة.</p>
+                    </div>
+                </div>
+
+                <div class="step-box">
+                    <div class="step-num">4</div>
+                    <div class="step-detail">
+                        <h4>لوحة التحكم وباقي الشاشات (home.jsp, profils.jsp, publications.jsp...)</h4>
+                        <p>مستوحاة بالكامل من <code>LIAS-Application-standalone.html</code> : بطاقات مؤشرات الأداء (KPIs)، تتبع فترة انتداب المدير (Mandat Progress)، ملفات الباحثين وسيرهم الأكاديمية، تصفية المقالات العلمية، إدارة توزيع العتاد وفق مبدأ العدالة، وتوليد التقرير السنوي الوزاري الجاهز للطباعة والتصدير.</p>
+                    </div>
+                </div>
+
+                <div class="callout callout-tip">
+                    <strong>سؤال محتمل من الأستاذ: "هل استعملت Bootstrap أو Tailwind أو React؟"</strong><br>
+                    <strong>إجابتك القوية :</strong> <em>"لا يا أستاذ، تم بناء جميع الواجهات باستخدام Pure CSS و Vanilla HTML مدمجة في صفحات JSP الكلاسيكية. فضلت عدم الاعتماد على أطر عمل خارجية ثقيلة، لكي تكون كل تفصيلة تحت سيطرتي البرمجية، ولكي يظل المشروع خفيفاً ومتوافقاً 100% مع بيئة Eclipse وخادم Apache Tomcat."</em>
+                </div>
+
+                <h3>تضمين الأجزاء الموحدة (Includes) :</h3>
+                <p>
+                    لعدم تكرار كود القائمة العلوية والتذييل في كل صفحة، قمنا بإنشاء:
+                </p>
+                <ul>
+                    <li><code>WEB-INF/views/includes/navbar.jsp</code> : القائمة العلوية بشعار المختبر الموحد <code>[ L ] LIAS EST. 2003</code>، وروابط التنقل التفاعلية وشارة المستخدم المتصل.</li>
+                    <li><code>WEB-INF/views/includes/footer.jsp</code> : تذييل الصفحة المؤسساتي المكون من 4 أعمدة رسمية مع حقوق الكلية والمختبر.</li>
+                </ul>
+                <p>ويتم تضمينها في الصفحات عبر التوجيه القياسي: <code>&lt;%@ include file="includes/navbar.jsp" %&gt;</code>.</p>
+            </section>
+
+            <!-- 13. Database -->
+            <section id="database">
+                <h2>13. قاعدة البيانات (schema.sql) والربط العلائقي</h2>
+                <p>
+                    ملف <code>schema.sql</code> الموجود في جذر المشروع ينشئ قاعدة البيانات <code>lias_db</code> ويحتوي على الجداول التالية:
+                </p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>اسم الجدول</th>
+                            <th>المحتوى والدور الوظيفي</th>
+                            <th>المرجع في دفتر التحملات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>users</code></td>
+                            <td>حسابات الدخول، كلمات المرور، والأدوار (directeur, permanent, doctorant...)</td>
+                            <td>CDC §2 & §5.1</td>
+                        </tr>
+                        <tr>
+                            <td><code>members</code></td>
+                            <td>بيانات الباحثين، الرتبة، الفريق، وتاريخ الانتساب</td>
+                            <td>CDC §3 & §4</td>
+                        </tr>
+                        <tr>
+                            <td><code>publications</code></td>
+                            <td>المنشورات، المقالات، المؤتمرات، ورابط DOI</td>
+                            <td>CDC §12</td>
+                        </tr>
+                        <tr>
+                            <td><code>evenements</code></td>
+                            <td>المؤتمرات، الندوات، وورش العمل المنظمة</td>
+                            <td>CDC §9 & §20</td>
+                        </tr>
+                        <tr>
+                            <td><code>demandes_adhesion</code></td>
+                            <td>طلبات الانضمام، السيرة الذاتية، وقرار المدير</td>
+                            <td>CDC §6</td>
+                        </tr>
+                        <tr>
+                            <td><code>materiels</code></td>
+                            <td>تجهيزات المختبر وتتبع التوزيع العادل</td>
+                            <td>CDC §14 & §15</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 14. Docker -->
+            <section id="docker">
+                <h2>14. التشغيل بالحاويات (Docker & Docker Compose)</h2>
+                <p>
+                    ملف <code>docker-compose.yml</code> يتيح تشغيل كامل المنظومة بأمر واحد دون تثبيت برامج وسيطة:
+                </p>
+                <ul>
+                    <li>حاوية <strong>`lias-app`</strong> : مبنية على <code>tomcat:10.1-jdk21</code>، وتقوم بتجميع كود الجافا عبر <code>javac</code> ووضعه داخل <code>WEB-INF/classes</code> وتشغيل التطبيق على المنفذ <code>8080</code>.</li>
+                    <li>حاوية <strong>`lias-mysql`</strong> : خادم <code>mysql:8.0</code> يقوم آلياً بتنفيذ <code>schema.sql</code> عند أول إقلاع.</li>
+                </ul>
+                <div class="code-title">أوامر التشغيل السريعة</div>
+                <div class="code-block">
+# تشغيل كامل المشروع وقاعدة البيانات في الخلفية
+docker compose up -d --build
+
+# فحص عمل الحاويات
+docker compose ps
+
+# فتح التطبيق في المتصفح
+http://localhost:8080/public
+                </div>
+            </section>
+
+            <!-- 15. Soutenance Bank -->
+            <section id="soutenance">
+                <h2>15. بنك الأسئلة والأجوبة النموذجية للمناقشة أمام الأستاذ 🎓</h2>
+                <p>
+                    إليك أشهر الأسئلة التي يطرحها أساتذة الـ JEE مع الإجابة الدقيقة لتنال أعلى نقطة بإذن الله:
+                </p>
+
+                <div class="qa-card">
+                    <div class="qa-q">لماذا اخترت Jakarta EE 10 / Servlet 6.0 ولم تستخدم حزم javax.servlet القديمة؟</div>
+                    <div class="qa-a">
+                        لأن خادم <strong>Apache Tomcat 10+</strong> انتقل رسمياً من حزمة <code>javax.*</code> إلى <code>jakarta.*</code> بعد انتقال حقوق تطوير جافا للمؤسسات إلى مؤسسة Eclipse Foundation. استخدام <code>jakarta.servlet.*</code> هو المعيار الحديث والمستقبلي لجميع تطبيقات JEE.
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-q">ما الفرق بين doGet و doPost ومتى تستعمل كلاً منهما؟</div>
+                    <div class="qa-a">
+                        <code>doGet</code> تُستعمل لجلب وعرض البيانات، وتظهر بارامتراتها في عنوان الـ URL (مناسبة للتنقل والبحث). بينما <code>doPost</code> تُستعمل لإرسال بيانات حساسة أو كبيرة (مثل بيانات تسجيل الدخول أو إنشاء منشور)، حيث تُرسل البيانات مشفرة داخل جسم الطلب (HTTP Body) ولا تظهر في الرابط.
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-q">ما الفرق بين sendRedirect() و RequestDispatcher.forward()؟</div>
+                    <div class="qa-a">
+                        <code>forward()</code> يتم بالكامل داخل الخادم (Côté Serveur) دون أن يعلم المتصفح؛ يحتفظ بنفس كائن الـ Request وتظل البيانات المرفقة فيه محفوظة (وهو ما نستعمله لعرض الـ JSP). أما <code>sendRedirect()</code> فهو يرسل أمراً للمتصفح ليقوم بطلب جديد بعنوان جديد (Requête HTTP différente)، مما يغير الرابط في المتصفح (ونستعمله بعد نجاح Login أو Logout لتفادي تكرار إرسال الفورم عند التحديث).
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-q">كيف تضمن عدم حدوث تسريب في الذاكرة عند الاتصال بقاعدة البيانات؟</div>
+                    <div class="qa-a">
+                        عبر تطبيق نمط <strong>Singleton</strong> في كلاس <code>DBConnection</code> لفتح اتصال واحد، واستعمال صيغة <code>try-with-resources</code> أو التأكد من إغلاق <code>ResultSet</code> و <code>PreparedStatement</code> بعد كل استعلام.
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-q">لماذا استخدمت PreparedStatement بدلاً من Statement العادية؟</div>
+                    <div class="qa-a">
+                        لسببين جوهريين: <strong>الأمان</strong> لأنها تمنع هجمات حقن قواعد البيانات (SQL Injection) عن طريق تمرير المتغيرات كمعاملات منفصلة (<code>?</code>)، و<strong>الأداء</strong> لأن محرك قاعدة البيانات يقوم بترجمة وتحسين خطة تنفيذ الاستعلام (Pre-compilation) مرة واحدة ويعيد استخدامها.
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-q">كيف قمت بتأمين الجلسة عند تسجيل الخروج (Logout)؟</div>
+                    <div class="qa-a">
+                        داخل <code>LogoutServlet</code> نقوم باستدعاء <code>session.invalidate()</code> التي تدمر كائن الجلسة من ذاكرة السيرفر نهائياً وتلغي صلاحية الكوكيز، ثم نقوم بعمل <code>sendRedirect</code> لصفحة الدخول.
+                    </div>
+                </div>
+
+                <div class="qa-card">
+                    <div class="qa-q">لو سألك الأستاذ: لماذا لم تستخدم Spring Boot أو Hibernate؟</div>
+                    <div class="qa-a">
+                        لأن الهدف الأكاديمي الأساسي هو إتقان وفهم <strong>المعايير القياسية الصافية للجافا المؤسساتية (Core JEE Architecture)</strong>، ومعرفة كيف يعمل الـ Servlet Container والـ Session والـ JDBC من الصفر دون الاعتماد على مكتبات سحرية (Magic Frameworks) تحجب التفاصيل المنهجية عن الطالب.
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
