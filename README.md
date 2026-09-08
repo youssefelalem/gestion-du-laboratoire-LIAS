@@ -157,22 +157,25 @@ gestion-du-laboratoire-LIAS/
 │
 ├── src/main/
 │   ├── java/com/lias/
-│   │   ├── beans/                     → Modèle Métier (User, Member, Publication, etc.)
-│   │   ├── dao/                       → Interfaces & Implémentations DAO (JDBC)
-│   │   │   ├── DBConnection.java      → Singleton de connexion MySQL
+│   │   ├── beans/                     → Modèle Métier (User, Member, AffiliationPeriod, Mandat, Convention, ReunionPV, etc.)
+│   │   ├── dao/                       → Interfaces & Implémentations DAO (JDBC natif)
+│   │   │   ├── DBConnection.java      → Gestionnaire thread-safe de connexions MySQL
 │   │   │   ├── IUserDao.java / UserDaoImpl.java
-│   │   │   ├── IMemberDao.java / MemberDaoImpl.java
+│   │   │   ├── IMemberDao.java / MemberDaoImpl.java (Affiliations & Traçabilité)
+│   │   │   ├── IMandatDao.java / MandatDaoImpl.java (Mandats de Direction)
+│   │   │   ├── IConventionDao.java / ConventionDaoImpl.java (Partenariats R&D)
+│   │   │   ├── IPVDao.java / PVDaoImpl.java (Procès-Verbaux & Délibérations)
 │   │   │   └── IPublicationDao.java / PublicationDaoImpl.java
 │   │   ├── metier/                    → Couche Logique Métier (IMetier / MetierImpl)
-│   │   ├── web/                       → Servlets Contrôleurs (Home, Login, Adhesion, etc.)
-│   │   └── filter/                    → Filtres de sécurité (AuthFilter)
+│   │   ├── web/                       → 14 Contrôleurs Servlets (Home, Mandat, Convention, PV, Admin, Adhesion, etc.)
+│   │   └── filter/                    → Filtres de sécurité RBAC (AuthFilter)
 │   └── webapp/
 │       ├── WEB-INF/
 │       │   ├── lib/                   → Connecteur JDBC MySQL 8.x
-│       │   ├── views/                 → Vues JSP sécurisées (AppShell, Home, Profils...)
-│       │   │   └── includes/          → Fragments réutilisables (header, sidebar, footer)
+│       │   ├── views/                 → 14 Vues JSP conformes AppShell (home, mandats, conventions, pv, admin...)
+│       │   │   └── includes/          → Fragments réutilisables (header, sidebar, quick search modal)
 │       │   └── web.xml                → Descripteur de déploiement Jakarta Servlet 6.0
-│       ├── css/                       → Feuilles de styles CSS
+│       ├── css/                       → Feuilles de styles CSS & Design System
 │       └── index.jsp                  → Redirection d'entrée vers la Servlet d'accueil
 │
 └── docs/                              → Suite complète de conception UML & Spécifications

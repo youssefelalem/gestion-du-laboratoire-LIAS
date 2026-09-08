@@ -7,6 +7,9 @@
     boolean isDirecteur = (currentUser != null && ("directeur".equalsIgnoreCase(currentUser.getRole()) || "admin".equalsIgnoreCase(currentUser.getRole())));
     String msg = request.getParameter("msg");
     List<DemandeAdhesion> demandes = (List<DemandeAdhesion>) request.getAttribute("demandes");
+    if (demandes == null) {
+        demandes = (List<DemandeAdhesion>) request.getAttribute("adhesions");
+    }
 %>
 <!DOCTYPE html>
 <html lang="fr">

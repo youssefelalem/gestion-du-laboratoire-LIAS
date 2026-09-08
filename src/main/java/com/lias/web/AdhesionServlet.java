@@ -33,6 +33,7 @@ public class AdhesionServlet extends HttpServlet {
             throws ServletException, IOException {
         List<DemandeAdhesion> adhesions = demandeDao.findAllAdhesions();
         request.setAttribute("adhesions", adhesions);
+        request.setAttribute("demandes", adhesions);
         request.getRequestDispatcher("/WEB-INF/views/adhesions.jsp").forward(request, response);
     }
 
@@ -54,7 +55,13 @@ public class AdhesionServlet extends HttpServlet {
             String prenom = request.getParameter("prenom");
             String email = request.getParameter("email");
             String statutVise = request.getParameter("statutVise");
+            if (statutVise == null || statutVise.trim().isEmpty()) {
+                statutVise = request.getParameter("statutPostule");
+            }
             String etablissement = request.getParameter("etablissement");
+            if (etablissement == null || etablissement.trim().isEmpty()) {
+                etablissement = request.getParameter("etablissementOrigine");
+            }
             String motivation = request.getParameter("motivation");
             String date = LocalDate.now().toString();
 
