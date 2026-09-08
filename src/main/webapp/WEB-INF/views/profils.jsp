@@ -254,10 +254,13 @@
                         <span class="badge badge-muted">Systèmes décisionnels</span>
                     </div>
 
-                    <div style="margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-                        <a href="<%= request.getContextPath() %>/publications" class="btn btn-secondary">Voir ses publications scientifiques →</a>
+                    <div style="margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+                        <a href="<%= request.getContextPath() %>/publications?author=<%= java.net.URLEncoder.encode(selectedMember.getNom(), "UTF-8") %>" class="btn-section-cta">
+                            Voir les publications de <%= selectedMember.getPrenom() %> <%= selectedMember.getNom() %> <span class="arrow">→</span>
+                        </a>
                         <span style="font-family: var(--font-mono); font-size: 11px; color: var(--muted);">Dossier archivé et certifié LIAS</span>
                     </div>
+
                 </div>
                 <% } %>
             </div>
