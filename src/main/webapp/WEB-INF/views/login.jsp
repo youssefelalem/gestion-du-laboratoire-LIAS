@@ -337,15 +337,9 @@
                         <input type="password" id="password" name="password" placeholder="••••••••••••" required>
                     </div>
 
-                    <div class="login-row">
-                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-                            <input type="checkbox" name="remember" style="accent-color: var(--navy);">
-                            <span>Se souvenir de moi</span>
-                        </label>
-                        <a href="#" onclick="alert('Veuillez contacter le secrétariat du laboratoire : contact@lias.ma'); return false;">Mot de passe oublié ?</a>
+                    <div style="margin-top: 24px;">
+                        <button type="submit" class="submit-btn" style="margin-top: 0;">Accéder à mon espace →</button>
                     </div>
-
-                    <button type="submit" class="submit-btn">Accéder à mon espace →</button>
                 </form>
 
                 <!-- Comptes de Démonstration pour l'Évaluation Universitaire -->
