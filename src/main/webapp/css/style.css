@@ -41,6 +41,11 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -160,7 +165,7 @@ button, input, select, textarea {
 
 .nav {
   display: flex;
-  gap: 26px;
+  gap: 22px;
   align-items: center;
 }
 
@@ -171,22 +176,56 @@ button, input, select, textarea {
   font-weight: 500;
   padding: 6px 4px;
   position: relative;
-  transition: color 0.15s;
+  transition: color 0.2s ease;
+  text-decoration: none !important;
 }
 
 .nav a:hover, .nav a.active {
   color: var(--navy);
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
-.nav a.active::after {
+.nav a::after {
   content: '';
   position: absolute;
   bottom: -4px;
-  left: 0;
-  right: 0;
+  left: 50%;
+  width: 0;
   height: 2px;
-  background: var(--navy);
+  background: var(--accent-2);
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 2px;
+}
+
+.nav a:hover::after, .nav a.active::after {
+  width: 100%;
+  left: 0;
+}
+
+.nav a.cta::after, .nav a.nav-badge-btn::after, .nav a.btn::after {
+  display: none !important;
+}
+
+.nav .nav-badge-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--accent-2);
+  color: var(--navy) !important;
+  border-radius: 4px;
+  background: rgba(176, 136, 56, 0.08);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav .nav-badge-btn:hover {
+  background: var(--accent-2);
+  color: #1A1814 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(176, 136, 56, 0.28);
 }
 
 .nav .cta {
@@ -194,17 +233,21 @@ button, input, select, textarea {
   background: var(--navy);
   color: var(--cream) !important;
   border: 1px solid var(--navy);
-  border-radius: 2px;
+  border-radius: 3px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.02em;
-  transition: background 0.15s, transform 0.15s;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .nav .cta:hover {
   background: var(--navy-dark);
-  text-decoration: none;
+  text-decoration: none !important;
   transform: translateY(-1px);
+  box-shadow: 0 3px 12px rgba(27, 47, 74, 0.22);
 }
 
 .user-badge {

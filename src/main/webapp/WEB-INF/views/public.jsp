@@ -274,11 +274,32 @@
             color: var(--ink);
         }
 
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .event-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 28px 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .event-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
         @media (max-width: 900px) {
             .hero-public { grid-template-columns: 1fr; gap: 40px; padding: 48px 20px; }
             .hero-public h1 { font-size: 52px; }
             .stats-grid-public { grid-template-columns: 1fr 1fr; }
             .teams-grid { grid-template-columns: 1fr; }
+            .events-grid { grid-template-columns: 1fr; }
             .cta-box { grid-template-columns: 1fr; gap: 30px; padding: 40px 20px; }
             .partners-grid { grid-template-columns: repeat(3, 1fr); }
         }
@@ -290,7 +311,7 @@
     <%@ include file="includes/navbar.jsp" %>
 
     <!-- Hero Section -->
-    <section class="hero-public">
+    <section class="hero-public" id="top">
         <div>
             <div class="eyebrow">Laboratoire d'Informatique et Applications Scientifiques · FSBM Casablanca</div>
             <h1>Recherche <em>fondamentale</em> et appliquée en informatique.</h1>
@@ -450,6 +471,96 @@
         </div>
     </section>
 
+    <!-- Événements & Séminaires -->
+    <section class="section-public" id="evenements" style="padding-top: 0;">
+        <div class="section-head">
+            <div>
+                <div class="section-eyebrow">Agenda Scientifique</div>
+                <h2 class="section-title">Événements & Séminaires</h2>
+            </div>
+            <a href="<%= request.getContextPath() %>/evenements" class="btn btn-secondary">Tous les événements →</a>
+        </div>
+
+        <div class="events-grid">
+            <%
+                List<Evenement> evts = (List<Evenement>) request.getAttribute("upcomingEvents");
+                if (evts != null && !evts.isEmpty()) {
+                    int eCount = 0;
+                    for (Evenement evt : evts) {
+                        if (++eCount > 3) break;
+            %>
+            <div class="event-card">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                        <span class="badge badge-navy"><%= evt.getType() != null ? evt.getType() : "Séminaire" %></span>
+                        <span style="font-family: var(--font-mono); font-size: 11px; color: var(--muted);"><%= evt.getDate() != null ? evt.getDate() : "" %></span>
+                    </div>
+                    <h3 style="font-family: var(--font-serif); font-size: 20px; font-weight: 500; margin: 0 0 10px; line-height: 1.3;"><%= evt.getTitre() %></h3>
+                    <p style="font-family: var(--font-serif); font-size: 14px; color: var(--muted); line-height: 1.5; margin: 0 0 16px;">
+                        <%= evt.getDescription() != null && evt.getDescription().length() > 110 ? evt.getDescription().substring(0, 107) + "..." : (evt.getDescription() != null ? evt.getDescription() : "") %>
+                    </p>
+                </div>
+                <div style="padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-sans); font-size: 12.5px; color: var(--ink); display: flex; justify-content: space-between; align-items: center;">
+                    <span>📍 <%= evt.getLieu() != null ? evt.getLieu() : "FSBM Casablanca" %></span>
+                    <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-2); font-weight: 600;"><%= evt.getStatut() != null ? evt.getStatut() : "À venir" %></span>
+                </div>
+            </div>
+            <%
+                    }
+                } else {
+            %>
+            <div class="event-card">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                        <span class="badge badge-navy">Workshop</span>
+                        <span style="font-family: var(--font-mono); font-size: 11px; color: var(--muted);">2026-04-15</span>
+                    </div>
+                    <h3 style="font-family: var(--font-serif); font-size: 20px; font-weight: 500; margin: 0 0 10px; line-height: 1.3;">Journée Doctorale IA & Big Data</h3>
+                    <p style="font-family: var(--font-serif); font-size: 14px; color: var(--muted); line-height: 1.5; margin: 0 0 16px;">
+                        Présentation des avancées des thèses de doctorat et échanges avec les chercheurs associés.
+                    </p>
+                </div>
+                <div style="padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-sans); font-size: 12.5px; color: var(--ink); display: flex; justify-content: space-between; align-items: center;">
+                    <span>📍 Amphithéâtre Al-Khawarizmi</span>
+                    <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-2); font-weight: 600;">À venir</span>
+                </div>
+            </div>
+            <div class="event-card">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                        <span class="badge badge-navy">Séminaire</span>
+                        <span style="font-family: var(--font-mono); font-size: 11px; color: var(--muted);">2026-05-10</span>
+                    </div>
+                    <h3 style="font-family: var(--font-serif); font-size: 20px; font-weight: 500; margin: 0 0 10px; line-height: 1.3;">Calcul Haute Performance & Clouds</h3>
+                    <p style="font-family: var(--font-serif); font-size: 14px; color: var(--muted); line-height: 1.5; margin: 0 0 16px;">
+                        Conférence invitée avec des experts du CNRS sur les architectures distribuées résilientes.
+                    </p>
+                </div>
+                <div style="padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-sans); font-size: 12.5px; color: var(--ink); display: flex; justify-content: space-between; align-items: center;">
+                    <span>📍 Salle des Séminaires LIAS</span>
+                    <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-2); font-weight: 600;">À venir</span>
+                </div>
+            </div>
+            <div class="event-card">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                        <span class="badge badge-navy">Soutenance</span>
+                        <span style="font-family: var(--font-mono); font-size: 11px; color: var(--muted);">2026-06-20</span>
+                    </div>
+                    <h3 style="font-family: var(--font-serif); font-size: 20px; font-weight: 500; margin: 0 0 10px; line-height: 1.3;">Soutenance de Thèse de Doctorat</h3>
+                    <p style="font-family: var(--font-serif); font-size: 14px; color: var(--muted); line-height: 1.5; margin: 0 0 16px;">
+                        Thèse intitulée « Privacy-Preserving Federated Learning » présentée par Y. Amrani.
+                    </p>
+                </div>
+                <div style="padding-top: 14px; border-top: 1px solid var(--border); font-family: var(--font-sans); font-size: 12.5px; color: var(--ink); display: flex; justify-content: space-between; align-items: center;">
+                    <span>📍 Salle des Thèses, FSBM</span>
+                    <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-2); font-weight: 600;">À venir</span>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </section>
+
     <!-- Partenaires -->
     <section class="section-public" style="padding-top: 0;">
         <div class="section-eyebrow">Réseau & Collaborations</div>
@@ -465,7 +576,7 @@
     </section>
 
     <!-- CTA Collaborer -->
-    <section class="cta-box">
+    <section class="cta-box" id="rejoindre">
         <div>
             <div class="eyebrow" style="color: rgba(244,239,230,0.6);">Rejoignez le laboratoire</div>
             <h2>Vous souhaitez collaborer avec le LIAS ?</h2>
@@ -481,6 +592,42 @@
 
     <!-- Shared Footer -->
     <%@ include file="includes/footer.jsp" %>
+
+    <!-- Active Anchor Scroll Spy -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var navMap = {
+                'top': document.getElementById('nav-top'),
+                'equipes': document.getElementById('nav-equipes'),
+                'publications': document.getElementById('nav-publications'),
+                'evenements': document.getElementById('nav-evenements'),
+                'rejoindre': document.getElementById('nav-rejoindre')
+            };
+
+            var sections = ['top', 'equipes', 'publications', 'evenements', 'rejoindre']
+                .map(function(id) { return document.getElementById(id); })
+                .filter(Boolean);
+
+            if ('IntersectionObserver' in window && sections.length > 0) {
+                var observer = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            var id = entry.target.id;
+                            Object.keys(navMap).forEach(function(k) {
+                                if (navMap[k]) navMap[k].classList.remove('active');
+                            });
+                            if (navMap[id]) navMap[id].classList.add('active');
+                        }
+                    });
+                }, {
+                    rootMargin: '-20% 0px -65% 0px',
+                    threshold: 0.05
+                });
+
+                sections.forEach(function(sec) { observer.observe(sec); });
+            }
+        });
+    </script>
 
 </body>
 </html>
