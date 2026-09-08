@@ -154,6 +154,15 @@ public class DemandeDaoImpl implements IDemandeDao {
                         psU.setString(4, statutVise.equalsIgnoreCase("Doctorant") ? "doctorant" : "permanent");
                         psU.executeUpdate();
                     }
+
+                    // 4. Trace du service de notification par email (CDC §4 & §19)
+                    System.out.println("================================================================================");
+                    System.out.println("[SERVICE NOTIFICATION - EMAIL AUTOMATIQUE]");
+                    System.out.println("Destinataire : " + email + " (" + prenom + " " + nom + ")");
+                    System.out.println("Objet        : Décision d'adhésion au Laboratoire LIAS - Compte Activé");
+                    System.out.println("Message      : Félicitations, votre candidature a été validée par la direction.");
+                    System.out.println("Identifiants : Identifiant: " + email + " | Mot de passe initial: pass123");
+                    System.out.println("================================================================================");
                 }
             }
         } catch (SQLException e) {
