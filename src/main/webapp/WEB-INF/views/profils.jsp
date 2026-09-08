@@ -138,7 +138,7 @@
                 </p>
             </div>
             <% if (isDirector) { %>
-                <button class="btn btn-primary" onclick="alert('Formulaire d\'enregistrement de membre accessible dans l\'interface administrative.');">+ Ajouter un chercheur</button>
+                <a href="<%= request.getContextPath() %>/admin" class="btn btn-primary">+ Gérer les comptes chercheurs →</a>
             <% } %>
         </div>
 

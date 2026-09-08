@@ -29,11 +29,33 @@
         </div>
     </div>
 
-    <div class="header-right">
+    <div class="header-right" style="position: relative;">
         <button type="button" class="header-icon-btn" title="Notifications" onclick="toggleNotifications()">
             <span class="bell-glyph">◉</span>
             <span class="bell-badge">3</span>
         </button>
+
+        <!-- Notifications Dropdown Popover (CDC §19) -->
+        <div id="notifPopover" class="user-dropdown-popover" style="display: none; width: 340px; right: 200px; top: 56px; text-align: left; padding: 16px 20px; box-shadow: var(--shadow-md); border-radius: 4px; z-index: 1000;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <strong style="font-size: 13px; color: var(--navy); font-family: var(--font-serif);">Notifications (CDC §19)</strong>
+                <span class="badge badge-gold" style="font-size: 10px;">3 nouvelles</span>
+            </div>
+            <div class="popover-divider" style="margin: 8px 0;"></div>
+            <a href="<%= request.getContextPath() %>/adhesions" class="popover-item" style="padding: 8px 0; display: block; text-decoration: none; border-bottom: 1px solid var(--border);">
+                <div style="font-weight: 600; font-size: 12px; color: var(--ink);">Validation de candidatures</div>
+                <div style="font-size: 11px; color: var(--muted);">Dossiers d'adhésion en attente d'arbitrage.</div>
+            </a>
+            <a href="<%= request.getContextPath() %>/evenements" class="popover-item" style="padding: 8px 0; display: block; text-decoration: none; border-bottom: 1px solid var(--border);">
+                <div style="font-weight: 600; font-size: 12px; color: var(--ink);">Événement scientifique</div>
+                <div style="font-size: 11px; color: var(--muted);">Séminaire IA Générative programmé en avril.</div>
+            </a>
+            <a href="<%= request.getContextPath() %>/pv" class="popover-item" style="padding: 8px 0; display: block; text-decoration: none;">
+                <div style="font-weight: 600; font-size: 12px; color: var(--ink);">Ajout de documents (PV)</div>
+                <div style="font-size: 11px; color: var(--muted);">Nouveau PV de conseil de laboratoire consigné.</div>
+            </a>
+        </div>
+
 
         <div class="header-user-menu">
             <div class="user-avatar"><%= userInitials %></div>
@@ -125,8 +147,14 @@
     });
 
     function toggleNotifications() {
-        alert('🔔 Notifications LIAS :\n\n1. 4 demandes d\'adhésion en attente de décision de la direction.\n2. Rapport annuel 2025–2026 complété à 78 %.\n3. Prochain séminaire : Federated Learning sur Edge le 14 juin.');
+        var pop = document.getElementById('notifPopover');
+        var userPop = document.getElementById('userPopover');
+        if (userPop) userPop.style.display = 'none';
+        if (pop) {
+            pop.style.display = (pop.style.display === 'block') ? 'none' : 'block';
+        }
     }
+
 
     function filterQuickSearch(query) {
         query = query.toLowerCase().trim();
