@@ -13,7 +13,7 @@
     <meta charset="UTF-8">
     <title>LIAS — Événements Scientifiques & Séminaires</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=2">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=3">
     <style>
         .event-row {
             display: grid;
@@ -93,8 +93,13 @@
         </div>
 
         <% if ("cree".equals(msg)) { %>
-            <div class="callout callout-success" style="margin-bottom: 24px;">
-                ✓ L'événement a été programmé et ajouté à l'agenda officiel du laboratoire.
+            <div class="toast-notification" id="appToast">
+                <div class="toast-icon">✓</div>
+                <div class="toast-content">
+                    <div class="toast-title">Événement planifié avec succès !</div>
+                    <div class="toast-desc">La manifestation scientifique a été enregistrée et ajoutée à l'agenda officiel du laboratoire.</div>
+                </div>
+                <button type="button" class="toast-close" onclick="closeToast()" title="Fermer">✕</button>
             </div>
         <% } %>
 
@@ -190,6 +195,25 @@
             el.style.display = el.style.display === 'block' ? 'none' : 'block';
             if (el.style.display === 'block') el.scrollIntoView({ behavior: 'smooth' });
         }
+        function closeToast() {
+            var toast = document.getElementById("appToast");
+            if (toast) {
+                toast.classList.add("toast-hide");
+                setTimeout(function() { toast.remove(); }, 350);
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            var toast = document.getElementById("appToast");
+            if (toast) {
+                setTimeout(function() {
+                    closeToast();
+                }, 5000);
+                if (window.history.replaceState) {
+                    var cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                    window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+                }
+            }
+        });
     </script>
 </body>
 </html>

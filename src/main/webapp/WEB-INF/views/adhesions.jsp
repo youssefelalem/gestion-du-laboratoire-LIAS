@@ -17,7 +17,7 @@
     <meta charset="UTF-8">
     <title>LIAS — Demandes d'Adhésion & Recrutement</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=2">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=3">
 </head>
 <body>
 
@@ -49,19 +49,22 @@
         </div>
 
         <% if ("soumission_reussie".equals(msg)) { %>
-            <div class="callout callout-success" id="successBannerTop">
-                <div style="font-size: 26px; line-height: 1; font-weight: bold;">✓</div>
-                <div>
-                    <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Dossier de candidature transmis avec succès !</strong>
-                    Votre dossier a été enregistré et transmis à la direction du laboratoire LIAS. Un accusé de réception automatique a été généré et votre candidature sera examinée lors du prochain conseil scientifique.
+            <div class="toast-notification" id="appToast">
+                <div class="toast-icon">✓</div>
+                <div class="toast-content">
+                    <div class="toast-title">Candidature transmise avec succès !</div>
+                    <div class="toast-desc">Votre dossier a été enregistré et transmis à la direction du laboratoire LIAS. Un accusé de réception automatique a été généré.</div>
                 </div>
+                <button type="button" class="toast-close" onclick="closeToast()" title="Fermer">✕</button>
             </div>
         <% } else if ("decision_enregistree".equals(msg)) { %>
-            <div class="callout callout-success" id="successBannerTop">
-                <div style="font-size: 26px; line-height: 1; font-weight: bold;">✓</div>
-                <div>
-                    <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Décision enregistrée avec succès !</strong>
+            <div class="toast-notification" id="appToast">
+                <div class="toast-icon">✓</div>
+                <div class="toast-content">
+                    <div class="toast-title">Décision enregistrée avec succès !</div>
+                    <div class="toast-desc">La décision de la direction sur le dossier a été validée et enregistrée dans les registres officiels du laboratoire.</div>
                 </div>
+                <button type="button" class="toast-close" onclick="closeToast()" title="Fermer">✕</button>
             </div>
         <% } %>
 
@@ -170,16 +173,6 @@
                     Veuillez renseigner ce formulaire avec vos coordonnées institutionnelles exactes. La direction examinera votre profil lors du prochain conseil scientifique.
                 </p>
 
-                <% if ("soumission_reussie".equals(msg)) { %>
-                    <div class="callout callout-success" id="successBannerForm" style="margin-bottom: 28px;">
-                        <div style="font-size: 26px; line-height: 1; font-weight: bold;">✓</div>
-                        <div>
-                            <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Votre demande a bien été reçue par le laboratoire LIAS !</strong>
-                            Vos informations ont été enregistrées avec succès dans notre base de données. Vous recevrez une notification par email dès que la direction aura statué sur votre dossier.
-                        </div>
-                    </div>
-                <% } %>
-
                 <form action="<%= request.getContextPath() %>/adhesions" method="post">
                     <input type="hidden" name="action" value="soumettre">
 
@@ -246,16 +239,27 @@
 </div>
 <% } %>
 
-<% if (msg != null && !msg.trim().isEmpty()) { %>
 <script>
+    function closeToast() {
+        var toast = document.getElementById("appToast");
+        if (toast) {
+            toast.classList.add("toast-hide");
+            setTimeout(function() { toast.remove(); }, 350);
+        }
+    }
     document.addEventListener("DOMContentLoaded", function() {
-        var banner = document.getElementById("successBannerTop") || document.getElementById("successBannerForm");
-        if (banner) {
-            banner.scrollIntoView({ behavior: "smooth", block: "center" });
+        var toast = document.getElementById("appToast");
+        if (toast) {
+            setTimeout(function() {
+                closeToast();
+            }, 5000);
+            if (window.history.replaceState) {
+                var cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+            }
         }
     });
 </script>
-<% } %>
 
 </body>
 </html>

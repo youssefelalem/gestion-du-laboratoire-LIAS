@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <title>LIAS — Gestion du Matériel & Distribution Équitable</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=2">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=3">
 </head>
 <body>
 
@@ -40,8 +40,13 @@
         </div>
 
         <% if ("demande_enregistree".equals(msg)) { %>
-            <div class="callout callout-success">
-                ✓ Votre demande d'équipement scientifique a été enregistrée pour arbitrage.
+            <div class="toast-notification" id="appToast">
+                <div class="toast-icon">✓</div>
+                <div class="toast-content">
+                    <div class="toast-title">Demande d'équipement transmise !</div>
+                    <div class="toast-desc">Votre besoin en matériel scientifique a été consigné pour instruction budgétaire.</div>
+                </div>
+                <button type="button" class="toast-close" onclick="closeToast()" title="Fermer">✕</button>
             </div>
         <% } %>
 
@@ -172,6 +177,25 @@
             f.style.display = f.style.display === 'block' ? 'none' : 'block';
             if (f.style.display === 'block') f.scrollIntoView({ behavior: 'smooth' });
         }
+        function closeToast() {
+            var toast = document.getElementById("appToast");
+            if (toast) {
+                toast.classList.add("toast-hide");
+                setTimeout(function() { toast.remove(); }, 350);
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            var toast = document.getElementById("appToast");
+            if (toast) {
+                setTimeout(function() {
+                    closeToast();
+                }, 5000);
+                if (window.history.replaceState) {
+                    var cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                    window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+                }
+            }
+        });
     </script>
 </body>
 </html>
