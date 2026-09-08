@@ -43,7 +43,7 @@ public class AdhesionServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
 
-        if ("decision".equals(action)) {
+        if ("decision".equals(action) || "valider".equals(action) || "refuser".equals(action)) {
             jakarta.servlet.http.HttpSession session = request.getSession(false);
             com.lias.beans.User user = null;
             if (session != null) {
@@ -55,10 +55,18 @@ public class AdhesionServlet extends HttpServlet {
                 return;
             }
             // Décision prise par le directeur en mandat actif
-            Long id = Long.parseLong(request.getParameter("id"));
+            String idStr = request.getParameter("id");
+            if (idStr == null || idStr.trim().isEmpty()) {
+                idStr = request.getParameter("demandeId");
+            }
+            Long id = Long.parseLong(idStr);
             String decision = request.getParameter("decision"); // ACCEPTEE ou REFUSEE
+            if (decision == null || decision.trim().isEmpty()) {
+                decision = "valider".equalsIgnoreCase(action) ? "ACCEPTEE" : "REFUSEE";
+            }
             demandeDao.updateDecisionAdhesion(id, decision);
             response.sendRedirect(request.getContextPath() + "/adhesions?msg=decision_enregistree");
+            return;
         } else {
             // Nouvelle soumission de candidature (par un visiteur ou candidat externe)
             String nom = request.getParameter("nom");
