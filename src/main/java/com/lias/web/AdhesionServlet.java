@@ -44,6 +44,16 @@ public class AdhesionServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         if ("decision".equals(action)) {
+            jakarta.servlet.http.HttpSession session = request.getSession(false);
+            com.lias.beans.User user = null;
+            if (session != null) {
+                user = (com.lias.beans.User) session.getAttribute("currentUser");
+                if (user == null) user = (com.lias.beans.User) session.getAttribute("user");
+            }
+            if (user == null || (!"directeur".equalsIgnoreCase(user.getRole()) && !"admin".equalsIgnoreCase(user.getRole()))) {
+                response.sendRedirect(request.getContextPath() + "/login?error=auth_requise");
+                return;
+            }
             // Décision prise par le directeur en mandat actif
             Long id = Long.parseLong(request.getParameter("id"));
             String decision = request.getParameter("decision"); // ACCEPTEE ou REFUSEE

@@ -166,7 +166,6 @@
         <url-pattern>/mandats</url-pattern>
         <url-pattern>/conventions</url-pattern>
         <url-pattern>/pv</url-pattern>
-        <url-pattern>/adhesions</url-pattern>
         <url-pattern>/materiel</url-pattern>
         <url-pattern>/admin</url-pattern>
     </filter-mapping>
