@@ -54,6 +54,10 @@
                 <div style="font-weight: 600; font-size: 12px; color: var(--ink);">Ajout de documents (PV)</div>
                 <div style="font-size: 11px; color: var(--muted);">Nouveau PV de conseil de laboratoire consigné.</div>
             </a>
+            <div class="popover-divider" style="margin: 8px 0;"></div>
+            <a href="<%= request.getContextPath() %>/notifications" style="display:block; text-align:center; font-size:12px; color:var(--navy); font-weight:600; text-decoration:none; padding:6px 0;">
+                Voir toutes les notifications (CDC §19) →
+            </a>
         </div>
 
 
@@ -73,6 +77,7 @@
                 <div class="popover-divider"></div>
                 <a href="<%= request.getContextPath() %>/public" class="popover-item">↗ Site public du LIAS</a>
                 <a href="<%= request.getContextPath() %>/profils" class="popover-item">Mon profil chercheur</a>
+                <a href="<%= request.getContextPath() %>/notifications" class="popover-item">Centre de notifications</a>
                 <div class="popover-divider"></div>
                 <a href="<%= request.getContextPath() %>/logout" class="popover-item danger">Déconnexion</a>
             </div>
@@ -85,12 +90,12 @@
     <div class="search-modal-card">
         <div class="search-modal-input-row">
             <span style="font-size:16px; color:var(--muted); font-family:var(--font-mono);">⌕</span>
-            <input type="text" id="globalSearchInput" placeholder="Rechercher membre, publication, événement, matériel…" oninput="filterQuickSearch(this.value)">
+            <input type="text" id="globalSearchInput" placeholder="Rechercher membre, publication, événement, document… (Entrée pour recherche complète)" oninput="filterQuickSearch(this.value)" onkeydown="if(event.key==='Enter') doGlobalSearch(this.value)">
             <kbd onclick="closeSearchModal()" style="cursor:pointer; font-family:var(--font-mono); font-size:11px; padding:2px 6px; border:1px solid var(--border); border-radius:2px; background:var(--surface);">Échap</kbd>
         </div>
         <div class="search-modal-results" id="searchResults">
             <div class="search-result-group">
-                <div class="search-group-title">Raccourcis rapides</div>
+                <div class="search-group-title">Raccourcis & Modules</div>
                 <a href="<%= request.getContextPath() %>/home" class="search-result-item">
                     <span class="sr-icon">⊟</span>
                     <span class="sr-text">Tableau de bord institutionnel</span>
@@ -101,20 +106,40 @@
                     <span class="sr-text">Profils des chercheurs & doctorants</span>
                     <span class="sr-tag">Annuaire</span>
                 </a>
+                <a href="<%= request.getContextPath() %>/calendrier" class="search-result-item">
+                    <span class="sr-icon">▦</span>
+                    <span class="sr-text">Calendrier scientifique & événements</span>
+                    <span class="sr-tag">Agenda</span>
+                </a>
+                <a href="<%= request.getContextPath() %>/documents" class="search-result-item">
+                    <span class="sr-icon">▤</span>
+                    <span class="sr-text">Archive documentaire institutionnelle</span>
+                    <span class="sr-tag">Documents</span>
+                </a>
+                <a href="<%= request.getContextPath() %>/communication" class="search-result-item">
+                    <span class="sr-icon">❝</span>
+                    <span class="sr-text">Communication interne & canaux d'équipes</span>
+                    <span class="sr-tag">Échanges</span>
+                </a>
                 <a href="<%= request.getContextPath() %>/publications" class="search-result-item">
                     <span class="sr-icon">¶</span>
-                    <span class="sr-text">Catalogue des publications scientifiques (Scopus / DBLP)</span>
+                    <span class="sr-text">Catalogue des publications scientifiques</span>
                     <span class="sr-tag">Recherche</span>
                 </a>
-                <a href="<%= request.getContextPath() %>/evenements" class="search-result-item">
-                    <span class="sr-icon">◇</span>
-                    <span class="sr-text">Agenda & Conférences scientifiques</span>
-                    <span class="sr-tag">Évènements</span>
+                <a href="<%= request.getContextPath() %>/materiel" class="search-result-item">
+                    <span class="sr-icon">▭</span>
+                    <span class="sr-text">Parc de matériel scientifique & allocations</span>
+                    <span class="sr-tag">Équipement</span>
                 </a>
-                <a href="<%= request.getContextPath() %>/rapport" class="search-result-item">
-                    <span class="sr-icon">§</span>
-                    <span class="sr-text">Rapport annuel d'exercice 2025–2026 (78%)</span>
-                    <span class="sr-tag">Gouvernance</span>
+                <a href="<%= request.getContextPath() %>/conventions" class="search-result-item">
+                    <span class="sr-icon">⌘</span>
+                    <span class="sr-text">Conventions & Partenariats institutionnels</span>
+                    <span class="sr-tag">Accords</span>
+                </a>
+                <a href="<%= request.getContextPath() %>/notifications" class="search-result-item">
+                    <span class="sr-icon">◉</span>
+                    <span class="sr-text">Centre de notifications & alertes</span>
+                    <span class="sr-tag">Notifications</span>
                 </a>
             </div>
         </div>
@@ -122,6 +147,11 @@
 </div>
 
 <script>
+    function doGlobalSearch(val) {
+        if (val && val.trim().length > 0) {
+            window.location.href = '<%= request.getContextPath() %>/recherche?q=' + encodeURIComponent(val.trim());
+        }
+    }
     function openSearchModal() {
         var modal = document.getElementById('searchModal');
         if (modal) {
@@ -155,7 +185,6 @@
         }
     }
 
-
     function filterQuickSearch(query) {
         query = query.toLowerCase().trim();
         var items = document.querySelectorAll('.search-result-item');
@@ -169,22 +198,28 @@
         });
     }
 
-    // Toggle user dropdown on click
+    // Toggle user dropdown on click & close on click outside
     document.addEventListener('DOMContentLoaded', function() {
         var userMenu = document.querySelector('.header-user-menu');
         var popover = document.getElementById('userPopover');
+        var notifPop = document.getElementById('notifPopover');
+        var notifBtn = document.querySelector('.header-icon-btn');
+
         if (userMenu && popover) {
             userMenu.addEventListener('click', function(e) {
                 e.stopPropagation();
-                if (popover.style.display === 'none' || !popover.style.display) {
-                    popover.style.display = 'flex';
-                } else {
-                    popover.style.display = 'none';
-                }
-            });
-            document.addEventListener('click', function() {
-                popover.style.display = 'none';
+                if (notifPop) notifPop.style.display = 'none';
+                popover.style.display = (popover.style.display === 'flex') ? 'none' : 'flex';
             });
         }
+        if (notifBtn && notifPop) {
+            notifBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+        document.addEventListener('click', function(e) {
+            if (popover) popover.style.display = 'none';
+            if (notifPop && !notifPop.contains(e.target)) notifPop.style.display = 'none';
+        });
     });
 </script>

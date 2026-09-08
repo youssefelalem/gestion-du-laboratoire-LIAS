@@ -17,7 +17,24 @@ import jakarta.servlet.http.HttpSession;
  * Vérifie qu'une session HTTP active existe avant d'accéder aux pages privées.
  * Si non connecté, redirige automatiquement vers la page de login.
  */
-@WebFilter(filterName = "AuthFilter", urlPatterns = {"/home", "/home/*", "/admin", "/admin/*"})
+@WebFilter(filterName = "AuthFilter", urlPatterns = {
+    "/home", "/home/*",
+    "/admin", "/admin/*",
+    "/publications", "/publications/*",
+    "/evenements", "/evenements/*",
+    "/calendrier", "/calendrier/*",
+    "/membres", "/membres/*",
+    "/profils", "/profils/*",
+    "/materiel", "/materiel/*",
+    "/conventions", "/conventions/*",
+    "/mandats", "/mandats/*",
+    "/pv", "/pv/*",
+    "/documents", "/documents/*",
+    "/communication", "/communication/*",
+    "/rapport", "/rapport/*",
+    "/notifications", "/notifications/*",
+    "/recherche", "/recherche/*"
+})
 public class AuthFilter implements Filter {
 
     @Override

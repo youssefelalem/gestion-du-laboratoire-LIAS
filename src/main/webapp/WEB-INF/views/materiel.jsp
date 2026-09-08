@@ -143,7 +143,9 @@
                             <% if ("en_attente".equalsIgnoreCase(m.getStatut())) { %>
                             <form action="<%= request.getContextPath() %>/materiel" method="post" style="display: inline;">
                                 <input type="hidden" name="action" value="attribuer">
+                                <input type="hidden" name="id" value="<%= m.getId() %>">
                                 <input type="hidden" name="materielId" value="<%= m.getId() %>">
+                                <input type="hidden" name="statut" value="ATTRIBUE">
                                 <button type="submit" class="btn btn-sm btn-accent">Attribuer</button>
                             </form>
                             <% } else { %>

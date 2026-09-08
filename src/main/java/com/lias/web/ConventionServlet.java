@@ -56,7 +56,7 @@ public class ConventionServlet extends HttpServlet {
             if (user == null) user = (User) session.getAttribute("user");
         }
 
-        if (user == null || (!"directeur".equalsIgnoreCase(user.getRole()) && !"permanent".equalsIgnoreCase(user.getRole()))) {
+        if (user == null || (!"directeur".equalsIgnoreCase(user.getRole()) && !"permanent".equalsIgnoreCase(user.getRole()) && !"admin".equalsIgnoreCase(user.getRole()))) {
             response.sendRedirect(request.getContextPath() + "/conventions?error=unauthorized");
             return;
         }
@@ -69,32 +69,36 @@ public class ConventionServlet extends HttpServlet {
         String budgetStr = request.getParameter("budgetAlloue");
         String statut = request.getParameter("statut");
 
-        if (organisme != null && !organisme.trim().isEmpty() && objet != null && dateSigStr != null) {
-            Convention c = new Convention();
-            Mandat actif = mandatDao.findActive();
-            if (actif != null) {
-                c.setMandatId(actif.getId());
-            }
-            c.setOrganismePartenaire(organisme.trim());
-            c.setTypePartenaire(typePartenaire != null ? typePartenaire : "Industrie");
-            c.setObjet(objet.trim());
-            c.setDateSignature(LocalDate.parse(dateSigStr));
-            if (dateEchStr != null && !dateEchStr.trim().isEmpty()) {
-                c.setDateEcheance(LocalDate.parse(dateEchStr));
-            }
-            c.setStatut(statut != null ? statut : "Active");
+        if (organisme != null && !organisme.trim().isEmpty() && objet != null && dateSigStr != null && !dateSigStr.trim().isEmpty()) {
+            try {
+                Convention c = new Convention();
+                Mandat actif = mandatDao.findActive();
+                if (actif != null) {
+                    c.setMandatId(actif.getId());
+                }
+                c.setOrganismePartenaire(organisme.trim());
+                c.setTypePartenaire(typePartenaire != null ? typePartenaire : "Industrie");
+                c.setObjet(objet.trim());
+                c.setDateSignature(LocalDate.parse(dateSigStr.trim()));
+                if (dateEchStr != null && !dateEchStr.trim().isEmpty()) {
+                    c.setDateEcheance(LocalDate.parse(dateEchStr.trim()));
+                }
+                c.setStatut(statut != null ? statut : "Active");
 
-            if (budgetStr != null && !budgetStr.trim().isEmpty()) {
-                try {
-                    c.setBudgetAlloue(new BigDecimal(budgetStr.replaceAll("[^0-9.]", "")));
-                } catch (Exception e) {
+                if (budgetStr != null && !budgetStr.trim().isEmpty()) {
+                    try {
+                        c.setBudgetAlloue(new BigDecimal(budgetStr.replaceAll("[^0-9.]", "")));
+                    } catch (Exception e) {
+                        c.setBudgetAlloue(BigDecimal.ZERO);
+                    }
+                } else {
                     c.setBudgetAlloue(BigDecimal.ZERO);
                 }
-            } else {
-                c.setBudgetAlloue(BigDecimal.ZERO);
-            }
 
-            conventionDao.save(c);
+                conventionDao.save(c);
+            } catch (Exception e) {
+                // Ignore parse errors safely
+            }
         }
 
         response.sendRedirect(request.getContextPath() + "/conventions?success=created");

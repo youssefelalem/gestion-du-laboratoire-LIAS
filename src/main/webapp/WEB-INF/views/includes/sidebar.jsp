@@ -23,6 +23,8 @@
             else if (servletPath.contains("convention")) activeNav = "conventions";
             else if (servletPath.contains("pv")) activeNav = "pv";
             else if (servletPath.contains("admin")) activeNav = "admin";
+            else if (servletPath.contains("notif")) activeNav = "notifications";
+            else if (servletPath.contains("recherche")) activeNav = "recherche";
         }
     }
 %>
@@ -110,10 +112,16 @@
         <div class="sidebar-section">
             <div class="sidebar-section-title">Outils</div>
 
-            <button type="button" class="sidebar-nav-item" onclick="openSearchModal()" style="background:none; border:none; width:100%; cursor:pointer;">
+            <a href="<%= request.getContextPath() %>/recherche" class="sidebar-nav-item <%= "recherche".equals(activeNav) ? "active" : "" %>">
                 <span class="nav-glyph">⌕</span>
                 <span class="nav-label">Recherche globale</span>
-            </button>
+            </a>
+
+            <a href="<%= request.getContextPath() %>/notifications" class="sidebar-nav-item <%= "notifications".equals(activeNav) ? "active" : "" %>" style="display:flex; align-items:center;">
+                <span class="nav-glyph">◉</span>
+                <span class="nav-label">Notifications</span>
+                <span style="margin-left:auto; background:#B5453E; color:#FFF; font-size:10px; padding:1px 6px; border-radius:10px; font-family:'JetBrains Mono', monospace; font-weight:600;">3</span>
+            </a>
 
             <% if (sbIsDir) { %>
             <a href="<%= request.getContextPath() %>/admin" class="sidebar-nav-item <%= "admin".equals(activeNav) ? "active" : "" %>">

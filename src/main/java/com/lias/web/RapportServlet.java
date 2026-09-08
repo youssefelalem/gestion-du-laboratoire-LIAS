@@ -41,7 +41,12 @@ public class RapportServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         String anneeStr = request.getParameter("annee");
-        int annee = (anneeStr != null && !anneeStr.isEmpty()) ? Integer.parseInt(anneeStr) : 2025;
+        int annee = 2025;
+        if (anneeStr != null && !anneeStr.trim().isEmpty()) {
+            try {
+                annee = Integer.parseInt(anneeStr.trim());
+            } catch (NumberFormatException ignored) {}
+        }
 
         List<Member> membres = memberDao.findAll();
         List<Publication> pubs = pubDao.findAll();
@@ -53,6 +58,7 @@ public class RapportServlet extends HttpServlet {
         request.setAttribute("totalEvenements", evts.size());
         request.setAttribute("publications", pubs);
         request.setAttribute("evenements", evts);
+        request.setAttribute("activeNav", "rapport");
 
         request.getRequestDispatcher("/WEB-INF/views/rapport.jsp").forward(request, response);
     }

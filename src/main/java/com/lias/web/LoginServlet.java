@@ -55,6 +55,7 @@ public class LoginServlet extends HttpServlet {
             // Création / Récupération de la session HTTP
             HttpSession session = request.getSession(true);
             session.setAttribute("currentUser", user);
+            session.setAttribute("user", user);
             session.setAttribute("role", user.getRole());
 
             // Redirection vers l'espace membre

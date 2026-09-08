@@ -183,6 +183,26 @@
         <url-pattern>/communication</url-pattern>
     </servlet-mapping>
 
+    <!-- 17. Servlet Centre de Notifications (CDC §19) -->
+    <servlet>
+        <servlet-name>NotificationServlet</servlet-name>
+        <servlet-class>com.lias.web.NotificationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NotificationServlet</servlet-name>
+        <url-pattern>/notifications</url-pattern>
+    </servlet-mapping>
+
+    <!-- 18. Servlet Recherche Globale Multi-Critères (CDC §15) -->
+    <servlet>
+        <servlet-name>RechercheServlet</servlet-name>
+        <servlet-class>com.lias.web.RechercheServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RechercheServlet</servlet-name>
+        <url-pattern>/recherche</url-pattern>
+    </servlet-mapping>
+
     <!-- Filtre de sécurité JEE pour interdire l'accès direct sans session -->
     <filter>
         <filter-name>AuthFilter</filter-name>
@@ -200,6 +220,12 @@
         <url-pattern>/calendrier</url-pattern>
         <url-pattern>/documents</url-pattern>
         <url-pattern>/communication</url-pattern>
+        <url-pattern>/notifications</url-pattern>
+        <url-pattern>/recherche</url-pattern>
+        <url-pattern>/publications</url-pattern>
+        <url-pattern>/evenements</url-pattern>
+        <url-pattern>/membres</url-pattern>
+        <url-pattern>/profils</url-pattern>
     </filter-mapping>
 
     <error-page>

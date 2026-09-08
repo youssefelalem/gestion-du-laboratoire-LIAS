@@ -15,7 +15,7 @@ import com.lias.dao.IEvenementDao;
 /**
  * Contrôleur JEE pour la gestion des évènements scientifiques (CDC §9).
  */
-@WebServlet(name = "EvenementServlet", urlPatterns = {"/evenements", "/calendrier"})
+@WebServlet(name = "EvenementServlet", urlPatterns = {"/evenements"})
 public class EvenementServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

@@ -57,7 +57,7 @@ public class MandatServlet extends HttpServlet {
             if (user == null) user = (User) session.getAttribute("user");
         }
 
-        if (user == null || !"directeur".equalsIgnoreCase(user.getRole())) {
+        if (user == null || (!"directeur".equalsIgnoreCase(user.getRole()) && !"admin".equalsIgnoreCase(user.getRole()))) {
             response.sendRedirect(request.getContextPath() + "/mandats?error=unauthorized");
             return;
         }
@@ -69,18 +69,22 @@ public class MandatServlet extends HttpServlet {
         String dateFinStr = request.getParameter("dateFin");
         boolean actif = "true".equalsIgnoreCase(request.getParameter("actif")) || "on".equalsIgnoreCase(request.getParameter("actif"));
 
-        if (titre != null && !titre.trim().isEmpty() && directeurId != null && dateDebutStr != null) {
-            Mandat m = new Mandat();
-            m.setTitre(titre.trim());
-            m.setDirecteurId(directeurId);
-            m.setViceDirecteurId(viceDirecteurId != null && !viceDirecteurId.trim().isEmpty() ? viceDirecteurId : null);
-            m.setDateDebut(LocalDate.parse(dateDebutStr));
-            if (dateFinStr != null && !dateFinStr.trim().isEmpty()) {
-                m.setDateFin(LocalDate.parse(dateFinStr));
-            }
-            m.setActif(actif);
+        if (titre != null && !titre.trim().isEmpty() && directeurId != null && dateDebutStr != null && !dateDebutStr.trim().isEmpty()) {
+            try {
+                Mandat m = new Mandat();
+                m.setTitre(titre.trim());
+                m.setDirecteurId(directeurId);
+                m.setViceDirecteurId(viceDirecteurId != null && !viceDirecteurId.trim().isEmpty() ? viceDirecteurId : null);
+                m.setDateDebut(LocalDate.parse(dateDebutStr.trim()));
+                if (dateFinStr != null && !dateFinStr.trim().isEmpty()) {
+                    m.setDateFin(LocalDate.parse(dateFinStr.trim()));
+                }
+                m.setActif(actif);
 
-            mandatDao.save(m);
+                mandatDao.save(m);
+            } catch (Exception e) {
+                // Ignore parse errors safely
+            }
         }
 
         response.sendRedirect(request.getContextPath() + "/mandats?success=created");

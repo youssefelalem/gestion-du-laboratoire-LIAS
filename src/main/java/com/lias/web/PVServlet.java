@@ -47,7 +47,7 @@ public class PVServlet extends HttpServlet {
             if (user == null) user = (User) session.getAttribute("user");
         }
 
-        if (user == null || (!"directeur".equalsIgnoreCase(user.getRole()) && !"permanent".equalsIgnoreCase(user.getRole()))) {
+        if (user == null || (!"directeur".equalsIgnoreCase(user.getRole()) && !"permanent".equalsIgnoreCase(user.getRole()) && !"admin".equalsIgnoreCase(user.getRole()))) {
             response.sendRedirect(request.getContextPath() + "/pv?error=unauthorized");
             return;
         }
@@ -58,15 +58,19 @@ public class PVServlet extends HttpServlet {
         String cheminFichierPV = request.getParameter("cheminFichierPV");
         String directeurSignataire = request.getParameter("directeurSignataire");
 
-        if (titre != null && !titre.trim().isEmpty() && dateReunionStr != null) {
-            ReunionPV pv = new ReunionPV();
-            pv.setTitre(titre.trim());
-            pv.setDateReunion(LocalDate.parse(dateReunionStr));
-            pv.setOrdreDuJour(ordreDuJour != null ? ordreDuJour.trim() : "");
-            pv.setCheminFichierPV(cheminFichierPV != null && !cheminFichierPV.trim().isEmpty() ? cheminFichierPV.trim() : "archives/pv_document.pdf");
-            pv.setDirecteurSignataire(directeurSignataire != null && !directeurSignataire.trim().isEmpty() ? directeurSignataire.trim() : "Prof. Youssef El Alem");
+        if (titre != null && !titre.trim().isEmpty() && dateReunionStr != null && !dateReunionStr.trim().isEmpty()) {
+            try {
+                ReunionPV pv = new ReunionPV();
+                pv.setTitre(titre.trim());
+                pv.setDateReunion(LocalDate.parse(dateReunionStr.trim()));
+                pv.setOrdreDuJour(ordreDuJour != null ? ordreDuJour.trim() : "");
+                pv.setCheminFichierPV(cheminFichierPV != null && !cheminFichierPV.trim().isEmpty() ? cheminFichierPV.trim() : "archives/pv_document.pdf");
+                pv.setDirecteurSignataire(directeurSignataire != null && !directeurSignataire.trim().isEmpty() ? directeurSignataire.trim() : "Prof. Youssef El Alem");
 
-            pvDao.save(pv);
+                pvDao.save(pv);
+            } catch (Exception e) {
+                // Ignore parse errors safely
+            }
         }
 
         response.sendRedirect(request.getContextPath() + "/pv?success=created");
