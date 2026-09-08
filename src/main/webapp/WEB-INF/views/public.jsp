@@ -359,7 +359,7 @@
                 <div class="section-eyebrow">Structure Scientifique</div>
                 <h2 class="section-title">Quatre équipes de recherche d'excellence</h2>
             </div>
-            <a href="<%= request.getContextPath() %>/profils" class="btn btn-secondary">Consulter l'annuaire complet →</a>
+            <a href="<%= request.getContextPath() %>/profils" class="btn-section-cta">Consulter l'annuaire complet <span class="arrow">→</span></a>
         </div>
 
         <div class="teams-grid">
@@ -409,7 +409,7 @@
                 <div class="section-eyebrow">Diffusion Scientifique</div>
                 <h2 class="section-title">Dernières publications</h2>
             </div>
-            <a href="<%= request.getContextPath() %>/publications" class="btn btn-secondary">Toutes les publications →</a>
+            <a href="<%= request.getContextPath() %>/publications" class="btn-section-cta">Toutes les publications <span class="arrow">→</span></a>
         </div>
 
         <div class="table-container">
@@ -478,7 +478,7 @@
                 <div class="section-eyebrow">Agenda Scientifique</div>
                 <h2 class="section-title">Événements & Séminaires</h2>
             </div>
-            <a href="<%= request.getContextPath() %>/evenements" class="btn btn-secondary">Tous les événements →</a>
+            <a href="<%= request.getContextPath() %>/evenements" class="btn-section-cta">Tous les événements <span class="arrow">→</span></a>
         </div>
 
         <div class="events-grid">

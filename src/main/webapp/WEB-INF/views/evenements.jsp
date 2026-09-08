@@ -66,12 +66,17 @@
 </head>
 <body>
 
-<div class="app-shell">
-    <%@ include file="includes/app_header.jsp" %>
-    <div class="app-body">
-        <%@ include file="includes/sidebar.jsp" %>
-        <main class="app-main">
-            <div class="app-content">
+<% if (currentUser == null) { %>
+    <%@ include file="includes/navbar.jsp" %>
+    <div class="container" style="max-width: 1280px; margin: 0 auto; padding: 40px 24px;">
+<% } else { %>
+    <div class="app-shell">
+        <%@ include file="includes/app_header.jsp" %>
+        <div class="app-body">
+            <%@ include file="includes/sidebar.jsp" %>
+            <main class="app-main">
+                <div class="app-content">
+<% } %>
 
         <!-- Page Header -->
         <div class="page-header">
@@ -169,10 +174,15 @@
             <% } %>
         </div>
 
+<% if (currentUser == null) { %>
+    </div>
+    <%@ include file="includes/footer.jsp" %>
+<% } else { %>
             </div>
         </main>
     </div>
 </div>
+<% } %>
 
     <script>
         function toggleAddEvent() {
