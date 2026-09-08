@@ -73,7 +73,7 @@
         <url-pattern>/publications</url-pattern>
     </servlet-mapping>
 
-    <!-- 7. Servlet Évènements et Calendrier (CDC §9) -->
+    <!-- 7. Servlet Évènements (CDC §9) -->
     <servlet>
         <servlet-name>EvenementServlet</servlet-name>
         <servlet-class>com.lias.web.EvenementServlet</servlet-class>
@@ -81,6 +81,15 @@
     <servlet-mapping>
         <servlet-name>EvenementServlet</servlet-name>
         <url-pattern>/evenements</url-pattern>
+    </servlet-mapping>
+
+    <!-- 7bis. Servlet Calendrier Scientifique (CDC §20) -->
+    <servlet>
+        <servlet-name>CalendrierServlet</servlet-name>
+        <servlet-class>com.lias.web.CalendrierServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CalendrierServlet</servlet-name>
         <url-pattern>/calendrier</url-pattern>
     </servlet-mapping>
 
@@ -154,6 +163,26 @@
         <url-pattern>/admin</url-pattern>
     </servlet-mapping>
 
+    <!-- 15. Servlet Archive Documentaire (CDC §10) -->
+    <servlet>
+        <servlet-name>DocumentServlet</servlet-name>
+        <servlet-class>com.lias.web.DocumentServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DocumentServlet</servlet-name>
+        <url-pattern>/documents</url-pattern>
+    </servlet-mapping>
+
+    <!-- 16. Servlet Communication Interne (CDC §13) -->
+    <servlet>
+        <servlet-name>CommunicationServlet</servlet-name>
+        <servlet-class>com.lias.web.CommunicationServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CommunicationServlet</servlet-name>
+        <url-pattern>/communication</url-pattern>
+    </servlet-mapping>
+
     <!-- Filtre de sécurité JEE pour interdire l'accès direct sans session -->
     <filter>
         <filter-name>AuthFilter</filter-name>
@@ -168,7 +197,15 @@
         <url-pattern>/pv</url-pattern>
         <url-pattern>/materiel</url-pattern>
         <url-pattern>/admin</url-pattern>
+        <url-pattern>/calendrier</url-pattern>
+        <url-pattern>/documents</url-pattern>
+        <url-pattern>/communication</url-pattern>
     </filter-mapping>
+
+    <error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/views/errors/403.jsp</location>
+    </error-page>
 
     <!-- Page d'accueil par défaut -->
     <welcome-file-list>

@@ -12,7 +12,10 @@
             if (servletPath.contains("home")) activeNav = "dashboard";
             else if (servletPath.contains("member") || servletPath.contains("profil")) activeNav = "profils";
             else if (servletPath.contains("publication")) activeNav = "publications";
+            else if (servletPath.contains("calendrier")) activeNav = "calendrier";
             else if (servletPath.contains("evenement")) activeNav = "evenements";
+            else if (servletPath.contains("document")) activeNav = "documents";
+            else if (servletPath.contains("communication")) activeNav = "communication";
             else if (servletPath.contains("adhesion")) activeNav = "adhesions";
             else if (servletPath.contains("materiel")) activeNav = "materiel";
             else if (servletPath.contains("rapport")) activeNav = "rapport";
@@ -67,7 +70,7 @@
                 <span class="nav-label">Évènements</span>
             </a>
 
-            <a href="<%= request.getContextPath() %>/evenements#calendrier" class="sidebar-nav-item">
+            <a href="<%= request.getContextPath() %>/calendrier" class="sidebar-nav-item <%= "calendrier".equals(activeNav) ? "active" : "" %>">
                 <span class="nav-glyph">▦</span>
                 <span class="nav-label">Calendrier</span>
             </a>
@@ -77,12 +80,12 @@
                 <span class="nav-label">Publications</span>
             </a>
 
-            <a href="<%= request.getContextPath() %>/home#documents" class="sidebar-nav-item">
+            <a href="<%= request.getContextPath() %>/documents" class="sidebar-nav-item <%= "documents".equals(activeNav) ? "active" : "" %>">
                 <span class="nav-glyph">▤</span>
                 <span class="nav-label">Archive documentaire</span>
             </a>
 
-            <a href="<%= request.getContextPath() %>/home#communication" class="sidebar-nav-item">
+            <a href="<%= request.getContextPath() %>/communication" class="sidebar-nav-item <%= "communication".equals(activeNav) ? "active" : "" %>">
                 <span class="nav-glyph">❝</span>
                 <span class="nav-label">Communication</span>
             </a>
@@ -112,7 +115,7 @@
                 <span class="nav-label">Recherche globale</span>
             </button>
 
-            <% if ("admin".equalsIgnoreCase(sbRole)) { %>
+            <% if (sbIsDir) { %>
             <a href="<%= request.getContextPath() %>/admin" class="sidebar-nav-item <%= "admin".equals(activeNav) ? "active" : "" %>">
                 <span class="nav-glyph">⚙</span>
                 <span class="nav-label">Administration</span>

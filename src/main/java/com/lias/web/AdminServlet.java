@@ -34,14 +34,18 @@ public class AdminServlet extends HttpServlet {
             if (user == null) user = (User) session.getAttribute("user");
         }
 
-        if (user == null || !"admin".equalsIgnoreCase(user.getRole())) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès réservé exclusivement à l'administrateur système.");
+        boolean isAuthorized = user != null && ("admin".equalsIgnoreCase(user.getRole()) || "directeur".equalsIgnoreCase(user.getRole()));
+        if (!isAuthorized) {
+            request.setAttribute("requiredRole", "Directeur du Laboratoire ou Administrateur Système");
+            request.setAttribute("deniedUrl", request.getRequestURI());
+            request.getRequestDispatcher("/WEB-INF/views/errors/403.jsp").forward(request, response);
             return;
         }
 
         List<User> users = userDao.findAll();
         request.setAttribute("users", users);
         request.setAttribute("activeMenu", "admin");
+        request.setAttribute("activeNav", "admin");
 
         request.getRequestDispatcher("/WEB-INF/views/admin.jsp").forward(request, response);
     }
@@ -57,8 +61,11 @@ public class AdminServlet extends HttpServlet {
             if (currentAdmin == null) currentAdmin = (User) session.getAttribute("user");
         }
 
-        if (currentAdmin == null || !"admin".equalsIgnoreCase(currentAdmin.getRole())) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Action interdite.");
+        boolean isAuthorized = currentAdmin != null && ("admin".equalsIgnoreCase(currentAdmin.getRole()) || "directeur".equalsIgnoreCase(currentAdmin.getRole()));
+        if (!isAuthorized) {
+            request.setAttribute("requiredRole", "Directeur du Laboratoire ou Administrateur Système");
+            request.setAttribute("deniedUrl", request.getRequestURI());
+            request.getRequestDispatcher("/WEB-INF/views/errors/403.jsp").forward(request, response);
             return;
         }
 
