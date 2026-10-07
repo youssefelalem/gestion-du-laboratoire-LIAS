@@ -16,6 +16,14 @@ public class Member implements Serializable {
     private String role;   // directeur, chef-equipe, membre
     private String team;   // IA, Big Data, NLP, Sécurité
     private String grade;  // Professeur, Maître de Conférences, Doctorant
+    private String photo;  // URL de la photo de profil (CDC §3)
+    private String etablissementOrigine; // Faculté des Sciences Ben M'Sik, etc. (CDC §3)
+    private String laboratoireOrigine;   // LIAS, etc. (CDC §3)
+    private String biographie;          // Biographie scientifique (CDC §3)
+    private String centresInteret;      // Centres d'intérêt de recherche (CDC §3)
+    private String dateNaissance;       // Date de naissance confidentielle (CDC §4.2)
+    private String dateEmbauche;        // Date d'embauche universitaire (CDC §4.2)
+    private String dateAffiliation;     // Date d'affiliation au laboratoire LIAS (Clé métier CDC §4.2)
 
     public Member() {
         super();
@@ -30,6 +38,35 @@ public class Member implements Serializable {
         this.role = role;
         this.team = team;
         this.grade = grade;
+        this.etablissementOrigine = "Faculté des Sciences Ben M'Sik";
+        this.laboratoireOrigine = "LIAS";
+    }
+
+    public Member(String id, String firstName, String lastName, String email, String status, String role, String team, String grade,
+                  String photo, String etablissementOrigine, String laboratoireOrigine, String biographie, String centresInteret) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.status = status;
+        this.role = role;
+        this.team = team;
+        this.grade = grade;
+        this.photo = photo;
+        this.etablissementOrigine = etablissementOrigine;
+        this.laboratoireOrigine = laboratoireOrigine;
+        this.biographie = biographie;
+        this.centresInteret = centresInteret;
+    }
+
+    public Member(String id, String firstName, String lastName, String email, String status, String role, String team, String grade,
+                  String photo, String etablissementOrigine, String laboratoireOrigine, 
+                  String dateNaissance, String dateEmbauche, String dateAffiliation,
+                  String biographie, String centresInteret) {
+        this(id, firstName, lastName, email, status, role, team, grade, photo, etablissementOrigine, laboratoireOrigine, biographie, centresInteret);
+        this.dateNaissance = dateNaissance;
+        this.dateEmbauche = dateEmbauche;
+        this.dateAffiliation = dateAffiliation;
     }
 
     public String getId() {
@@ -133,7 +170,76 @@ public class Member implements Serializable {
         this.status = statut;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public String getEtablissementOrigine() {
+        return etablissementOrigine;
+    }
+
+    public void setEtablissementOrigine(String etablissementOrigine) {
+        this.etablissementOrigine = etablissementOrigine;
+    }
+
+    public String getLaboratoireOrigine() {
+        return laboratoireOrigine;
+    }
+
+    public void setLaboratoireOrigine(String laboratoireOrigine) {
+        this.laboratoireOrigine = laboratoireOrigine;
+    }
+
+    public String getBiographie() {
+        return biographie;
+    }
+
+    public void setBiographie(String biographie) {
+        this.biographie = biographie;
+    }
+
+    public String getCentresInteret() {
+        return centresInteret;
+    }
+
+    public void setCentresInteret(String centresInteret) {
+        this.centresInteret = centresInteret;
+    }
+
+    public String getDateNaissance() {
+        return dateNaissance;
+    }
+
+    public void setDateNaissance(String dateNaissance) {
+        this.dateNaissance = dateNaissance;
+    }
+
+    public String getDateEmbauche() {
+        return dateEmbauche;
+    }
+
+    public void setDateEmbauche(String dateEmbauche) {
+        this.dateEmbauche = dateEmbauche;
+    }
+
     public String getDateAffiliation() {
-        return "2021-09-01";
+        return dateAffiliation;
+    }
+
+    public void setDateAffiliation(String dateAffiliation) {
+        this.dateAffiliation = dateAffiliation;
+    }
+
+    // Alias francophones
+    public String getEtablissement() {
+        return etablissementOrigine != null ? etablissementOrigine : "Faculté des Sciences Ben M'Sik";
+    }
+
+    public String getLaboratoire() {
+        return laboratoireOrigine != null ? laboratoireOrigine : "LIAS";
     }
 }

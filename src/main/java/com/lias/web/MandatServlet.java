@@ -37,10 +37,19 @@ public class MandatServlet extends HttpServlet {
         List<Mandat> mandats = mandatDao.findAll();
         Mandat actif = mandatDao.findActive();
         List<Member> permanents = memberDao.findByStatus("permanent");
+        List<Member> chefsEquipe = new java.util.ArrayList<>();
+        if (permanents != null) {
+            for (Member p : permanents) {
+                if ("chef-equipe".equalsIgnoreCase(p.getRole()) || "directeur".equalsIgnoreCase(p.getRole())) {
+                    chefsEquipe.add(p);
+                }
+            }
+        }
 
         request.setAttribute("mandats", mandats);
         request.setAttribute("mandatActif", actif);
         request.setAttribute("permanents", permanents);
+        request.setAttribute("chefsEquipe", chefsEquipe);
         request.setAttribute("activeMenu", "mandats");
 
         request.getRequestDispatcher("/WEB-INF/views/mandats.jsp").forward(request, response);

@@ -42,9 +42,62 @@ public class MemberServlet extends HttpServlet {
             liste = memberDao.findAll();
         }
 
+        String selId = request.getParameter("id");
+        Member selectedMember = null;
+        if (selId != null && !selId.trim().isEmpty()) {
+            selectedMember = memberDao.findById(selId.trim());
+        } else if (liste != null && !liste.isEmpty()) {
+            selectedMember = liste.get(0);
+        }
+
+        List<com.lias.beans.AffiliationPeriod> periods = null;
+        if (selectedMember != null) {
+            periods = memberDao.getAffiliationPeriods(selectedMember.getId());
+        }
+
         request.setAttribute("membres", liste);
+        request.setAttribute("selectedMember", selectedMember);
+        request.setAttribute("affiliationPeriods", periods);
         request.setAttribute("selectedTeam", team);
         request.setAttribute("selectedStatus", status);
         request.getRequestDispatcher("/WEB-INF/views/profils.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String id = request.getParameter("id");
+        if (id != null && !id.trim().isEmpty()) {
+            Member m = memberDao.findById(id.trim());
+            if (m != null) {
+                String firstName = request.getParameter("firstName");
+                String lastName = request.getParameter("lastName");
+                String grade = request.getParameter("grade");
+                String team = request.getParameter("team");
+                String status = request.getParameter("status");
+                String photo = request.getParameter("photo");
+                String etablissement = request.getParameter("etablissementOrigine");
+                String labo = request.getParameter("laboratoireOrigine");
+                String biographie = request.getParameter("biographie");
+                String centresInteret = request.getParameter("centresInteret");
+
+                if (firstName != null && !firstName.trim().isEmpty()) m.setFirstName(firstName.trim());
+                if (lastName != null && !lastName.trim().isEmpty()) m.setLastName(lastName.trim());
+                if (grade != null && !grade.trim().isEmpty()) m.setGrade(grade.trim());
+                if (team != null && !team.trim().isEmpty()) m.setTeam(team.trim());
+                if (status != null && !status.trim().isEmpty()) m.setStatus(status.trim());
+                if (photo != null && !photo.trim().isEmpty()) m.setPhoto(photo.trim());
+                if (etablissement != null) m.setEtablissementOrigine(etablissement.trim());
+                if (labo != null) m.setLaboratoireOrigine(labo.trim());
+                if (biographie != null) m.setBiographie(biographie.trim());
+                if (centresInteret != null) m.setCentresInteret(centresInteret.trim());
+
+                memberDao.update(m);
+                response.sendRedirect(request.getContextPath() + "/profils?id=" + m.getId() + "&msg=profil_mis_a_jour");
+                return;
+            }
+        }
+        response.sendRedirect(request.getContextPath() + "/profils");
     }
 }

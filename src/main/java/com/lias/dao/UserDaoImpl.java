@@ -23,13 +23,16 @@ public class UserDaoImpl implements IUserDao {
         DEMO_USERS.add(new User(2L, "Benjelloun", "Sara", "permanent@lias.ma", "pass123", "permanent", true));
         DEMO_USERS.add(new User(3L, "Alami", "Amine", "doctorant@lias.ma", "doc123", "doctorant", true));
         DEMO_USERS.add(new User(4L, "Admin", "Système", "admin@lias.ma", "admin123", "admin", true));
+        DEMO_USERS.add(new User(5L, "Berrada", "Fatima", "associe@lias.ma", "pass123", "associe", true));
+        DEMO_USERS.add(new User(6L, "Mansouri", "Omar", "retraite@lias.ma", "pass123", "retraite", false));
+        DEMO_USERS.add(new User(7L, "Hassani", "Khalid", "ancien@lias.ma", "pass123", "ancien", false));
     }
 
     @Override
     public User findByCredentials(String email, String password) {
         Connection conn = DBConnection.getConnection();
         if (conn != null) {
-            String sql = "SELECT * FROM users WHERE email = ? AND password = ? AND actif = 1";
+            String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, email);
                 ps.setString(2, password);
@@ -157,6 +160,28 @@ public class UserDaoImpl implements IUserDao {
                 return ps.executeUpdate() > 0;
             } catch (SQLException e) {
                 System.err.println("[UserDaoImpl] Erreur SQL update : " + e.getMessage());
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updatePassword(Long id, String newPassword) {
+        Connection conn = DBConnection.getConnection();
+        if (conn != null) {
+            String sql = "UPDATE users SET password = ? WHERE id = ?";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, newPassword);
+                ps.setLong(2, id);
+                return ps.executeUpdate() > 0;
+            } catch (SQLException e) {
+                System.err.println("[UserDaoImpl] Erreur SQL updatePassword : " + e.getMessage());
+            }
+        }
+        for (User u : DEMO_USERS) {
+            if (u.getId().equals(id)) {
+                u.setPassword(newPassword);
+                return true;
             }
         }
         return false;

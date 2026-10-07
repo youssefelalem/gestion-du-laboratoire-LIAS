@@ -11,6 +11,7 @@
     List<Mandat> mandats = (List<Mandat>) request.getAttribute("mandats");
     Mandat mandatActif = (Mandat) request.getAttribute("mandatActif");
     List<Member> permanents = (List<Member>) request.getAttribute("permanents");
+    List<Member> chefsEquipe = (List<Member>) request.getAttribute("chefsEquipe");
     String msg = request.getParameter("success");
 %>
 <!DOCTYPE html>
@@ -88,6 +89,24 @@
                             </div>
                         </div>
                     </div>
+
+                    <% if (chefsEquipe != null && !chefsEquipe.isEmpty()) { %>
+                    <div style="margin-top: 18px; padding-top: 14px; border-top: 1px dashed rgba(255,255,255,0.2);">
+                        <div style="font-size: 11px; text-transform: uppercase; color: #94A3B8; font-weight: 700; margin-bottom: 8px;">
+                            Collège des Chefs d'Équipe de Recherche associés :
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <% for (Member c : chefsEquipe) { %>
+                                <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 6px 12px; font-size: 12.5px; color: #F1F5F9; display: inline-flex; align-items: center; gap: 6px;">
+                                    <span style="display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #38BDF8;"></span>
+                                    <strong style="color: #F8E7C9;"><%= c.getTeam() != null ? c.getTeam() : "Équipe" %> :</strong>
+                                    <span><%= c.getFullName() %></span>
+                                    <span style="font-size: 11px; opacity: 0.75; font-style: italic;">(<%= "directeur".equalsIgnoreCase(c.getRole()) ? "Directeur / Chef" : "Chef d'équipe" %>)</span>
+                                </span>
+                            <% } %>
+                        </div>
+                    </div>
+                    <% } %>
                 </div>
                 <% } %>
 

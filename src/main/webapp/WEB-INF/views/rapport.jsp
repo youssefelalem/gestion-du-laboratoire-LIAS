@@ -2,6 +2,12 @@
 <%@ page import="java.util.List"%>
 <%@ page import="com.lias.beans.Publication"%>
 <%@ page import="com.lias.beans.Evenement"%>
+<%@ page import="com.lias.beans.Mandat"%>
+<%
+    Mandat mandatActif = (Mandat) request.getAttribute("mandatActif");
+    Integer anneeRapport = (Integer) request.getAttribute("anneeRapport");
+    if (anneeRapport == null) anneeRapport = 2025;
+%>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -76,7 +82,15 @@
                     Génération automatisée consolidée pour le Conseil d'Établissement et le Ministère. Compilation des membres, productions, mandats et budget matériel.
                 </p>
             </div>
-            <div style="display: flex; gap: 10px;">
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <form method="get" action="<%= request.getContextPath() %>/rapport" style="display: flex; gap: 8px; align-items: center;">
+                    <label style="font-size: 12px; font-weight: 700; color: var(--muted);">Exercice :</label>
+                    <select name="annee" onchange="this.form.submit()" style="padding: 7px 12px; border-radius: 4px; border: 1px solid var(--border); font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--navy); cursor: pointer;">
+                        <option value="2026" <%= anneeRapport == 2026 ? "selected" : "" %>>2026 (En cours)</option>
+                        <option value="2025" <%= anneeRapport == 2025 ? "selected" : "" %>>2025 (Évaluation)</option>
+                        <option value="2024" <%= anneeRapport == 2024 ? "selected" : "" %>>2024 (Archivé)</option>
+                    </select>
+                </form>
                 <button onclick="window.print()" class="btn btn-primary">
                     Imprimer / Exporter PDF 🖨️
                 </button>
@@ -101,18 +115,18 @@
                 <div style="text-align: right;">
                     <div class="brand-mark" style="width: 48px; height: 48px; font-size: 28px; margin-left: auto;">L</div>
                     <div style="font-family: var(--font-mono); font-size: 10.5px; color: var(--muted); margin-top: 6px;">
-                        EXERCICE 2025–2026
+                        EXERCICE <%= anneeRapport %>–<%= anneeRapport + 1 %>
                     </div>
                 </div>
             </div>
 
             <div style="text-align: center; margin-bottom: 48px;">
-                <span class="eyebrow" style="color: var(--accent-2);">Rapport Annuel Consolidé d'Évaluation</span>
+                <span class="eyebrow" style="color: var(--accent-2);">Rapport Annuel Consolidé d'Évaluation (CDC §11 ⭐)</span>
                 <h2 style="font-size: 38px; line-height: 1.15; margin: 8px 0 12px; color: var(--ink);">
-                    Bilan des Travaux & Rayonnement Scientifique
+                    Bilan des Travaux & Rayonnement Scientifique (<%= anneeRapport %>)
                 </h2>
                 <div style="font-family: var(--font-serif); font-style: italic; font-size: 16px; color: var(--muted);">
-                    Sous la direction du <strong>Pr. Yassine Benali</strong> · Mandat triennal 2024–2027
+                    Sous la direction du <strong><%= (mandatActif != null && mandatActif.getDirecteurNomComplet() != null) ? mandatActif.getDirecteurNomComplet() : "Pr. Youssef El Alem" %></strong> · <%= (mandatActif != null && mandatActif.getTitre() != null) ? mandatActif.getTitre() : "Mandat Actuel 2024–2028" %>
                 </div>
             </div>
 

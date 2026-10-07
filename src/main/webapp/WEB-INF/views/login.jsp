@@ -75,7 +75,7 @@
         .login-brand-text .est {
             font-family: var(--font-mono);
             font-size: 11px;
-            color: rgba(244,239,230,0.55);
+            color: rgba(255,255,255,0.6);
             letter-spacing: 0.12em;
             margin-left: 8px;
         }
@@ -92,7 +92,7 @@
             font-size: 11px;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            color: rgba(244,239,230,0.55);
+            color: rgba(255,255,255,0.65);
             margin-bottom: 18px;
         }
 
@@ -103,7 +103,7 @@
             line-height: 1.05;
             margin: 0;
             letter-spacing: -0.015em;
-            color: var(--cream);
+            color: #FFFFFF;
             max-width: 520px;
         }
 
@@ -111,7 +111,7 @@
             font-family: var(--font-serif);
             font-style: italic;
             font-size: 19px;
-            color: rgba(244,239,230,0.75);
+            color: rgba(255,255,255,0.8);
             margin: 24px 0 0;
             max-width: 460px;
             line-height: 1.55;
@@ -122,10 +122,10 @@
             z-index: 1;
             font-family: var(--font-mono);
             font-size: 11px;
-            color: rgba(244,239,230,0.45);
+            color: rgba(255,255,255,0.5);
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            border-top: 1px solid rgba(244,239,230,0.15);
+            border-top: 1px solid rgba(255,255,255,0.15);
             padding-top: 18px;
         }
 
@@ -345,10 +345,15 @@
                 <!-- Comptes de Démonstration pour l'Évaluation Universitaire -->
                 <div class="demo-credentials">
                     <h4>Comptes de test pour la soutenance (Cliquez pour remplir) :</h4>
-                    <span class="demo-tag" onclick="fillForm('directeur@lias.ma', 'admin123')">Directeur (admin123)</span>
-                    <span class="demo-tag" onclick="fillForm('permanent@lias.ma', 'pass123')">Permanent (pass123)</span>
-                    <span class="demo-tag" onclick="fillForm('doctorant@lias.ma', 'doc123')">Doctorant (doc123)</span>
-                    <span class="demo-tag" onclick="fillForm('admin@lias.ma', 'admin123')">Administrateur (admin123)</span>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        <span class="demo-tag" onclick="fillForm('directeur@lias.ma', 'admin123')">Directeur (admin123)</span>
+                        <span class="demo-tag" onclick="fillForm('permanent@lias.ma', 'pass123')">Permanent (pass123)</span>
+                        <span class="demo-tag" onclick="fillForm('associe@lias.ma', 'pass123')">Associé (pass123)</span>
+                        <span class="demo-tag" onclick="fillForm('doctorant@lias.ma', 'doc123')">Doctorant (doc123)</span>
+                        <span class="demo-tag" onclick="fillForm('admin@lias.ma', 'admin123')">Administrateur (admin123)</span>
+                        <span class="demo-tag" style="border-style: dashed; color: #b45309;" onclick="fillForm('retraite@lias.ma', 'pass123')" title="Test compte gelé selon CDC §2.D & §8.1">Retraité / Gelé (pass123)</span>
+                        <span class="demo-tag" style="border-style: dashed; color: #475569;" onclick="fillForm('ancien@lias.ma', 'pass123')" title="Test compte désactivé selon CDC §2.E & §8.2">Ancien membre (pass123)</span>
+                    </div>
                 </div>
 
                 <div style="margin-top: 24px; text-align: center; font-size: 13px;">

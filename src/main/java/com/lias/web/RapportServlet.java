@@ -1,6 +1,7 @@
 package com.lias.web;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,12 +10,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import com.lias.beans.Evenement;
+import com.lias.beans.Mandat;
 import com.lias.beans.Member;
 import com.lias.beans.Publication;
 import com.lias.dao.EvenementDaoImpl;
 import com.lias.dao.IEvenementDao;
+import com.lias.dao.IMandatDao;
 import com.lias.dao.IMemberDao;
 import com.lias.dao.IPublicationDao;
+import com.lias.dao.MandatDaoImpl;
 import com.lias.dao.MemberDaoImpl;
 import com.lias.dao.PublicationDaoImpl;
 
@@ -28,6 +32,7 @@ public class RapportServlet extends HttpServlet {
     private IMemberDao memberDao;
     private IPublicationDao pubDao;
     private IEvenementDao evtDao;
+    private IMandatDao mandatDao;
 
     @Override
     public void init() throws ServletException {
@@ -35,6 +40,7 @@ public class RapportServlet extends HttpServlet {
         this.memberDao = new MemberDaoImpl();
         this.pubDao = new PublicationDaoImpl();
         this.evtDao = new EvenementDaoImpl();
+        this.mandatDao = new MandatDaoImpl();
     }
 
     @Override
@@ -51,13 +57,40 @@ public class RapportServlet extends HttpServlet {
         List<Member> membres = memberDao.findAll();
         List<Publication> pubs = pubDao.findAll();
         List<Evenement> evts = evtDao.findAll();
+        Mandat mandatActif = mandatDao.findActive();
+
+        // Filtrage spécifique pour l'exercice annuel sélectionné (CDC §11)
+        List<Publication> pubsAnnee = new ArrayList<>();
+        if (pubs != null) {
+            for (Publication p : pubs) {
+                if (p.getAnnee() == annee) {
+                    pubsAnnee.add(p);
+                }
+            }
+        }
+        if (pubsAnnee.isEmpty() && pubs != null) {
+            pubsAnnee = pubs; // Fallback pour affichage complet si année sans publications
+        }
+
+        List<Evenement> evtsAnnee = new ArrayList<>();
+        if (evts != null) {
+            for (Evenement e : evts) {
+                if (e.getDate() != null && e.getDate().contains(String.valueOf(annee))) {
+                    evtsAnnee.add(e);
+                }
+            }
+        }
+        if (evtsAnnee.isEmpty() && evts != null) {
+            evtsAnnee = evts;
+        }
 
         request.setAttribute("anneeRapport", annee);
-        request.setAttribute("totalMembres", membres.size());
-        request.setAttribute("totalPublications", pubs.size());
-        request.setAttribute("totalEvenements", evts.size());
-        request.setAttribute("publications", pubs);
-        request.setAttribute("evenements", evts);
+        request.setAttribute("totalMembres", membres != null ? membres.size() : 0);
+        request.setAttribute("totalPublications", pubsAnnee.size());
+        request.setAttribute("totalEvenements", evtsAnnee.size());
+        request.setAttribute("publications", pubsAnnee);
+        request.setAttribute("evenements", evtsAnnee);
+        request.setAttribute("mandatActif", mandatActif);
         request.setAttribute("activeNav", "rapport");
 
         request.getRequestDispatcher("/WEB-INF/views/rapport.jsp").forward(request, response);

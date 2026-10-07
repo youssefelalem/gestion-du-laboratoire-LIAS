@@ -75,8 +75,10 @@ public class CommunicationServlet extends HttpServlet {
             String auteurNom = (user.getPrenom() != null ? user.getPrenom() + " " : "") + (user.getNom() != null ? user.getNom() : "Chercheur");
             String canalNom = "Canal " + canalId;
             if ("general".equalsIgnoreCase(canalId)) canalNom = "Général & Direction";
-            else if ("team_dscc".equalsIgnoreCase(canalId)) canalNom = "Équipe Data Science & Cloud (DSCC)";
-            else if ("team_msi".equalsIgnoreCase(canalId)) canalNom = "Équipe Modélisation & SI (MSI)";
+            else if ("team_ia".equalsIgnoreCase(canalId)) canalNom = "Équipe Intelligence Artificielle (IA)";
+            else if ("team_bigdata".equalsIgnoreCase(canalId)) canalNom = "Équipe Big Data & Cloud";
+            else if ("team_securite".equalsIgnoreCase(canalId)) canalNom = "Équipe Cybersécurité & Zero-Trust";
+            else if ("team_nlp".equalsIgnoreCase(canalId)) canalNom = "Équipe NLP & Dialectologie";
             else if ("events".equalsIgnoreCase(canalId)) canalNom = "Manifestations & Événements";
 
             String dateEnvoi = "Aujourd'hui à " + DateTimeFormatter.ofPattern("HH:mm").format(LocalDateTime.now());

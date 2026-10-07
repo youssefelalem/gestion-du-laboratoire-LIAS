@@ -15,9 +15,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import com.lias.beans.DocumentLabo;
+import com.lias.beans.NotificationLabo;
 import com.lias.beans.User;
 import com.lias.dao.DocumentDaoImpl;
 import com.lias.dao.IDocumentDao;
+import com.lias.dao.INotificationDao;
+import com.lias.dao.NotificationDaoImpl;
 
 /**
  * Contrôleur de l'Archive Documentaire Institutionnelle (CDC §10).
@@ -28,11 +31,13 @@ public class DocumentServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private IDocumentDao documentDao;
+    private INotificationDao notificationDao;
 
     @Override
     public void init() throws ServletException {
         super.init();
         this.documentDao = new DocumentDaoImpl();
+        this.notificationDao = new NotificationDaoImpl();
     }
 
     @Override
@@ -132,6 +137,15 @@ public class DocumentServlet extends HttpServlet {
         );
 
         documentDao.save(newDoc);
+
+        // Notification automatique d'ajout documentaire (CDC §19)
+        NotificationLabo notif = new NotificationLabo(
+            null, "document", "À l'instant", false,
+            auteur,
+            "a téléversé un document dans l'archive officielle : « " + nomFichier + " » (" + dossier + " / " + sousDossier + ").",
+            "Consulter l'archive →", "/documents"
+        );
+        notificationDao.save(notif);
 
         response.sendRedirect(request.getContextPath() + "/documents?dossier=" + java.net.URLEncoder.encode(dossier, "UTF-8") +
                 "&sousDossier=" + java.net.URLEncoder.encode(sousDossier, "UTF-8") +

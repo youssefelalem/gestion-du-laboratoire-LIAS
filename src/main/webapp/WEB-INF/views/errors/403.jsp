@@ -71,16 +71,18 @@
         }
     </style>
 </head>
-<body class="app-body">
+<body>
+<div class="app-shell">
     <!-- APP HEADER -->
     <%@ include file="../includes/app_header.jsp" %>
 
-    <div class="app-container">
+    <div class="app-body">
         <!-- SIDEBAR -->
         <%@ include file="../includes/sidebar.jsp" %>
 
         <!-- MAIN -->
         <main class="app-main">
+            <div class="app-content">
             <div class="error-container">
                 <div class="error-icon">🛡</div>
                 <div class="error-badge">Code HTTP 403 · Accès Réservé</div>
@@ -130,7 +132,9 @@
                     </a>
                 </div>
             </div>
+            </div>
         </main>
     </div>
+</div>
 </body>
 </html>

@@ -50,14 +50,14 @@
             .docs-layout { grid-template-columns: 1fr; }
         }
         .tree-card {
-            background: var(--surface, #FAF7F2);
-            border: 1px solid var(--border, #E2D9CC);
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 4px;
             overflow: hidden;
         }
         .tree-header {
             padding: 12px 16px;
-            border-bottom: 1px solid var(--border, #E2D9CC);
+            border-bottom: 1px solid var(--border);
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
             color: var(--muted, #6B7280);
@@ -113,8 +113,8 @@
         .upload-dropzone {
             margin-bottom: 16px;
             padding: 18px 20px;
-            border: 1px dashed var(--border, #C5BBAF);
-            background: var(--surface-2, #F3ECE1);
+            border: 1px dashed var(--border);
+            background: var(--surface-2);
             border-radius: 4px;
             display: flex;
             align-items: center;
@@ -142,19 +142,19 @@
             right: 0;
             width: 8px;
             height: 8px;
-            background: var(--surface, #FAF7F2);
+            background: var(--surface);
             border-left: 1px solid currentColor;
             border-bottom: 1px solid currentColor;
         }
-        .type-pdf { background: #E9D9D6; color: #7A2A26; border: 1px solid #7A2A26; }
-        .type-docx { background: #DBE5F0; color: #1B2F4A; border: 1px solid #1B2F4A; }
-        .type-xlsx { background: #D9E4D7; color: #33503A; border: 1px solid #33503A; }
-        .type-zip { background: #EDE5D3; color: #7A5B2E; border: 1px solid #7A5B2E; }
+        .type-pdf { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
+        .type-docx { background: #E0E7FF; color: #1E3A8A; border: 1px solid #C7D2FE; }
+        .type-xlsx { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
+        .type-zip { background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; }
 
         .action-icon-btn {
             background: transparent;
-            border: 1px solid var(--border, #E2D9CC);
-            color: var(--ink, #1F242E);
+            border: 1px solid var(--border);
+            color: var(--ink);
             width: 30px;
             height: 30px;
             border-radius: 3px;
@@ -167,22 +167,24 @@
             transition: all 0.15s ease;
         }
         .action-icon-btn:hover {
-            background: var(--surface-2, #F3ECE1);
-            border-color: var(--navy, #1B2F4A);
-            color: var(--navy, #1B2F4A);
+            background: var(--surface-2);
+            border-color: var(--navy);
+            color: var(--navy);
         }
     </style>
 </head>
-<body class="app-body">
+<body>
+<div class="app-shell">
     <!-- APP HEADER -->
     <%@ include file="includes/app_header.jsp" %>
 
-    <div class="app-container">
+    <div class="app-body">
         <!-- SIDEBAR -->
         <%@ include file="includes/sidebar.jsp" %>
 
         <!-- CONTENU PRINCIPAL -->
         <main class="app-main">
+            <div class="app-content">
             <!-- NOTIFICATION TOAST -->
             <% if ("uploaded".equals(msg)) { %>
                 <div class="toast toast-success" style="display:flex; align-items:center; gap:10px; margin-bottom:16px; padding:12px 18px; background:#E8F5E9; border-left:4px solid #2E7D32; color:#1B5E20; border-radius:3px;">
@@ -477,8 +479,10 @@
                     <% } %>
                 </div>
             </div>
+            </div>
         </main>
     </div>
+</div>
 
     <!-- MODAL TÉLÉVERSEMENT -->
     <div id="uploadModal" class="modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center;">

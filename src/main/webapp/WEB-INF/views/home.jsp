@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.List"%>
+<%-- LIAS Home Dashboard - Updated with Font Awesome Icons --%>
 <%@ page import="com.lias.beans.User"%>
 <%@ page import="com.lias.beans.Evenement"%>
 <%@ page import="com.lias.beans.DemandeAdhesion"%>
@@ -20,8 +20,15 @@
         .gov-tile {
             background: var(--surface-2);
             border: 1px solid var(--border);
-            padding: 10px 12px;
-            border-radius: 2px;
+            border-left: 3px solid #CBD5E1;
+            padding: 10px 14px;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+        .gov-tile:hover {
+            border-left-color: var(--primary);
+            background: #EFF6FF;
+            transform: translateX(2px);
         }
         .gov-tile-label {
             font-family: var(--font-mono);
@@ -39,17 +46,18 @@
         }
         .mandate-track {
             position: relative;
-            height: 6px;
+            height: 8px;
             background: var(--surface-2);
             border: 1px solid var(--border);
             margin: 12px 0 8px;
-            border-radius: 2px;
+            border-radius: 4px;
             overflow: hidden;
         }
         .mandate-fill {
             height: 100%;
-            background: var(--navy);
+            background: linear-gradient(90deg, var(--primary) 0%, var(--indigo) 100%);
             width: 58%;
+            border-radius: 4px;
         }
         .report-line {
             display: flex;
@@ -92,6 +100,16 @@
                     </p>
                 </div>
 
+                <% if ("acces_interdit_doctorant".equals(request.getParameter("error"))) { %>
+                <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-left: 4px solid #D97706; padding: 14px 18px; border-radius: 6px; margin-bottom: 24px; color: #92400E; font-size: 13.5px; display: flex; align-items: flex-start; gap: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <span style="font-size: 22px; line-height: 1;">🔒</span>
+                    <div>
+                        <strong style="display: block; font-size: 14px; margin-bottom: 2px;">Module Interne Réservé (Règle Métier CDC §2.2 C)</strong>
+                        Conformément au cahier des charges officiel du laboratoire LIAS, les comptes <strong>Doctorants</strong> bénéficient d'un accès focalisé sur la consultation et la déclaration de leurs <em>publications scientifiques</em> et de leur profil. L'accès aux modules de gouvernance et gestion interne (matériel, conventions, mandats, délibérations PV, budget) est statutairement réservé aux membres permanents et à la direction.
+                    </div>
+                </div>
+                <% } %>
+
                 <!-- KPI Cards Strip -->
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -111,7 +129,7 @@
                     </div>
                     <div class="stat-card">
                         <div class="k">Demandes en Attente</div>
-                        <div class="v" style="color: var(--accent-2);"><%= request.getAttribute("totalDemandes") != null ? request.getAttribute("totalDemandes") : "4" %></div>
+                        <div class="v"><%= request.getAttribute("totalDemandes") != null ? request.getAttribute("totalDemandes") : "4" %></div>
                         <div class="s">À valider</div>
                     </div>
                 </div>
@@ -250,10 +268,10 @@
                             <div class="ring-progress-wrapper">
                                 <svg class="ring-progress-svg" width="100" height="100" viewBox="0 0 100 100">
                                     <circle cx="50" cy="50" r="40" stroke="var(--border)" stroke-width="6" fill="none" />
-                                    <circle cx="50" cy="50" r="40" stroke="var(--navy)" stroke-width="6" fill="none"
+                                    <circle cx="50" cy="50" r="40" stroke="var(--primary)" stroke-width="6" fill="none"
                                             stroke-dasharray="196 251.3" stroke-dashoffset="-62.8"
-                                            transform="rotate(-90 50 50)" stroke-linecap="butt" />
-                                    <text x="50" y="53" text-anchor="middle" font-family="var(--font-serif)" font-size="24" font-weight="500" fill="var(--ink)">
+                                            transform="rotate(-90 50 50)" stroke-linecap="round" />
+                                    <text x="50" y="53" text-anchor="middle" font-family="var(--font-serif)" font-size="24" font-weight="600" fill="var(--primary-deep)">
                                         78<tspan font-size="12" fill="var(--muted)">%</tspan>
                                     </text>
                                 </svg>

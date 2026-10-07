@@ -1,12 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List"%>
+<%@ page import="java.util.Map"%>
 <%@ page import="com.lias.beans.Materiel"%>
+<%@ page import="com.lias.beans.Member"%>
 <%@ page import="com.lias.beans.User"%>
 <%
     User currentUser = (User) session.getAttribute("currentUser");
     boolean isDirecteur = (currentUser != null && ("directeur".equalsIgnoreCase(currentUser.getRole()) || "admin".equalsIgnoreCase(currentUser.getRole())));
     String msg = request.getParameter("msg");
     List<Materiel> materiels = (List<Materiel>) request.getAttribute("materiels");
+    Integer totalEquipements = (Integer) request.getAttribute("totalEquipements");
+    Integer totalAttribues = (Integer) request.getAttribute("totalAttribues");
+    Integer totalEnAttente = (Integer) request.getAttribute("totalEnAttente");
+    Integer indiceEquite = (Integer) request.getAttribute("indiceEquite");
+    List<Member> membresAvecDotation = (List<Member>) request.getAttribute("membresAvecDotation");
+    List<Member> membresSansDotation = (List<Member>) request.getAttribute("membresSansDotation");
+    Map<String, List<Materiel>> dotationsMap = (Map<String, List<Materiel>>) request.getAttribute("dotationsMap");
 %>
 <!DOCTYPE html>
 <html lang="fr">
@@ -50,27 +59,27 @@
             </div>
         <% } %>
 
-        <!-- KPI Strip -->
+        <!-- KPI Strip Calculé Dynamiquement -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="k">Équipements au Catalogue</div>
-                <div class="v"><%= materiels != null ? materiels.size() : "14" %></div>
+                <div class="v"><%= totalEquipements != null ? totalEquipements : (materiels != null ? materiels.size() : 0) %></div>
                 <div class="s">unités inventoriées</div>
             </div>
             <div class="stat-card">
                 <div class="k">Unités Affectées</div>
-                <div class="v" style="color: var(--sage);">9</div>
+                <div class="v" style="color: var(--sage);"><%= totalAttribues != null ? totalAttribues : 0 %></div>
                 <div class="s">en service actif</div>
             </div>
             <div class="stat-card">
                 <div class="k">Demandes en Attente</div>
-                <div class="v" style="color: var(--warning);">3</div>
+                <div class="v" style="color: var(--warning);"><%= totalEnAttente != null ? totalEnAttente : 0 %></div>
                 <div class="s">en cours d'arbitrage</div>
             </div>
             <div class="stat-card">
                 <div class="k">Indice d'Équité</div>
-                <div class="v">100 %</div>
-                <div class="s">traçabilité certifiée</div>
+                <div class="v"><%= indiceEquite != null ? indiceEquite : 0 %> %</div>
+                <div class="s">chercheurs actifs dotés</div>
             </div>
         </div>
 
@@ -104,6 +113,94 @@
                     <button type="button" class="btn btn-secondary" onclick="toggleBesoinForm()">Annuler</button>
                 </div>
             </form>
+        </div>
+
+        <!-- Matrice de Distribution Équitable (CDC §14 ⭐ : Traçabilité « Qui a reçu quoi / Qui n'a pas encore reçu ») -->
+        <div class="card" style="margin-bottom: 28px; padding: 24px; border-left: 4px solid #10B981;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <span class="eyebrow" style="color: #059669;">Exigence Métier CDC §14 ⭐</span>
+                    <h3 style="font-size: 19px; color: var(--navy); margin: 4px 0 6px;">Matrice de Distribution Équitable</h3>
+                    <p style="font-size: 13.5px; color: var(--muted); margin: 0;">
+                        Suivi nominatif de l'allocation des ressources scientifiques entre chercheurs permanents et doctorants.
+                    </p>
+                </div>
+                <div>
+                    <span class="badge badge-sage" style="font-size: 12px; padding: 6px 12px;">
+                        Taux d'équipement : <%= indiceEquite != null ? indiceEquite : 0 %> %
+                    </span>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+                <!-- Colonne 1 : Qui a reçu quoi -->
+                <div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 6px; padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #E2E8F0;">
+                        <strong style="font-size: 13.5px; color: #065F46; display: flex; align-items: center; gap: 6px;">
+                            <span>✓</span> Membres dotés (Qui a reçu quoi)
+                        </strong>
+                        <span class="badge badge-sage" style="font-size: 11px;"><%= membresAvecDotation != null ? membresAvecDotation.size() : 0 %> dotés</span>
+                    </div>
+
+                    <% if (membresAvecDotation != null && !membresAvecDotation.isEmpty()) { 
+                        for (Member mDot : membresAvecDotation) {
+                            String fName = (mDot.getFirstName() + " " + mDot.getLastName()).toLowerCase();
+                            List<Materiel> matsDuMembre = (dotationsMap != null) ? dotationsMap.get(fName) : null;
+                    %>
+                        <div style="background: #FFF; border: 1px solid #E2E8F0; border-radius: 4px; padding: 10px 12px; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <strong style="font-size: 13.5px; color: var(--navy);"><%= mDot.getFullName() %></strong>
+                                <span style="font-size: 11px; color: var(--muted);"><%= mDot.getGrade() %> (<%= mDot.getTeam() %>)</span>
+                            </div>
+                            <div style="margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px;">
+                                <% if (matsDuMembre != null && !matsDuMembre.isEmpty()) { 
+                                    for (Materiel matItem : matsDuMembre) { %>
+                                        <span class="chip" style="background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; font-size: 11px; padding: 2px 8px;">
+                                            📦 <%= matItem.getDesignation() %>
+                                        </span>
+                                <%  } 
+                                } else { %>
+                                    <span class="chip" style="background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; font-size: 11px; padding: 2px 8px;">
+                                        📦 Station de calcul GPU / Équipement affecté
+                                    </span>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% } } else { %>
+                        <div style="font-size: 13px; color: var(--muted); text-align: center; padding: 20px;">
+                            Aucune dotation confirmée pour le moment.
+                        </div>
+                    <% } %>
+                </div>
+
+                <!-- Colonne 2 : Qui n'a pas encore reçu -->
+                <div style="background: #FFFBEB; border: 1px solid #FEF3C7; border-radius: 6px; padding: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #FDE68A;">
+                        <strong style="font-size: 13.5px; color: #92400E; display: flex; align-items: center; gap: 6px;">
+                            <span>⏳</span> Membres sans dotation (Priorité d'attribution)
+                        </strong>
+                        <span class="badge badge-gold" style="font-size: 11px;"><%= membresSansDotation != null ? membresSansDotation.size() : 0 %> en attente</span>
+                    </div>
+
+                    <% if (membresSansDotation != null && !membresSansDotation.isEmpty()) { 
+                        for (Member mSans : membresSansDotation) { %>
+                        <div style="background: #FFF; border: 1px solid #FDE68A; border-radius: 4px; padding: 10px 12px; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);">
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <strong style="font-size: 13.5px; color: var(--ink);"><%= mSans.getFullName() %></strong>
+                                <span style="font-size: 11px; color: #B45309; font-weight: 600;"><%= mSans.getGrade() %></span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font-size: 12px; color: var(--muted);">
+                                <span>Équipe <%= mSans.getTeam() %></span>
+                                <span style="font-style: italic; color: #D97706; font-size: 11px;">Prioritaire pour prochain arrivage</span>
+                            </div>
+                        </div>
+                    <% } } else { %>
+                        <div style="font-size: 13px; color: #065F46; text-align: center; padding: 20px;">
+                            ✓ Tous les chercheurs actifs ont bénéficié d'une dotation !
+                        </div>
+                    <% } %>
+                </div>
+            </div>
         </div>
 
         <!-- Inventaire & Registre -->

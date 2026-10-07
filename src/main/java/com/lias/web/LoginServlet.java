@@ -52,6 +52,19 @@ public class LoginServlet extends HttpServlet {
         User user = metier.authentifier(email, password);
 
         if (user != null) {
+            if (!user.isActif()) {
+                if ("retraite".equalsIgnoreCase(user.getRole())) {
+                    request.setAttribute("errorMessage", "Compte gelé pour départ en retraite (CDC §2.D & §8.1) : L'accès actif à l'espace membre est suspendu. L'historique, les publications et le parcours scientifique restent consultables en lecture seule dans l'annuaire.");
+                } else if ("ancien".equalsIgnoreCase(user.getRole())) {
+                    request.setAttribute("errorMessage", "Compte désactivé pour ancien membre (CDC §2.E & §8.2) : L'accès actif est désactivé mais les travaux scientifiques et l'historique restent archivés.");
+                } else {
+                    request.setAttribute("errorMessage", "Ce compte utilisateur est actuellement inactif. Veuillez contacter la direction du laboratoire.");
+                }
+                request.setAttribute("emailEntered", email);
+                request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+                return;
+            }
+
             // Création / Récupération de la session HTTP
             HttpSession session = request.getSession(true);
             session.setAttribute("currentUser", user);

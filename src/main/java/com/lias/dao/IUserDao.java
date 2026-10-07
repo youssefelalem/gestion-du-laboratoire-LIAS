@@ -13,5 +13,6 @@ public interface IUserDao {
     List<User> findAll();
     boolean save(User user);
     boolean update(User user);
+    boolean updatePassword(Long id, String newPassword);
     boolean delete(Long id);
 }

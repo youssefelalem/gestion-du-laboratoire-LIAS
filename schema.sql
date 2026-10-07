@@ -18,8 +18,24 @@ DROP TABLE IF EXISTS `publications`;
 DROP TABLE IF EXISTS `mandats`;
 DROP TABLE IF EXISTS `affiliation_periods`;
 DROP TABLE IF EXISTS `members`;
+DROP TABLE IF EXISTS `laboratoire_info`;
 DROP TABLE IF EXISTS `users`;
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- -------------------------------------------------------------------------
+-- 0. Table d'Information Institutionnelle du Laboratoire (CDC §4.1)
+-- -------------------------------------------------------------------------
+CREATE TABLE `laboratoire_info` (
+    `id` INT PRIMARY KEY DEFAULT 1,
+    `code` VARCHAR(50) NOT NULL DEFAULT 'LIAS',
+    `nom_complet` VARCHAR(255) NOT NULL DEFAULT 'Laboratoire d\'Informatique et Applications Scientifiques',
+    `date_creation` DATE NOT NULL, -- Date de création officielle du laboratoire (CDC §4.1)
+    `etablissement` VARCHAR(150) NOT NULL DEFAULT 'Faculté des Sciences Ben M\'Sik',
+    `universite` VARCHAR(150) NOT NULL DEFAULT 'Université Hassan II de Casablanca'
+) ENGINE=InnoDB;
+
+INSERT INTO `laboratoire_info` (`id`, `code`, `nom_complet`, `date_creation`, `etablissement`, `universite`) VALUES
+(1, 'LIAS', 'Laboratoire d\'Informatique et Applications Scientifiques', '2016-09-01', 'Faculté des Sciences Ben M\'Sik', 'Université Hassan II de Casablanca');
 
 -- -------------------------------------------------------------------------
 -- 1. Table des Utilisateurs du système (Authentification & RBAC)
@@ -40,7 +56,8 @@ INSERT INTO `users` (`id`, `nom`, `prenom`, `email`, `password`, `role`, `actif`
 (3, 'Alami', 'Amine', 'doctorant@lias.ma', 'doc123', 'doctorant', 1),
 (4, 'Admin', 'Système', 'admin@lias.ma', 'admin123', 'admin', 1),
 (5, 'Zouhair', 'Karim', 'karim.zouhair@lias.ma', 'pass123', 'permanent', 1),
-(6, 'Berrada', 'Fatima', 'fatima.berrada@lias.ma', 'pass123', 'permanent', 1);
+(6, 'Berrada', 'Fatima', 'associe@lias.ma', 'pass123', 'associe', 1),
+(7, 'Mansouri', 'Omar', 'retraite@lias.ma', 'pass123', 'retraite', 0);
 
 -- -------------------------------------------------------------------------
 -- 2. Table des Membres du laboratoire (Profils académiques)
@@ -50,19 +67,27 @@ CREATE TABLE `members` (
     `firstName` VARCHAR(100) NOT NULL,
     `lastName` VARCHAR(100) NOT NULL,
     `email` VARCHAR(150) NOT NULL,
-    `status` VARCHAR(50) NOT NULL,
-    `role` VARCHAR(50) NOT NULL,
-    `team` VARCHAR(50),
-    `grade` VARCHAR(100)
+    `status` VARCHAR(50) NOT NULL, -- Statut d'appartenance: permanent, associe, doctorant, retraite, ancien
+    `role` VARCHAR(50) NOT NULL,   -- Rôle de gouvernance courant: directeur, vice-directeur, chef-equipe, membre, aucun
+    `team` VARCHAR(50),            -- Équipe de recherche: IA, Big Data, NLP, Sécurité
+    `grade` VARCHAR(100),          -- Grade académique: Professeur de l'Enseignement Supérieur, Professeur Habilité, Maître de Conférences, Doctorant, Professeur Émérite, Chercheur Associé
+    `photo` VARCHAR(255) DEFAULT NULL,
+    `etablissement_origine` VARCHAR(150) DEFAULT 'Faculté des Sciences Ben M\'Sik',
+    `laboratoire_origine` VARCHAR(150) DEFAULT 'LIAS',
+    `date_naissance` DATE NULL,       -- Date de naissance confidentielle (CDC §4.2)
+    `date_embauche` DATE NULL,        -- Date d'embauche universitaire (CDC §4.2)
+    `date_affiliation` DATE NULL,     -- Date d'affiliation au laboratoire LIAS (Clé métier CDC §4.2)
+    `biographie` TEXT DEFAULT NULL,
+    `centres_interet` VARCHAR(255) DEFAULT 'Intelligence Artificielle, Big Data'
 ) ENGINE=InnoDB;
 
-INSERT INTO `members` (`id`, `firstName`, `lastName`, `email`, `status`, `role`, `team`, `grade`) VALUES
-('yea', 'Youssef', 'El Alem', 'directeur@lias.ma', 'permanent', 'directeur', 'IA', 'Professeur de l''Enseignement Supérieur'),
-('sb', 'Sara', 'Benjelloun', 'permanent@lias.ma', 'permanent', 'chef-equipe', 'Big Data', 'Professeur Habilité'),
-('as', 'Amine', 'Alami', 'doctorant@lias.ma', 'doctorant', 'membre', 'NLP', 'Doctorant'),
-('kz', 'Karim', 'Zouhair', 'karim.zouhair@lias.ma', 'permanent', 'chef-equipe', 'Sécurité', 'Maître de Conférences'),
-('fb', 'Fatima', 'Berrada', 'fatima.berrada@lias.ma', 'associe', 'membre', 'IA', 'Chercheur Associé'),
-('om', 'Omar', 'Mansouri', 'omar.mansouri@lias.ma', 'retraite', 'aucun', 'Big Data', 'Professeur Émérite');
+INSERT INTO `members` (`id`, `firstName`, `lastName`, `email`, `status`, `role`, `team`, `grade`, `photo`, `etablissement_origine`, `laboratoire_origine`, `date_naissance`, `date_embauche`, `date_affiliation`, `biographie`, `centres_interet`) VALUES
+('yea', 'Youssef', 'El Alem', 'directeur@lias.ma', 'permanent', 'directeur', 'IA', 'Professeur de l''Enseignement Supérieur', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80', 'Faculté des Sciences Ben M''Sik — Casablanca', 'LIAS (Membre fondateur)', '1978-04-15', '2006-09-01', '2016-09-01', 'Directeur du laboratoire LIAS. Spécialiste de l''intelligence artificielle, des modèles génératifs et de la gouvernance des systèmes de données massives.', 'Intelligence Artificielle, Deep Learning, Gouvernance R&D'),
+('sb', 'Sara', 'Benjelloun', 'permanent@lias.ma', 'permanent', 'chef-equipe', 'Big Data', 'Professeur Habilité', 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&auto=format&fit=crop&q=80', 'Faculté des Sciences Ben M''Sik', 'LIAS', '1984-11-20', '2012-09-01', '2018-10-01', 'Enseignante-chercheuse habilitée, responsable de l''équipe Big Data & Cloud. Travaux axés sur le streaming distribué et le machine learning scalable.', 'Big Data Streams, Apache Spark, Cloud Computing'),
+('as', 'Amine', 'Alami', 'doctorant@lias.ma', 'doctorant', 'membre', 'NLP', 'Doctorant', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80', 'Faculté des Sciences Ben M''Sik', 'LIAS (Équipe NLP)', '1998-06-10', '2023-11-01', '2023-11-01', 'Doctorant en 3ème année au LIAS travaillant sur le traitement automatique des langues pour les dialectes nord-africains (Darija).', 'NLP, Dialectologie Maghrébine, LLM Fine-Tuning'),
+('kz', 'Karim', 'Zouhair', 'karim.zouhair@lias.ma', 'permanent', 'chef-equipe', 'Sécurité', 'Maître de Conférences', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop&q=80', 'École Nationale Supérieure d''Électricité et de Mécanique (ENSEM)', 'LIAS', '1981-02-28', '2010-09-01', '2019-01-15', 'Responsable de l''axe Cybersécurité et Architectures Cloud Zero-Trust. Auteur de nombreuses contributions en sécurité logicielle.', 'Cybersécurité, Zero-Trust, Cryptographie Appliquée'),
+('fb', 'Fatima', 'Berrada', 'fatima.berrada@lias.ma', 'associe', 'membre', 'IA', 'Chercheur Associé', 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&auto=format&fit=crop&q=80', 'Université Chouaib Doukkali — El Jadida', 'Laboratoire de Recherche en Informatique (LaRI)', '1986-08-14', '2014-09-01', '2021-03-01', 'Chercheuse associée collaborant avec le LIAS dans le cadre du projet d''apprentissage fédéré pour les systèmes médicaux.', 'Santé Numérique, Federated Learning, Bioinformatique'),
+('om', 'Omar', 'Mansouri', 'omar.mansouri@lias.ma', 'retraite', 'aucun', 'Big Data', 'Professeur Émérite', 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&auto=format&fit=crop&q=80', 'Faculté des Sciences Ben M''Sik', 'LIAS', '1956-03-12', '1984-09-01', '2016-09-01', 'Ancien directeur fondateur du LIAS (2016-2020), Professeur Émérite. Compte gelé à titre de mémoire académique institutionnelle.', 'Bases de Données Réparties, Algorithmique Avancée');
 
 -- -------------------------------------------------------------------------
 -- 3. Table des Périodes d'Affiliation (Historisation temporelle des membres)

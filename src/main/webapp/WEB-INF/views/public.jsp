@@ -250,28 +250,61 @@
         .partners-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
+            gap: 16px;
             margin-top: 24px;
         }
         .partner-item {
             background: var(--surface);
-            padding: 24px 16px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 20px 12px 16px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 154px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
         }
-        .partner-mark {
-            font-family: var(--font-serif);
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--navy);
-            margin-bottom: 6px;
+        .partner-item:hover {
+            transform: translateY(-3px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.09);
+        }
+        .partner-logo-box {
+            height: 60px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            background: #FFFFFF;
+            border-radius: 4px;
+            padding: 6px;
+        }
+        .partner-img {
+            max-height: 48px;
+            max-width: 100%;
+            object-fit: contain;
+            transition: transform 0.2s ease;
+        }
+        .partner-item:hover .partner-img {
+            transform: scale(1.08);
         }
         .partner-name {
-            font-family: var(--font-sans);
-            font-size: 12px;
-            font-weight: 500;
+            font-family: var(--font-serif);
+            font-size: 14.5px;
+            font-weight: 600;
             color: var(--ink);
+            line-height: 1.25;
+            margin-bottom: 4px;
+        }
+        .partner-sub {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 0.02em;
         }
 
         .events-grid {
@@ -564,21 +597,60 @@
     <!-- Partenaires -->
     <section class="section-public" style="padding-top: 0;">
         <div class="section-eyebrow">Réseau & Collaborations</div>
-        <h2 class="section-title" style="font-size: 34px; margin-bottom: 24px;">Partenaires académiques et industriels</h2>
+        <h2 class="section-title" style="font-size: 34px; margin-bottom: 10px;">Partenaires académiques et industriels</h2>
+        <p style="font-family: var(--font-serif); font-size: 16px; color: var(--muted); margin: 0 0 24px; max-width: 820px; line-height: 1.5;">
+            Conventions de recherche bilatérales, mobilités doctorales et programmes d'innovation appliquée noués avec les leaders industriels et académiques de référence.
+        </p>
         <div class="partners-grid">
-            <div class="partner-item"><div class="partner-mark">CT</div><div class="partner-name">Casa Transports</div></div>
-            <div class="partner-item"><div class="partner-mark">IN</div><div class="partner-name">INRIA Paris</div></div>
-            <div class="partner-item"><div class="partner-mark">UM</div><div class="partner-name">Univ. Mohammed V</div></div>
-            <div class="partner-item"><div class="partner-mark">LP</div><div class="partner-name">CNRS-LIPN</div></div>
-            <div class="partner-item"><div class="partner-mark">EN</div><div class="partner-name">ENSIAS Rabat</div></div>
-            <div class="partner-item"><div class="partner-mark">OC</div><div class="partner-name">OCP Innovation</div></div>
+            <div class="partner-item">
+                <div class="partner-logo-box">
+                    <img src="<%= request.getContextPath() %>/images/partners/casa_transport.png" alt="Casa Transports" class="partner-img">
+                </div>
+                <div class="partner-name">Casa Transports</div>
+                <div class="partner-sub">Partenaire Industriel</div>
+            </div>
+            <div class="partner-item">
+                <div class="partner-logo-box">
+                    <img src="<%= request.getContextPath() %>/images/partners/inria.svg" alt="INRIA Paris" class="partner-img">
+                </div>
+                <div class="partner-name">INRIA Paris</div>
+                <div class="partner-sub">Centre de Recherche</div>
+            </div>
+            <div class="partner-item">
+                <div class="partner-logo-box">
+                    <img src="<%= request.getContextPath() %>/images/partners/um5.png" alt="Univ. Mohammed V" class="partner-img">
+                </div>
+                <div class="partner-name">Univ. Mohammed V</div>
+                <div class="partner-sub">Partenaire Académique</div>
+            </div>
+            <div class="partner-item">
+                <div class="partner-logo-box">
+                    <img src="<%= request.getContextPath() %>/images/partners/cnrs.svg" alt="CNRS - LIPN" class="partner-img">
+                </div>
+                <div class="partner-name">CNRS — LIPN</div>
+                <div class="partner-sub">Coopération France</div>
+            </div>
+            <div class="partner-item">
+                <div class="partner-logo-box">
+                    <img src="<%= request.getContextPath() %>/images/partners/ensias.png" alt="ENSIAS Rabat" class="partner-img">
+                </div>
+                <div class="partner-name">ENSIAS Rabat</div>
+                <div class="partner-sub">Cotutelles & Projets</div>
+            </div>
+            <div class="partner-item">
+                <div class="partner-logo-box">
+                    <img src="<%= request.getContextPath() %>/images/partners/ocp.svg" alt="OCP Innovation" class="partner-img">
+                </div>
+                <div class="partner-name">OCP Innovation</div>
+                <div class="partner-sub">R&D Industrielle</div>
+            </div>
         </div>
     </section>
 
     <!-- CTA Collaborer -->
     <section class="cta-box" id="rejoindre">
         <div>
-            <div class="eyebrow" style="color: rgba(244,239,230,0.6);">Rejoignez le laboratoire</div>
+            <div class="eyebrow" style="color: rgba(255,255,255,0.7);">Rejoignez le laboratoire</div>
             <h2>Vous souhaitez collaborer avec le LIAS ?</h2>
         </div>
         <div>

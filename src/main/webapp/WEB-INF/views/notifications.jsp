@@ -84,16 +84,18 @@
         .tone-sage { background: #EBF3ED; color: #2C5E3B; border: 1px solid #BED8C5; }
     </style>
 </head>
-<body class="app-body">
+<body>
+<div class="app-shell">
     <!-- APP HEADER -->
     <%@ include file="includes/app_header.jsp" %>
 
-    <div class="app-container">
+    <div class="app-body">
         <!-- SIDEBAR -->
         <%@ include file="includes/sidebar.jsp" %>
 
         <!-- MAIN -->
         <main class="app-main">
+            <div class="app-content">
             <!-- NOTIFICATION TOAST -->
             <% if ("lu".equals(msg)) { %>
                 <div class="toast toast-success" style="display:flex; align-items:center; gap:10px; margin-bottom:16px; padding:12px 18px; background:#E8F5E9; border-left:4px solid #2E7D32; color:#1B5E20; border-radius:3px;">
@@ -187,7 +189,9 @@
                     <% } %>
                 <% } %>
             </div>
+            </div>
         </main>
     </div>
+</div>
 </body>
 </html>

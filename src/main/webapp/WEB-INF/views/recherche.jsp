@@ -80,16 +80,18 @@
         }
     </style>
 </head>
-<body class="app-body">
+<body>
+<div class="app-shell">
     <!-- APP HEADER -->
     <%@ include file="includes/app_header.jsp" %>
 
-    <div class="app-container">
+    <div class="app-body">
         <!-- SIDEBAR -->
         <%@ include file="includes/sidebar.jsp" %>
 
         <!-- MAIN -->
         <main class="app-main">
+            <div class="app-content">
             <!-- SECTION HEAD -->
             <div class="section-head">
                 <div>
@@ -249,7 +251,9 @@
                     Saisissez un mot-clé ci-dessus pour lancer une recherche instantanée dans tout le système d'information du laboratoire.
                 </div>
             <% } %>
+            </div>
         </main>
     </div>
+</div>
 </body>
 </html>

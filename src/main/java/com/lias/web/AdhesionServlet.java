@@ -10,8 +10,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import com.lias.beans.DemandeAdhesion;
+import com.lias.beans.NotificationLabo;
 import com.lias.dao.DemandeDaoImpl;
 import com.lias.dao.IDemandeDao;
+import com.lias.dao.INotificationDao;
+import com.lias.dao.NotificationDaoImpl;
 
 /**
  * Contrôleur JEE pour les demandes d'adhésion au laboratoire (CDC §6).
@@ -21,11 +24,13 @@ public class AdhesionServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private IDemandeDao demandeDao;
+    private INotificationDao notificationDao;
 
     @Override
     public void init() throws ServletException {
         super.init();
         this.demandeDao = new DemandeDaoImpl();
+        this.notificationDao = new NotificationDaoImpl();
     }
 
     @Override
@@ -65,6 +70,16 @@ public class AdhesionServlet extends HttpServlet {
                 decision = "valider".equalsIgnoreCase(action) ? "ACCEPTEE" : "REFUSEE";
             }
             demandeDao.updateDecisionAdhesion(id, decision);
+
+            // Notification automatique de la décision (CDC §6 & §19)
+            NotificationLabo notif = new NotificationLabo(
+                null, "adhesion", "À l'instant", false,
+                (user != null && user.getPrenom() != null ? user.getPrenom() + " " + user.getNom() : "Direction"),
+                "a statué sur la candidature #" + id + " : décision " + decision + " consignée au registre (CDC §6).",
+                "Examiner →", "/adhesions"
+            );
+            notificationDao.save(notif);
+
             response.sendRedirect(request.getContextPath() + "/adhesions?msg=decision_enregistree");
             return;
         } else {
@@ -85,6 +100,16 @@ public class AdhesionServlet extends HttpServlet {
 
             DemandeAdhesion d = new DemandeAdhesion(null, nom, prenom, email, statutVise, etablissement, motivation, date, "EN_ATTENTE");
             demandeDao.saveAdhesion(d);
+
+            // Notification automatique pour la direction (CDC §6 & §19)
+            NotificationLabo notif = new NotificationLabo(
+                null, "adhesion", "À l'instant", false,
+                (prenom != null ? prenom + " " : "") + (nom != null ? nom : "Candidat"),
+                "a soumis une nouvelle candidature d'adhésion au laboratoire (Statut visé : " + statutVise + ").",
+                "Examiner le dossier →", "/adhesions"
+            );
+            notificationDao.save(notif);
+
             response.sendRedirect(request.getContextPath() + "/adhesions?msg=soumission_reussie");
         }
     }

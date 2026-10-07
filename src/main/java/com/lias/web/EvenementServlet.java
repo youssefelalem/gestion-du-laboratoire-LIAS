@@ -9,8 +9,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import com.lias.beans.Evenement;
+import com.lias.beans.NotificationLabo;
 import com.lias.dao.EvenementDaoImpl;
 import com.lias.dao.IEvenementDao;
+import com.lias.dao.INotificationDao;
+import com.lias.dao.NotificationDaoImpl;
 
 /**
  * Contrôleur JEE pour la gestion des évènements scientifiques (CDC §9).
@@ -20,11 +23,13 @@ public class EvenementServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private IEvenementDao evtDao;
+    private INotificationDao notificationDao;
 
     @Override
     public void init() throws ServletException {
         super.init();
         this.evtDao = new EvenementDaoImpl();
+        this.notificationDao = new NotificationDaoImpl();
     }
 
     @Override
@@ -48,6 +53,15 @@ public class EvenementServlet extends HttpServlet {
 
         Evenement evt = new Evenement(null, titre, type, date, lieu, description, organisateur, "À venir");
         evtDao.save(evt);
+
+        // Notification automatique des événements (CDC §19)
+        NotificationLabo notif = new NotificationLabo(
+            null, "event", "À l'instant", false,
+            (organisateur != null && !organisateur.trim().isEmpty()) ? organisateur.trim() : "Direction LIAS",
+            "a planifié un nouvel événement scientifique : « " + titre + " » (" + type + ") le " + date + " à " + lieu + ".",
+            "Voir l'agenda →", "/evenements"
+        );
+        notificationDao.save(notif);
 
         response.sendRedirect(request.getContextPath() + "/evenements?msg=cree");
     }

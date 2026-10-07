@@ -12,12 +12,18 @@
 
     String canalTitre = "Canal Général & Direction";
     String canalDesc = "Discussions transversales, annonces officielles et coordination de l'ensemble des membres du LIAS.";
-    if ("team_dscc".equalsIgnoreCase(activeCanal)) {
-        canalTitre = "Équipe Data Science & Cloud Computing (DSCC)";
-        canalDesc = "Échanges techniques, partage de code, modèles NLP et calcul distribué de l'équipe DSCC.";
-    } else if ("team_msi".equalsIgnoreCase(activeCanal)) {
-        canalTitre = "Équipe Modélisation & Systèmes d'Information (MSI)";
-        canalDesc = "Travaux de recherche sur les ontologies, bases de données avancées et architectures logicielles.";
+    if ("team_ia".equalsIgnoreCase(activeCanal)) {
+        canalTitre = "Équipe Intelligence Artificielle & Deep Learning (IA)";
+        canalDesc = "Travaux sur les modèles génératifs, vision par ordinateur et apprentissage automatique.";
+    } else if ("team_bigdata".equalsIgnoreCase(activeCanal)) {
+        canalTitre = "Équipe Big Data Streams & Cloud Computing";
+        canalDesc = "Architectures distribuées, traitement de flux temps réel avec Spark et infrastructures cloud.";
+    } else if ("team_securite".equalsIgnoreCase(activeCanal)) {
+        canalTitre = "Équipe Cybersécurité & Architectures Zero-Trust";
+        canalDesc = "Sécurité des systèmes distribués, cryptographie appliquée et résilience logicielle.";
+    } else if ("team_nlp".equalsIgnoreCase(activeCanal)) {
+        canalTitre = "Équipe Traitement Automatique des Langues (NLP)";
+        canalDesc = "Modèles de langage pour dialectes nord-africains (Darija), TAL et fouille de textes.";
     } else if ("events".equalsIgnoreCase(activeCanal)) {
         canalTitre = "Organisation des Manifestations & Événements";
         canalDesc = "Coordination logistique, appels à communications et préparation des ateliers scientifiques.";
@@ -213,14 +219,22 @@
                     <span>Événements & Séminaires</span>
                 </a>
 
-                <div class="channel-section-title" style="margin-top: 14px;">Équipes de Recherche</div>
-                <a href="<%= request.getContextPath() %>/communication?canal=team_dscc" class="channel-link <%= "team_dscc".equals(activeCanal) ? "active" : "" %>">
+                <div class="channel-section-title" style="margin-top: 14px;">Équipes de Recherche (CDC §13)</div>
+                <a href="<%= request.getContextPath() %>/communication?canal=team_ia" class="channel-link <%= "team_ia".equals(activeCanal) ? "active" : "" %>">
                     <span class="channel-badge-hash">#</span>
-                    <span>Équipe DSCC (Data Science)</span>
+                    <span>Équipe IA (Intelligence Artificielle)</span>
                 </a>
-                <a href="<%= request.getContextPath() %>/communication?canal=team_msi" class="channel-link <%= "team_msi".equals(activeCanal) ? "active" : "" %>">
+                <a href="<%= request.getContextPath() %>/communication?canal=team_bigdata" class="channel-link <%= "team_bigdata".equals(activeCanal) ? "active" : "" %>">
                     <span class="channel-badge-hash">#</span>
-                    <span>Équipe MSI (Modélisation)</span>
+                    <span>Équipe Big Data & Cloud</span>
+                </a>
+                <a href="<%= request.getContextPath() %>/communication?canal=team_securite" class="channel-link <%= "team_securite".equals(activeCanal) ? "active" : "" %>">
+                    <span class="channel-badge-hash">#</span>
+                    <span>Équipe Cybersécurité</span>
+                </a>
+                <a href="<%= request.getContextPath() %>/communication?canal=team_nlp" class="channel-link <%= "team_nlp".equals(activeCanal) ? "active" : "" %>">
+                    <span class="channel-badge-hash">#</span>
+                    <span>Équipe NLP & Dialectes</span>
                 </a>
 
                 <div style="margin-top: auto; padding: 16px; border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); line-height: 1.4;">
