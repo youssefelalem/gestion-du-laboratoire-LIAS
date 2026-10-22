@@ -9,6 +9,8 @@
     String selectedStatus = (String) request.getAttribute("selectedStatus");
     User currentUser = (User) session.getAttribute("currentUser");
     boolean isDirector = currentUser != null && ("directeur".equalsIgnoreCase(currentUser.getRole()) || "admin".equalsIgnoreCase(currentUser.getRole()));
+    // Modification de profils et des champs de gouvernance (statut, équipe) : directeur en mandat uniquement.
+    boolean isDirecteurLabo = currentUser != null && "directeur".equalsIgnoreCase(currentUser.getRole());
 
     Member selectedMember = null;
     String selectParam = request.getParameter("id");
@@ -236,7 +238,7 @@
                             <span class="badge badge-navy" style="font-size: 12px; padding: 6px 14px;">
                                 Statut : <%= selectedMember.getStatut().toUpperCase() %>
                             </span>
-                            <% if (currentUser != null && (isDirector || (currentUser.getEmail() != null && currentUser.getEmail().equalsIgnoreCase(selectedMember.getEmail())))) { %>
+                            <% if (currentUser != null && (isDirecteurLabo || (currentUser.getEmail() != null && currentUser.getEmail().equalsIgnoreCase(selectedMember.getEmail())))) { %>
                                 <button type="button" class="btn btn-sm btn-secondary" onclick="openEditModal()" style="font-size: 12px; padding: 6px 12px; cursor: pointer;">
                                     ✎ Modifier ce profil
                                 </button>
@@ -411,7 +413,7 @@
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:14px;">
                 <div>
                     <label style="display:block; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; color:var(--muted); margin-bottom:6px;">Équipe de recherche</label>
-                    <select name="team" class="form-control">
+                    <select name="team" class="form-control" <%= isDirecteurLabo ? "" : "disabled" %>>
                         <option value="IA" <%= "IA".equalsIgnoreCase(selectedMember.getEquipe()) ? "selected" : "" %>>IA (Intelligence Artificielle)</option>
                         <option value="Big Data" <%= "Big Data".equalsIgnoreCase(selectedMember.getEquipe()) ? "selected" : "" %>>Big Data & Cloud</option>
                         <option value="NLP" <%= "NLP".equalsIgnoreCase(selectedMember.getEquipe()) ? "selected" : "" %>>NLP & Traitement Automatique</option>
@@ -420,14 +422,14 @@
                 </div>
                 <div>
                     <label style="display:block; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; color:var(--muted); margin-bottom:6px;">Statut</label>
-                    <select name="status" class="form-control" <%= isDirector ? "" : "disabled" %>>
+                    <select name="status" class="form-control" <%= isDirecteurLabo ? "" : "disabled" %>>
                         <option value="permanent" <%= "permanent".equalsIgnoreCase(selectedMember.getStatut()) ? "selected" : "" %>>Permanent</option>
                         <option value="doctorant" <%= "doctorant".equalsIgnoreCase(selectedMember.getStatut()) ? "selected" : "" %>>Doctorant</option>
                         <option value="associe" <%= "associe".equalsIgnoreCase(selectedMember.getStatut()) ? "selected" : "" %>>Associé</option>
                         <option value="retraite" <%= "retraite".equalsIgnoreCase(selectedMember.getStatut()) ? "selected" : "" %>>Retraité / Émérite (Compte gelé - CDC §8.1)</option>
                         <option value="ancien" <%= "ancien".equalsIgnoreCase(selectedMember.getStatut()) ? "selected" : "" %>>Ancien membre (Départ - CDC §8.2)</option>
                     </select>
-                    <% if (!isDirector) { %>
+                    <% if (!isDirecteurLabo) { %>
                         <input type="hidden" name="status" value="<%= selectedMember.getStatut() %>">
                     <% } %>
                 </div>

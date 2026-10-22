@@ -7,8 +7,10 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import com.lias.beans.Member;
+import com.lias.beans.User;
 import com.lias.dao.IMemberDao;
 import com.lias.dao.MemberDaoImpl;
 
@@ -67,10 +69,28 @@ public class MemberServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        HttpSession session = request.getSession(false);
+        User user = null;
+        if (session != null) {
+            user = (User) session.getAttribute("currentUser");
+            if (user == null) user = (User) session.getAttribute("user");
+        }
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login?error=auth_requise");
+            return;
+        }
         String id = request.getParameter("id");
         if (id != null && !id.trim().isEmpty()) {
             Member m = memberDao.findById(id.trim());
             if (m != null) {
+                // CDC §3 : le membre modifie librement SON profil ; le directeur peut modifier tout profil.
+                boolean isDirecteur = "directeur".equalsIgnoreCase(user.getRole());
+                boolean isSelf = user.getEmail() != null && user.getEmail().equalsIgnoreCase(m.getEmail());
+                if (!isDirecteur && !isSelf) {
+                    response.sendRedirect(request.getContextPath() + "/profils?id=" + m.getId() + "&error=modification_non_autorisee");
+                    return;
+                }
+
                 String firstName = request.getParameter("firstName");
                 String lastName = request.getParameter("lastName");
                 String grade = request.getParameter("grade");
@@ -85,8 +105,9 @@ public class MemberServlet extends HttpServlet {
                 if (firstName != null && !firstName.trim().isEmpty()) m.setFirstName(firstName.trim());
                 if (lastName != null && !lastName.trim().isEmpty()) m.setLastName(lastName.trim());
                 if (grade != null && !grade.trim().isEmpty()) m.setGrade(grade.trim());
-                if (team != null && !team.trim().isEmpty()) m.setTeam(team.trim());
-                if (status != null && !status.trim().isEmpty()) m.setStatus(status.trim());
+                // Statut et équipe relèvent de la gouvernance (CDC §5.2, §21) : directeur uniquement.
+                if (isDirecteur && team != null && !team.trim().isEmpty()) m.setTeam(team.trim());
+                if (isDirecteur && status != null && !status.trim().isEmpty()) m.setStatus(status.trim());
                 if (photo != null && !photo.trim().isEmpty()) m.setPhoto(photo.trim());
                 if (etablissement != null) m.setEtablissementOrigine(etablissement.trim());
                 if (labo != null) m.setLaboratoireOrigine(labo.trim());
