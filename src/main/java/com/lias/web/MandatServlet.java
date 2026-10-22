@@ -66,7 +66,7 @@ public class MandatServlet extends HttpServlet {
             if (user == null) user = (User) session.getAttribute("user");
         }
 
-        if (user == null || (!"directeur".equalsIgnoreCase(user.getRole()) && !"admin".equalsIgnoreCase(user.getRole()))) {
+        if (user == null || !"directeur".equalsIgnoreCase(user.getRole())) {
             response.sendRedirect(request.getContextPath() + "/mandats?error=unauthorized");
             return;
         }

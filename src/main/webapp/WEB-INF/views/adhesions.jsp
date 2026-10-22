@@ -4,7 +4,7 @@
 <%@ page import="com.lias.beans.User"%>
 <%
     User currentUser = (User) session.getAttribute("currentUser");
-    boolean isDirecteur = (currentUser != null && ("directeur".equalsIgnoreCase(currentUser.getRole()) || "admin".equalsIgnoreCase(currentUser.getRole())));
+    boolean isDirecteur = (currentUser != null && "directeur".equalsIgnoreCase(currentUser.getRole()));
     String msg = request.getParameter("msg");
     List<DemandeAdhesion> demandes = (List<DemandeAdhesion>) request.getAttribute("demandes");
     if (demandes == null) {

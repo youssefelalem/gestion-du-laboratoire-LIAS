@@ -6,7 +6,7 @@
 <%
     User currentUser = (User) session.getAttribute("currentUser");
     if (currentUser == null) currentUser = (User) session.getAttribute("user");
-    boolean isDirecteur = (currentUser != null && ("directeur".equalsIgnoreCase(currentUser.getRole()) || "admin".equalsIgnoreCase(currentUser.getRole())));
+    boolean isDirecteur = (currentUser != null && "directeur".equalsIgnoreCase(currentUser.getRole()));
 
     List<Mandat> mandats = (List<Mandat>) request.getAttribute("mandats");
     Mandat mandatActif = (Mandat) request.getAttribute("mandatActif");

@@ -105,7 +105,7 @@
                     <span style="font-size: 22px; line-height: 1;">🔒</span>
                     <div>
                         <strong style="display: block; font-size: 14px; margin-bottom: 2px;">Module Interne Réservé (Règle Métier CDC §2.2 C)</strong>
-                        Conformément au cahier des charges officiel du laboratoire LIAS, les comptes <strong>Doctorants</strong> bénéficient d'un accès focalisé sur la consultation et la déclaration de leurs <em>publications scientifiques</em> et de leur profil. L'accès aux modules de gouvernance et gestion interne (matériel, conventions, mandats, délibérations PV, budget) est statutairement réservé aux membres permanents et à la direction.
+                        Conformément au cahier des charges officiel du laboratoire LIAS, les comptes <strong>Doctorants</strong> et <strong>Membres associés</strong> bénéficient d'un accès focalisé sur la consultation et la déclaration de leurs <em>publications scientifiques</em> et de leur profil. L'accès aux modules de gouvernance et gestion interne (matériel, conventions, mandats, délibérations PV, archive documentaire, communication interne, budget) est statutairement réservé aux membres permanents et à la direction.
                     </div>
                 </div>
                 <% } %>

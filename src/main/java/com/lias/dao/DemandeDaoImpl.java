@@ -163,7 +163,8 @@ public class DemandeDaoImpl implements IDemandeDao {
                         psU.setString(2, prenom);
                         psU.setString(3, email);
                         psU.setString(4, PasswordUtil.hash(motDePasseInitial));
-                        psU.setString(5, statutVise.equalsIgnoreCase("Doctorant") ? "doctorant" : "permanent");
+                        psU.setString(5, statutVise.equalsIgnoreCase("doctorant") ? "doctorant"
+                                : statutVise.equalsIgnoreCase("associe") ? "associe" : "permanent");
                         psU.executeUpdate();
                     }
 

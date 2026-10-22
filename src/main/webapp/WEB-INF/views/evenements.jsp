@@ -87,7 +87,7 @@
                     Conférences, séminaires, soutenances de thèses et workshops organisés ou co-organisés par le laboratoire LIAS.
                 </p>
             </div>
-            <% if (currentUser != null) { %>
+            <% if (currentUser != null && ("directeur".equalsIgnoreCase(currentUser.getRole()) || "permanent".equalsIgnoreCase(currentUser.getRole()) || "admin".equalsIgnoreCase(currentUser.getRole()))) { %>
                 <button class="btn btn-primary" onclick="toggleAddEvent()">+ Planifier un événement</button>
             <% } %>
         </div>

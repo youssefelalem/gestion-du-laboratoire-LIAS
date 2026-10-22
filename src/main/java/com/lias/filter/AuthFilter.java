@@ -119,10 +119,13 @@ public class AuthFilter implements Filter {
             if (u == null) u = (com.lias.beans.User) session.getAttribute("user");
             String userRole = (u != null && u.getRole() != null) ? u.getRole().toLowerCase() : "";
 
-            // 3. Règle stricte CDC §2.2 C : Doctorants
-            // "Compte personnel. Accès limité : Ajouter publications, Consulter publications. ❌ Aucun accès aux modules internes"
-            if ("doctorant".equals(userRole)) {
+            // 3. Règle stricte CDC §2.2 B/C : Doctorants et membres associés
+            // Doctorant : "Ajouter / consulter publications. ❌ Aucun accès aux modules internes".
+            // Associé : "Accès limité : consultation, certains événements, publications".
+            if ("doctorant".equals(userRole) || "associe".equals(userRole)) {
                 boolean isForbiddenInternalModule = servletPath.startsWith("/materiel")
+                        || servletPath.startsWith("/documents")
+                        || servletPath.startsWith("/communication")
                         || servletPath.startsWith("/conventions")
                         || servletPath.startsWith("/pv")
                         || servletPath.startsWith("/mandats")

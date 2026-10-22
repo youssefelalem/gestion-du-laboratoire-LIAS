@@ -44,6 +44,18 @@ public class EvenementServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        jakarta.servlet.http.HttpSession session = request.getSession(false);
+        com.lias.beans.User user = null;
+        if (session != null) {
+            user = (com.lias.beans.User) session.getAttribute("currentUser");
+            if (user == null) user = (com.lias.beans.User) session.getAttribute("user");
+        }
+        String role = (user != null && user.getRole() != null) ? user.getRole().toLowerCase() : "";
+        // CDC §2.2 / §5.2 : l'organisation des événements relève des permanents et de la direction.
+        if (!"directeur".equals(role) && !"permanent".equals(role) && !"admin".equals(role)) {
+            response.sendRedirect(request.getContextPath() + "/evenements?error=unauthorized");
+            return;
+        }
         String titre = request.getParameter("titre");
         String type = request.getParameter("type");
         String date = request.getParameter("date");

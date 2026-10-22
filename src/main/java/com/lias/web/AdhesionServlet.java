@@ -49,8 +49,7 @@ public class AdhesionServlet extends HttpServlet {
             user = (com.lias.beans.User) session.getAttribute("currentUser");
             if (user == null) user = (com.lias.beans.User) session.getAttribute("user");
         }
-        boolean isDirection = user != null
-                && ("directeur".equalsIgnoreCase(user.getRole()) || "admin".equalsIgnoreCase(user.getRole()));
+        boolean isDirection = user != null && "directeur".equalsIgnoreCase(user.getRole());
         List<DemandeAdhesion> adhesions = isDirection ? demandeDao.findAllAdhesions() : new java.util.ArrayList<>();
         request.setAttribute("adhesions", adhesions);
         request.setAttribute("demandes", adhesions);
@@ -70,7 +69,8 @@ public class AdhesionServlet extends HttpServlet {
                 user = (com.lias.beans.User) session.getAttribute("currentUser");
                 if (user == null) user = (com.lias.beans.User) session.getAttribute("user");
             }
-            if (user == null || (!"directeur".equalsIgnoreCase(user.getRole()) && !"admin".equalsIgnoreCase(user.getRole()))) {
+            // CDC §6 : « Gestion uniquement par le directeur en mandat ».
+            if (user == null || !"directeur".equalsIgnoreCase(user.getRole())) {
                 response.sendRedirect(request.getContextPath() + "/login?error=auth_requise");
                 return;
             }

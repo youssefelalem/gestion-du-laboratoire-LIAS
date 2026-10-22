@@ -228,6 +228,9 @@
                     <a href="<%= request.getContextPath() %>/documents" class="sidebar-sub-item <%= "documents".equals(activeNav) ? "active" : "" %>">
                         <span class="sub-dot"></span>
                         <span class="nav-label">Archive Documentaire</span>
+                        <% if (!sbIsDir && !"permanent".equalsIgnoreCase(sbRole)) { %>
+                            <span class="nav-lock" title="Module interne (CDC §2.2 C)"><i class="fa-solid fa-lock" style="font-size:9px;"></i></span>
+                        <% } %>
                     </a>
                     <a href="<%= request.getContextPath() %>/evenements" class="sidebar-sub-item <%= "evenements".equals(activeNav) ? "active" : "" %>">
                         <span class="sub-dot"></span>
@@ -279,6 +282,9 @@
                     <a href="<%= request.getContextPath() %>/communication" class="sidebar-sub-item <%= "communication".equals(activeNav) ? "active" : "" %>">
                         <span class="sub-dot"></span>
                         <span class="nav-label">Communication</span>
+                        <% if (!sbIsDir && !"permanent".equalsIgnoreCase(sbRole)) { %>
+                            <span class="nav-lock" title="Module interne (CDC §2.2 C)"><i class="fa-solid fa-lock" style="font-size:9px;"></i></span>
+                        <% } %>
                     </a>
                 </div>
             </div>
