@@ -51,13 +51,13 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB;
 
 INSERT INTO `users` (`id`, `nom`, `prenom`, `email`, `password`, `role`, `actif`) VALUES
-(1, 'El Alem', 'Youssef', 'directeur@lias.ma', 'admin123', 'directeur', 1),
-(2, 'Benjelloun', 'Sara', 'permanent@lias.ma', 'pass123', 'permanent', 1),
-(3, 'Alami', 'Amine', 'doctorant@lias.ma', 'doc123', 'doctorant', 1),
-(4, 'Admin', 'Système', 'admin@lias.ma', 'admin123', 'admin', 1),
-(5, 'Zouhair', 'Karim', 'karim.zouhair@lias.ma', 'pass123', 'permanent', 1),
-(6, 'Berrada', 'Fatima', 'associe@lias.ma', 'pass123', 'associe', 1),
-(7, 'Mansouri', 'Omar', 'retraite@lias.ma', 'pass123', 'retraite', 0);
+(1, 'El Alem', 'Youssef', 'directeur@lias.ma', 'pbkdf2$120000$ALPZQcpmZyMm8kl2T/a3Bw==$Vkk/keoNG3zkTUU0B52PzBB0C/vKmZwx0vMVpKPqUkM=', 'directeur', 1),
+(2, 'Benjelloun', 'Sara', 'permanent@lias.ma', 'pbkdf2$120000$EmGcbDU9iZ+GM+gpnkqefA==$BaNDprfPQwDdLHEbhg/ui2JY+cRdR88IyGb+y15k3gM=', 'permanent', 1),
+(3, 'Alami', 'Amine', 'doctorant@lias.ma', 'pbkdf2$120000$MUV3DQ9QRCd5Wsp95zQTFQ==$xnfKfmTnAa93M/FyK585b2cEJaJxIKjSIFil5BC5WvY=', 'doctorant', 1),
+(4, 'Admin', 'Système', 'admin@lias.ma', 'pbkdf2$120000$J4eeMfI8piZUowhkzrJS1g==$84zuag0pMGEY96aa301KNY6hKEjDOJodk1ssjM/0sFg=', 'admin', 1),
+(5, 'Zouhair', 'Karim', 'karim.zouhair@lias.ma', 'pbkdf2$120000$3TTpOBFDlObRsKP50Dt+wQ==$hkxfYtA2jyks0JKnJkES6zK6EPZfyBxVD5BTCbrU3ps=', 'permanent', 1),
+(6, 'Berrada', 'Fatima', 'associe@lias.ma', 'pbkdf2$120000$giNGd8XUja9UKoEFrFih8g==$LkC7B5xH8IKWJxoLukvFwQuixc3h3VFzg9mqzA/XdVs=', 'associe', 1),
+(7, 'Mansouri', 'Omar', 'retraite@lias.ma', 'pbkdf2$120000$zmm3s5ALbjdyJYgivU8daw==$iJSCuEMbBUprN2/kEuxs2lLp2hbmU6NxGtKOA3bXsnA=', 'retraite', 0);
 
 -- -------------------------------------------------------------------------
 -- 2. Table des Membres du laboratoire (Profils académiques)

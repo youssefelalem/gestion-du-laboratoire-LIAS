@@ -68,6 +68,25 @@
             </div>
         <% } %>
 
+        <%
+            // Compte créé à l'acceptation (CDC §6) : identifiants affichés UNE seule fois au directeur.
+            String compteCree = (String) session.getAttribute("flashCompteCree");
+            if (isDirecteur && compteCree != null) {
+                session.removeAttribute("flashCompteCree");
+                String[] cc = compteCree.split("\\|", 2);
+                String ccEmail = cc[0].replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;");
+                String ccPass = cc.length > 1 ? cc[1] : "";
+        %>
+            <div style="margin: 0 0 24px; padding: 18px 22px; background: var(--primary-bg); border: 1px solid var(--primary-border); border-radius: 4px;">
+                <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--navy); margin-bottom: 8px;">Compte de connexion créé</div>
+                <div style="font-size: 14px; color: var(--ink); line-height: 1.7;">
+                    Identifiant : <code><%= ccEmail %></code><br>
+                    Mot de passe temporaire : <code style="font-weight: 700;"><%= ccPass %></code>
+                </div>
+                <div style="font-size: 12.5px; color: var(--muted); margin-top: 8px;">À communiquer au nouveau membre. Il ne sera plus affiché après cette page.</div>
+            </div>
+        <% } %>
+
         <% if (isDirecteur) { 
             int nbAttente = 0;
             int nbAcceptees = 0;

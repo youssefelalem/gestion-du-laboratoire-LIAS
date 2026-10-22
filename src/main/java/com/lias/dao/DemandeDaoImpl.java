@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.lias.beans.DemandeAdhesion;
 import com.lias.beans.Materiel;
+import com.lias.security.PasswordUtil;
 
 public class DemandeDaoImpl implements IDemandeDao {
 
@@ -81,7 +82,7 @@ public class DemandeDaoImpl implements IDemandeDao {
     }
 
     @Override
-    public boolean updateDecisionAdhesion(Long id, String decision) {
+    public boolean updateDecisionAdhesion(Long id, String decision, String motDePasseInitial) {
         Connection conn = DBConnection.getConnection();
         if (conn != null) {
             String sql = "UPDATE demandes_adhesion SET decision = ? WHERE id = ?";
@@ -91,7 +92,7 @@ public class DemandeDaoImpl implements IDemandeDao {
                 if (ps.executeUpdate() > 0) {
                     // Si acceptée, créer automatiquement le membre et la période d'affiliation si possible
                     if ("ACCEPTEE".equalsIgnoreCase(decision)) {
-                        creerMembreApresAdhesion(conn, id);
+                        creerMembreApresAdhesion(conn, id, motDePasseInitial);
                     }
                     return true;
                 }
@@ -108,7 +109,7 @@ public class DemandeDaoImpl implements IDemandeDao {
         return false;
     }
 
-    private void creerMembreApresAdhesion(Connection conn, Long adhesionId) {
+    private void creerMembreApresAdhesion(Connection conn, Long adhesionId, String motDePasseInitial) {
         String sqlSelect = "SELECT * FROM demandes_adhesion WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sqlSelect)) {
             ps.setLong(1, adhesionId);
@@ -145,13 +146,15 @@ public class DemandeDaoImpl implements IDemandeDao {
                     }
 
                     // 3. Inserer dans users
+                    // Mot de passe initial aléatoire (généré par la direction), stocké haché.
                     String sqlUser = "INSERT IGNORE INTO users (nom, prenom, email, password, role, actif) " +
-                                     "VALUES (?, ?, ?, 'pass123', ?, 1)";
+                                     "VALUES (?, ?, ?, ?, ?, 1)";
                     try (PreparedStatement psU = conn.prepareStatement(sqlUser)) {
                         psU.setString(1, nom);
                         psU.setString(2, prenom);
                         psU.setString(3, email);
-                        psU.setString(4, statutVise.equalsIgnoreCase("Doctorant") ? "doctorant" : "permanent");
+                        psU.setString(4, PasswordUtil.hash(motDePasseInitial));
+                        psU.setString(5, statutVise.equalsIgnoreCase("Doctorant") ? "doctorant" : "permanent");
                         psU.executeUpdate();
                     }
 
@@ -161,7 +164,7 @@ public class DemandeDaoImpl implements IDemandeDao {
                     System.out.println("Destinataire : " + email + " (" + prenom + " " + nom + ")");
                     System.out.println("Objet        : Décision d'adhésion au Laboratoire LIAS - Compte Activé");
                     System.out.println("Message      : Félicitations, votre candidature a été validée par la direction.");
-                    System.out.println("Identifiants : Identifiant: " + email + " | Mot de passe initial: pass123");
+                    System.out.println("Identifiants : Identifiant: " + email + " | Mot de passe initial communiqué par la direction");
                     System.out.println("================================================================================");
                 }
             }

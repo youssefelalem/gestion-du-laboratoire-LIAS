@@ -8,7 +8,11 @@ public interface IDemandeDao {
     // Adhésions
     List<DemandeAdhesion> findAllAdhesions();
     boolean saveAdhesion(DemandeAdhesion adhesion);
-    boolean updateDecisionAdhesion(Long id, String decision);
+    /**
+     * Enregistre la décision ; si elle est ACCEPTEE, crée le membre et son compte de connexion
+     * avec {@code motDePasseInitial} (stocké haché).
+     */
+    boolean updateDecisionAdhesion(Long id, String decision, String motDePasseInitial);
 
     // Matériel
     List<Materiel> findAllMateriels();

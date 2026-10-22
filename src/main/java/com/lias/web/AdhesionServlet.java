@@ -14,7 +14,10 @@ import com.lias.beans.NotificationLabo;
 import com.lias.dao.DemandeDaoImpl;
 import com.lias.dao.IDemandeDao;
 import com.lias.dao.INotificationDao;
+import com.lias.dao.IUserDao;
 import com.lias.dao.NotificationDaoImpl;
+import com.lias.dao.UserDaoImpl;
+import com.lias.security.PasswordUtil;
 
 /**
  * Contrôleur JEE pour les demandes d'adhésion au laboratoire (CDC §6).
@@ -25,12 +28,14 @@ public class AdhesionServlet extends HttpServlet {
 
     private IDemandeDao demandeDao;
     private INotificationDao notificationDao;
+    private IUserDao userDao;
 
     @Override
     public void init() throws ServletException {
         super.init();
         this.demandeDao = new DemandeDaoImpl();
         this.notificationDao = new NotificationDaoImpl();
+        this.userDao = new UserDaoImpl();
     }
 
     @Override
@@ -79,7 +84,22 @@ public class AdhesionServlet extends HttpServlet {
             if (decision == null || decision.trim().isEmpty()) {
                 decision = "valider".equalsIgnoreCase(action) ? "ACCEPTEE" : "REFUSEE";
             }
-            demandeDao.updateDecisionAdhesion(id, decision);
+            // Acceptée → création du compte avec un mot de passe initial aléatoire (plus de mot de passe commun).
+            String motDePasseInitial = PasswordUtil.generateTemporary();
+            String emailCandidat = null;
+            for (DemandeAdhesion d : demandeDao.findAllAdhesions()) {
+                if (id.equals(d.getId())) {
+                    emailCandidat = d.getEmail();
+                    break;
+                }
+            }
+            boolean compteExistant = emailCandidat != null && userDao.findByEmail(emailCandidat) != null;
+            demandeDao.updateDecisionAdhesion(id, decision, motDePasseInitial);
+            if ("ACCEPTEE".equalsIgnoreCase(decision) && emailCandidat != null && !compteExistant
+                    && userDao.findByEmail(emailCandidat) != null) {
+                // Affiché une seule fois au directeur, qui le communique au nouveau membre (jamais dans l'URL).
+                session.setAttribute("flashCompteCree", emailCandidat + "|" + motDePasseInitial);
+            }
 
             // Notification automatique de la décision (CDC §6 & §19)
             NotificationLabo notif = new NotificationLabo(

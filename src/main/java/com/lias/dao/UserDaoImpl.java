@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import com.lias.beans.User;
+import com.lias.security.PasswordUtil;
 
 /**
  * Implémentation JDBC du DAO Utilisateur.
@@ -32,23 +33,34 @@ public class UserDaoImpl implements IUserDao {
     public User findByCredentials(String email, String password) {
         Connection conn = DBConnection.getConnection();
         if (conn != null) {
-            String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+            // Le mot de passe n'est plus comparé en SQL : on lit le hash puis on le vérifie (PBKDF2).
+            String sql = "SELECT * FROM users WHERE email = ?";
+            User found = null;
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, email);
-                ps.setString(2, password);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        return mapResultSetToUser(rs);
+                        found = mapResultSetToUser(rs);
                     }
                 }
             } catch (SQLException e) {
                 System.err.println("[UserDaoImpl] Erreur SQL findByCredentials : " + e.getMessage());
             }
+            if (found != null) {
+                if (!PasswordUtil.verify(password, found.getPassword())) {
+                    return null;
+                }
+                // Migration transparente : un ancien mot de passe en clair est re-haché à la connexion.
+                if (!PasswordUtil.isHashed(found.getPassword())) {
+                    updatePassword(found.getId(), password);
+                }
+                return found;
+            }
         }
 
         // Fallback en mémoire si la base n'est pas encore connectée
         for (User u : DEMO_USERS) {
-            if (u.getEmail().equalsIgnoreCase(email) && u.getPassword().equals(password)) {
+            if (u.getEmail().equalsIgnoreCase(email) && PasswordUtil.verify(password, u.getPassword())) {
                 return u;
             }
         }
@@ -133,7 +145,7 @@ public class UserDaoImpl implements IUserDao {
                 ps.setString(1, user.getNom());
                 ps.setString(2, user.getPrenom());
                 ps.setString(3, user.getEmail());
-                ps.setString(4, user.getPassword());
+                ps.setString(4, PasswordUtil.isHashed(user.getPassword()) ? user.getPassword() : PasswordUtil.hash(user.getPassword()));
                 ps.setString(5, user.getRole());
                 ps.setBoolean(6, user.isActif());
                 return ps.executeUpdate() > 0;
@@ -167,6 +179,8 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public boolean updatePassword(Long id, String newPassword) {
+        // Toujours stocké haché (CDC sécurité) ; une valeur déjà hachée est conservée telle quelle.
+        newPassword = PasswordUtil.isHashed(newPassword) ? newPassword : PasswordUtil.hash(newPassword);
         Connection conn = DBConnection.getConnection();
         if (conn != null) {
             String sql = "UPDATE users SET password = ? WHERE id = ?";
