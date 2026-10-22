@@ -64,6 +64,17 @@ public class RechercheServlet extends HttpServlet {
         List<DocumentLabo> resDocs = new ArrayList<>();
         List<Convention> resConventions = new ArrayList<>();
 
+        // CDC §2.1 / §2.2 : archives et conventions sont des données internes, invisibles pour
+        // les visiteurs, doctorants et associés (membres permanents, directeur et admin uniquement).
+        jakarta.servlet.http.HttpSession session = request.getSession(false);
+        com.lias.beans.User user = null;
+        if (session != null) {
+            user = (com.lias.beans.User) session.getAttribute("currentUser");
+            if (user == null) user = (com.lias.beans.User) session.getAttribute("user");
+        }
+        String role = (user != null && user.getRole() != null) ? user.getRole().toLowerCase() : "";
+        boolean accesInterne = "directeur".equals(role) || "permanent".equals(role) || "admin".equals(role);
+
         if (q != null && !q.trim().isEmpty()) {
             String lower = q.trim().toLowerCase();
 
@@ -85,13 +96,15 @@ public class RechercheServlet extends HttpServlet {
                 if (full.contains(lower)) resEvents.add(e);
             }
 
-            // Recherche documents
-            resDocs = documentDao.search(lower);
+            if (accesInterne) {
+                // Recherche documents
+                resDocs = documentDao.search(lower);
 
-            // Recherche conventions
-            for (Convention c : conventionDao.findAll()) {
-                String full = (c.getOrganismePartenaire() + " " + c.getObjet() + " " + c.getTypePartenaire()).toLowerCase();
-                if (full.contains(lower)) resConventions.add(c);
+                // Recherche conventions
+                for (Convention c : conventionDao.findAll()) {
+                    String full = (c.getOrganismePartenaire() + " " + c.getObjet() + " " + c.getTypePartenaire()).toLowerCase();
+                    if (full.contains(lower)) resConventions.add(c);
+                }
             }
         }
 
@@ -105,6 +118,7 @@ public class RechercheServlet extends HttpServlet {
         request.setAttribute("resDocs", resDocs);
         request.setAttribute("resConventions", resConventions);
         request.setAttribute("totalCount", totalCount);
+        request.setAttribute("accesInterne", accesInterne);
         request.setAttribute("activeNav", "recherche");
 
         request.getRequestDispatcher("/WEB-INF/views/recherche.jsp").forward(request, response);

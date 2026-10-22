@@ -131,12 +131,14 @@
                     <a href="<%= request.getContextPath() %>/recherche?q=<%= java.net.URLEncoder.encode(query, "UTF-8") %>&cat=evenements" class="cat-tab <%= "evenements".equals(category) ? "active" : "" %>">
                         Évènements (<%= resEvents != null ? resEvents.size() : 0 %>)
                     </a>
+                    <% if (Boolean.TRUE.equals(request.getAttribute("accesInterne"))) { %>
                     <a href="<%= request.getContextPath() %>/recherche?q=<%= java.net.URLEncoder.encode(query, "UTF-8") %>&cat=documents" class="cat-tab <%= "documents".equals(category) ? "active" : "" %>">
                         Documents (<%= resDocs != null ? resDocs.size() : 0 %>)
                     </a>
                     <a href="<%= request.getContextPath() %>/recherche?q=<%= java.net.URLEncoder.encode(query, "UTF-8") %>&cat=conventions" class="cat-tab <%= "conventions".equals(category) ? "active" : "" %>">
                         Conventions (<%= resConventions != null ? resConventions.size() : 0 %>)
                     </a>
+                    <% } %>
                 </div>
 
                 <!-- RESULTS SECTION -->

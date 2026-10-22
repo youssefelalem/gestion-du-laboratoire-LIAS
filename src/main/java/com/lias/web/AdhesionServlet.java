@@ -36,7 +36,17 @@ public class AdhesionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        List<DemandeAdhesion> adhesions = demandeDao.findAllAdhesions();
+        // Les dossiers de candidature (identité, motivation) ne sont transmis à la vue que pour la
+        // direction (CDC §6 « uniquement par le directeur ») ; le visiteur ne voit que le formulaire.
+        jakarta.servlet.http.HttpSession session = request.getSession(false);
+        com.lias.beans.User user = null;
+        if (session != null) {
+            user = (com.lias.beans.User) session.getAttribute("currentUser");
+            if (user == null) user = (com.lias.beans.User) session.getAttribute("user");
+        }
+        boolean isDirection = user != null
+                && ("directeur".equalsIgnoreCase(user.getRole()) || "admin".equalsIgnoreCase(user.getRole()));
+        List<DemandeAdhesion> adhesions = isDirection ? demandeDao.findAllAdhesions() : new java.util.ArrayList<>();
         request.setAttribute("adhesions", adhesions);
         request.setAttribute("demandes", adhesions);
         request.getRequestDispatcher("/WEB-INF/views/adhesions.jsp").forward(request, response);
