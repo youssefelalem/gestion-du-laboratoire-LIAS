@@ -160,9 +160,9 @@
                     <div class="event-date-sub"><%= e.getDate() != null ? e.getDate().toString().substring(0,7) : "2026-06" %></div>
                 </div>
                 <div>
-                    <h3 class="event-title"><%= e.getTitre() %></h3>
+                    <h3 class="event-title"><%= com.lias.web.HtmlUtil.escape(e.getTitre()) %></h3>
                     <div class="event-meta">
-                        Lieu : <strong><%= e.getLieu() %></strong> · Coordonné par : <%= e.getOrganisateur() != null ? e.getOrganisateur() : "LIAS" %>
+                        Lieu : <strong><%= com.lias.web.HtmlUtil.escape(e.getLieu()) %></strong> · Coordonné par : <%= e.getOrganisateur() != null ? com.lias.web.HtmlUtil.escape(e.getOrganisateur()) : "LIAS" %>
                     </div>
                 </div>
                 <div>

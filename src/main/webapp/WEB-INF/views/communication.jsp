@@ -279,11 +279,11 @@
                         <div class="msg-avatar"><%= initials %></div>
                         <div class="msg-body">
                             <div class="msg-header">
-                                <span class="msg-author"><%= m.getAuteurNom() %></span>
+                                <span class="msg-author"><%= com.lias.web.HtmlUtil.escape(m.getAuteurNom()) %></span>
                                 <span class="badge <%= badgeStyle %>" style="font-size: 10.5px;"><%= m.getAuteurRole() %></span>
                                 <span class="msg-time"><%= m.getDateEnvoi() %></span>
                             </div>
-                            <div class="msg-text"><%= m.getMessage() %></div>
+                            <div class="msg-text"><%= com.lias.web.HtmlUtil.escape(m.getMessage()) %></div>
                         </div>
                     </div>
                     <%

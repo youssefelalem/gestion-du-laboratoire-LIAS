@@ -135,10 +135,10 @@
                     <div class="form-group">
                         <label class="form-label">Équipe de rattachement</label>
                         <select name="equipe" class="form-control">
-                            <option value="Data Science">Data Science</option>
-                            <option value="Cloud & Systèmes">Cloud & Systèmes</option>
-                            <option value="IA & Vision">IA & Vision</option>
-                            <option value="Cybersécurité">Cybersécurité</option>
+                            <option value="IA">IA (Intelligence Artificielle)</option>
+                            <option value="Big Data">Big Data & Cloud</option>
+                            <option value="NLP">NLP & Traitement Automatique</option>
+                            <option value="Sécurité">Sécurité & Systèmes</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -171,10 +171,10 @@
                     <label class="form-label">Filtrer par équipe</label>
                     <select name="team" class="form-control" onchange="this.form.submit()">
                         <option value="">Toutes les équipes</option>
-                        <option value="Data Science" <%= "Data Science".equals(selectedTeam) ? "selected" : "" %>>Data Science</option>
-                        <option value="Cloud & Systèmes" <%= "Cloud & Systèmes".equals(selectedTeam) ? "selected" : "" %>>Cloud & Systèmes</option>
-                        <option value="IA & Vision" <%= "IA & Vision".equals(selectedTeam) ? "selected" : "" %>>IA & Vision</option>
-                        <option value="Cybersécurité" <%= "Cybersécurité".equals(selectedTeam) ? "selected" : "" %>>Cybersécurité</option>
+                        <option value="IA" <%= "IA".equals(selectedTeam) ? "selected" : "" %>>IA (Intelligence Artificielle)</option>
+                        <option value="Big Data" <%= "Big Data".equals(selectedTeam) ? "selected" : "" %>>Big Data & Cloud</option>
+                        <option value="NLP" <%= "NLP".equals(selectedTeam) ? "selected" : "" %>>NLP & Traitement Automatique</option>
+                        <option value="Sécurité" <%= "Sécurité".equals(selectedTeam) ? "selected" : "" %>>Sécurité & Systèmes</option>
                     </select>
                 </div>
                 <div>

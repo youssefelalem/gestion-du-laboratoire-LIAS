@@ -86,7 +86,7 @@
                 <!-- Header Welcome Section -->
                 <div>
                     <div class="eyebrow" style="margin-bottom: 6px;">
-                        LUNDI 26 MAI 2026 · 15 MOIS RESTANTS DE MANDAT
+                        <%= java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("EEEE d MMMM yyyy", java.util.Locale.FRENCH)).toUpperCase(java.util.Locale.FRENCH) %>
                     </div>
                     <h1 style="font-size: 38px; font-weight: 500; margin: 0 0 6px; letter-spacing: -0.015em;">
                         Bonjour, <%= currentUser != null ? currentUser.getPrenom() + " " + currentUser.getNom() : "Youssef" %>.

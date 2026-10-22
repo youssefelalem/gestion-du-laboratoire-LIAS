@@ -68,20 +68,14 @@ public class RapportServlet extends HttpServlet {
                 }
             }
         }
-        if (pubsAnnee.isEmpty() && pubs != null) {
-            pubsAnnee = pubs; // Fallback pour affichage complet si année sans publications
-        }
 
         List<Evenement> evtsAnnee = new ArrayList<>();
         if (evts != null) {
             for (Evenement e : evts) {
-                if (e.getDate() != null && e.getDate().contains(String.valueOf(annee))) {
+                if (e.getDate() != null && e.getDate().startsWith(annee + "-")) {
                     evtsAnnee.add(e);
                 }
             }
-        }
-        if (evtsAnnee.isEmpty() && evts != null) {
-            evtsAnnee = evts;
         }
 
         request.setAttribute("anneeRapport", annee);

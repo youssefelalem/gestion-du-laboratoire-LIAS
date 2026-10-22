@@ -271,8 +271,9 @@
         %>
     ];
 
-    var currentYear = 2026;
-    var currentMonth = 8; // 0-indexed : 8 = Septembre
+    var aujourdhui = new Date();
+    var currentYear = aujourdhui.getFullYear();
+    var currentMonth = aujourdhui.getMonth(); // 0-indexed : mois courant
 
     var monthNames = [
         "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
