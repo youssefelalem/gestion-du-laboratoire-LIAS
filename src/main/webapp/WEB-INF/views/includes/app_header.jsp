@@ -33,8 +33,7 @@
 <header class="app-header">
     <div class="header-left">
         <a href="<%= request.getContextPath() %>/home" class="header-brand">
-            <div class="brand-mark">L</div>
-            <div class="brand-name">LIAS <span class="est">EST. 2003</span></div>
+            <span class="lias-logo" role="img" aria-label="LIAS" style="height: 36px;"></span>
         </a>
         <div class="header-divider"></div>
         <div class="header-institution">

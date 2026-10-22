@@ -43,7 +43,7 @@
     <meta charset="UTF-8">
     <title>LIAS — Console d'Administration Technique (CDC §5.1)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=2">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=4">
     <style>
         .stat-bar-container {
             width: 100%;

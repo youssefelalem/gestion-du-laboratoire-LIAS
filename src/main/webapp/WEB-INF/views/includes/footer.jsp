@@ -3,8 +3,7 @@
     <div class="footer-inner" style="display:grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 40px; margin-bottom: 36px;">
         <div>
             <div class="brand" style="margin-bottom: 14px;">
-                <div class="brand-mark">L</div>
-                <div class="brand-name">LIAS <span class="est">EST. 2003</span></div>
+                <span class="lias-logo" role="img" aria-label="LIAS" style="height: 46px;"></span>
             </div>
             <p style="font-family: var(--font-serif); font-size: 13.5px; color: var(--muted); line-height: 1.55; margin: 0; max-width: 380px;">
                 Laboratoire d'Informatique et Applications Scientifiques. Faculté des Sciences Ben M'Sik — Université Hassan II — Casablanca, Maroc.

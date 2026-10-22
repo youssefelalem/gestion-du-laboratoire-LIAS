@@ -155,6 +155,23 @@ button, input, select, textarea {
   gap: 14px;
 }
 
+/* Logo officiel LIAS : PNG blanc sur transparent utilisé comme masque,
+   pour qu'il prenne la couleur de la marque (ou le blanc sur fond sombre). */
+.lias-logo {
+  display: block;
+  height: 40px;
+  aspect-ratio: 900 / 287;
+  background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary) 100%);
+  -webkit-mask: url("../images/logo-lias.png") center / contain no-repeat;
+  mask: url("../images/logo-lias.png") center / contain no-repeat;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.lias-logo--light {
+  background: #FFFFFF;
+}
+
 .brand-mark {
   width: 38px;
   height: 38px;

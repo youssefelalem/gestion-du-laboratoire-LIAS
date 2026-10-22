@@ -30,7 +30,7 @@
     <meta charset="UTF-8">
     <title>LIAS — Profils & Membres du Laboratoire</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=2">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=4">
     <style>
         .chip {
             padding: 5px 11px;

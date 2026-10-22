@@ -14,7 +14,7 @@
     <meta charset="UTF-8">
     <title>LIAS — Rapport Annuel d'Activité Scientifique</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=2">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=4">
     <style>
         .report-paper {
             background: var(--surface);
@@ -113,7 +113,7 @@
                     </div>
                 </div>
                 <div style="text-align: right;">
-                    <div class="brand-mark" style="width: 48px; height: 48px; font-size: 28px; margin-left: auto;">L</div>
+                    <span class="lias-logo" role="img" aria-label="LIAS" style="height: 52px; margin-left: auto;"></span>
                     <div style="font-family: var(--font-mono); font-size: 10.5px; color: var(--muted); margin-top: 6px;">
                         EXERCICE <%= anneeRapport %>–<%= anneeRapport + 1 %>
                     </div>

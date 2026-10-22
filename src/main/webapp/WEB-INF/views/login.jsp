@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>LIAS — Connexion à l'Espace Membre</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=4">
     <style>
         html, body {
             height: 100%;
@@ -286,8 +286,7 @@
         <!-- Colonne Gauche Éditoriale -->
         <div class="login-left">
             <a href="<%= request.getContextPath() %>/public" class="login-brand">
-                <div class="login-brand-mark">L</div>
-                <div class="login-brand-text">LIAS <span class="est">EST. 2003</span></div>
+                <span class="lias-logo lias-logo--light" role="img" aria-label="LIAS" style="height: 56px;"></span>
             </a>
 
             <div class="login-lead">

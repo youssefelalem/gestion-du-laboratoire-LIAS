@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <title>LIAS — Laboratoire d'Informatique et Applications Scientifiques</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=4">
     <style>
         .hero-public {
             padding: 96px 40px 80px;

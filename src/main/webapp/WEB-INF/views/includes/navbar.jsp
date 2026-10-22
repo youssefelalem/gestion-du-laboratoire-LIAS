@@ -21,8 +21,7 @@
 <header class="topbar">
     <div class="brand">
         <a href="<%= isHome ? "#top" : ctx + "/public" %>" style="display:flex; align-items:center; gap:12px; text-decoration:none;">
-            <div class="brand-mark">L</div>
-            <div class="brand-name">LIAS <span class="est">EST. 2003</span></div>
+            <span class="lias-logo" role="img" aria-label="LIAS"></span>
         </a>
     </div>
 

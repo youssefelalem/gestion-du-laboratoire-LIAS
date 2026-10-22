@@ -13,7 +13,7 @@
     <meta charset="UTF-8">
     <title>LIAS — Événements Scientifiques & Séminaires</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=3">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=4">
     <style>
         .event-row {
             display: grid;

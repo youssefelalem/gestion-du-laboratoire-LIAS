@@ -35,7 +35,7 @@
     <meta charset="UTF-8">
     <title>LIAS — Communication Interne & Canaux d'Équipes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=3">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/style.css?v=4">
     <style>
         .comm-layout {
             display: grid;
