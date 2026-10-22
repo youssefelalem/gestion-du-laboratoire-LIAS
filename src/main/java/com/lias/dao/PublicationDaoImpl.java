@@ -23,27 +23,30 @@ public class PublicationDaoImpl implements IPublicationDao {
     @Override
     public List<Publication> findAll() {
         List<Publication> list = new ArrayList<>();
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "SELECT * FROM publications ORDER BY annee DESC, id DESC";
-            try (PreparedStatement ps = conn.prepareStatement(sql);
-                 ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(new Publication(
-                        rs.getLong("id"),
-                        rs.getString("titre"),
-                        rs.getString("auteurs"),
-                        rs.getInt("annee"),
-                        rs.getString("revue"),
-                        rs.getString("doi"),
-                        rs.getString("equipe"),
-                        rs.getString("type")
-                    ));
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "SELECT * FROM publications ORDER BY annee DESC, id DESC";
+                try (PreparedStatement ps = conn.prepareStatement(sql);
+                     ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        list.add(new Publication(
+                            rs.getLong("id"),
+                            rs.getString("titre"),
+                            rs.getString("auteurs"),
+                            rs.getInt("annee"),
+                            rs.getString("revue"),
+                            rs.getString("doi"),
+                            rs.getString("equipe"),
+                            rs.getString("type")
+                        ));
+                    }
+                    if (!list.isEmpty()) return list;
+                } catch (SQLException e) {
+                    System.err.println("[PublicationDaoImpl] Erreur findAll: " + e.getMessage());
                 }
-                if (!list.isEmpty()) return list;
-            } catch (SQLException e) {
-                System.err.println("[PublicationDaoImpl] Erreur findAll: " + e.getMessage());
             }
+        } catch (SQLException e) {
+            System.err.println("[PublicationDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         return new ArrayList<>(DEMO_PUBS);
     }
@@ -81,21 +84,24 @@ public class PublicationDaoImpl implements IPublicationDao {
 
     @Override
     public boolean save(Publication pub) {
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "INSERT INTO publications (titre, auteurs, annee, revue, doi, equipe, type) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, pub.getTitre());
-                ps.setString(2, pub.getAuteurs());
-                ps.setInt(3, pub.getAnnee());
-                ps.setString(4, pub.getRevue());
-                ps.setString(5, pub.getDoi());
-                ps.setString(6, pub.getEquipe());
-                ps.setString(7, pub.getType());
-                return ps.executeUpdate() > 0;
-            } catch (SQLException e) {
-                System.err.println("[PublicationDaoImpl] Erreur save: " + e.getMessage());
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "INSERT INTO publications (titre, auteurs, annee, revue, doi, equipe, type) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, pub.getTitre());
+                    ps.setString(2, pub.getAuteurs());
+                    ps.setInt(3, pub.getAnnee());
+                    ps.setString(4, pub.getRevue());
+                    ps.setString(5, pub.getDoi());
+                    ps.setString(6, pub.getEquipe());
+                    ps.setString(7, pub.getType());
+                    return ps.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    System.err.println("[PublicationDaoImpl] Erreur save: " + e.getMessage());
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("[PublicationDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         pub.setId((long) (DEMO_PUBS.size() + 1));
         DEMO_PUBS.add(0, pub);

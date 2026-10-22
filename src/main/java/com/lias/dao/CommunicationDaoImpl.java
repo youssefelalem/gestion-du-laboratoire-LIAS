@@ -36,23 +36,26 @@ public class CommunicationDaoImpl implements ICommunicationDao {
     }
 
     private void initDatabaseTable() {
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "CREATE TABLE IF NOT EXISTS communications_internes (" +
-                         "id BIGINT AUTO_INCREMENT PRIMARY KEY, " +
-                         "canal_id VARCHAR(50) NOT NULL, " +
-                         "canal_nom VARCHAR(100) NOT NULL, " +
-                         "auteur_nom VARCHAR(100) NOT NULL, " +
-                         "auteur_email VARCHAR(100) NOT NULL, " +
-                         "auteur_role VARCHAR(50) NOT NULL, " +
-                         "message TEXT NOT NULL, " +
-                         "date_envoi VARCHAR(50) NOT NULL" +
-                         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
-            try (Statement stmt = conn.createStatement()) {
-                stmt.execute(sql);
-            } catch (SQLException e) {
-                System.err.println("[CommunicationDaoImpl] Info table init: " + e.getMessage());
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "CREATE TABLE IF NOT EXISTS communications_internes (" +
+                             "id BIGINT AUTO_INCREMENT PRIMARY KEY, " +
+                             "canal_id VARCHAR(50) NOT NULL, " +
+                             "canal_nom VARCHAR(100) NOT NULL, " +
+                             "auteur_nom VARCHAR(100) NOT NULL, " +
+                             "auteur_email VARCHAR(100) NOT NULL, " +
+                             "auteur_role VARCHAR(50) NOT NULL, " +
+                             "message TEXT NOT NULL, " +
+                             "date_envoi VARCHAR(50) NOT NULL" +
+                             ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.execute(sql);
+                } catch (SQLException e) {
+                    System.err.println("[CommunicationDaoImpl] Info table init: " + e.getMessage());
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("[CommunicationDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
     }
 
@@ -62,29 +65,32 @@ public class CommunicationDaoImpl implements ICommunicationDao {
             canalId = "general";
         }
         List<MessageCommunication> list = new ArrayList<>();
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "SELECT * FROM communications_internes WHERE canal_id = ? ORDER BY id ASC";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, canalId);
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        list.add(new MessageCommunication(
-                            rs.getLong("id"),
-                            rs.getString("canal_id"),
-                            rs.getString("canal_nom"),
-                            rs.getString("auteur_nom"),
-                            rs.getString("auteur_email"),
-                            rs.getString("auteur_role"),
-                            rs.getString("message"),
-                            rs.getString("date_envoi")
-                        ));
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "SELECT * FROM communications_internes WHERE canal_id = ? ORDER BY id ASC";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, canalId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            list.add(new MessageCommunication(
+                                rs.getLong("id"),
+                                rs.getString("canal_id"),
+                                rs.getString("canal_nom"),
+                                rs.getString("auteur_nom"),
+                                rs.getString("auteur_email"),
+                                rs.getString("auteur_role"),
+                                rs.getString("message"),
+                                rs.getString("date_envoi")
+                            ));
+                        }
                     }
+                    if (!list.isEmpty()) return list;
+                } catch (SQLException e) {
+                    System.err.println("[CommunicationDaoImpl] Erreur findByCanal: " + e.getMessage());
                 }
-                if (!list.isEmpty()) return list;
-            } catch (SQLException e) {
-                System.err.println("[CommunicationDaoImpl] Erreur findByCanal: " + e.getMessage());
             }
+        } catch (SQLException e) {
+            System.err.println("[CommunicationDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
 
         // Fallback en mémoire
@@ -100,28 +106,31 @@ public class CommunicationDaoImpl implements ICommunicationDao {
     @Override
     public boolean save(MessageCommunication msg) {
         if (msg == null) return false;
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "INSERT INTO communications_internes (canal_id, canal_nom, auteur_nom, auteur_email, auteur_role, message, date_envoi) " +
-                         "VALUES (?, ?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, msg.getCanalId());
-                ps.setString(2, msg.getCanalNom() != null ? msg.getCanalNom() : msg.getCanalId());
-                ps.setString(3, msg.getAuteurNom());
-                ps.setString(4, msg.getAuteurEmail());
-                ps.setString(5, msg.getAuteurRole());
-                ps.setString(6, msg.getMessage());
-                ps.setString(7, msg.getDateEnvoi() != null ? msg.getDateEnvoi() : DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(LocalDateTime.now()));
-                int rows = ps.executeUpdate();
-                if (rows > 0) {
-                    try (ResultSet gk = ps.getGeneratedKeys()) {
-                        if (gk.next()) msg.setId(gk.getLong(1));
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "INSERT INTO communications_internes (canal_id, canal_nom, auteur_nom, auteur_email, auteur_role, message, date_envoi) " +
+                             "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setString(1, msg.getCanalId());
+                    ps.setString(2, msg.getCanalNom() != null ? msg.getCanalNom() : msg.getCanalId());
+                    ps.setString(3, msg.getAuteurNom());
+                    ps.setString(4, msg.getAuteurEmail());
+                    ps.setString(5, msg.getAuteurRole());
+                    ps.setString(6, msg.getMessage());
+                    ps.setString(7, msg.getDateEnvoi() != null ? msg.getDateEnvoi() : DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(LocalDateTime.now()));
+                    int rows = ps.executeUpdate();
+                    if (rows > 0) {
+                        try (ResultSet gk = ps.getGeneratedKeys()) {
+                            if (gk.next()) msg.setId(gk.getLong(1));
+                        }
+                        return true;
                     }
-                    return true;
+                } catch (SQLException e) {
+                    System.err.println("[CommunicationDaoImpl] Erreur save: " + e.getMessage());
                 }
-            } catch (SQLException e) {
-                System.err.println("[CommunicationDaoImpl] Erreur save: " + e.getMessage());
             }
+        } catch (SQLException e) {
+            System.err.println("[CommunicationDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
 
         // Sauvegarde en mémoire

@@ -22,48 +22,54 @@ public class EvenementDaoImpl implements IEvenementDao {
     @Override
     public List<Evenement> findAll() {
         List<Evenement> list = new ArrayList<>();
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "SELECT * FROM evenements ORDER BY date DESC";
-            try (PreparedStatement ps = conn.prepareStatement(sql);
-                 ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(new Evenement(
-                        rs.getLong("id"),
-                        rs.getString("titre"),
-                        rs.getString("type"),
-                        rs.getString("date"),
-                        rs.getString("lieu"),
-                        rs.getString("description"),
-                        rs.getString("organisateur"),
-                        rs.getString("statut")
-                    ));
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "SELECT * FROM evenements ORDER BY date DESC";
+                try (PreparedStatement ps = conn.prepareStatement(sql);
+                     ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        list.add(new Evenement(
+                            rs.getLong("id"),
+                            rs.getString("titre"),
+                            rs.getString("type"),
+                            rs.getString("date"),
+                            rs.getString("lieu"),
+                            rs.getString("description"),
+                            rs.getString("organisateur"),
+                            rs.getString("statut")
+                        ));
+                    }
+                    if (!list.isEmpty()) return list;
+                } catch (SQLException e) {
+                    System.err.println("[EvenementDaoImpl] Erreur findAll: " + e.getMessage());
                 }
-                if (!list.isEmpty()) return list;
-            } catch (SQLException e) {
-                System.err.println("[EvenementDaoImpl] Erreur findAll: " + e.getMessage());
             }
+        } catch (SQLException e) {
+            System.err.println("[EvenementDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         return new ArrayList<>(DEMO_EVTS);
     }
 
     @Override
     public boolean save(Evenement evt) {
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "INSERT INTO evenements (titre, type, date, lieu, description, organisateur, statut) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, evt.getTitre());
-                ps.setString(2, evt.getType());
-                ps.setString(3, evt.getDate());
-                ps.setString(4, evt.getLieu());
-                ps.setString(5, evt.getDescription());
-                ps.setString(6, evt.getOrganisateur());
-                ps.setString(7, evt.getStatut());
-                return ps.executeUpdate() > 0;
-            } catch (SQLException e) {
-                System.err.println("[EvenementDaoImpl] Erreur save: " + e.getMessage());
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "INSERT INTO evenements (titre, type, date, lieu, description, organisateur, statut) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, evt.getTitre());
+                    ps.setString(2, evt.getType());
+                    ps.setString(3, evt.getDate());
+                    ps.setString(4, evt.getLieu());
+                    ps.setString(5, evt.getDescription());
+                    ps.setString(6, evt.getOrganisateur());
+                    ps.setString(7, evt.getStatut());
+                    return ps.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    System.err.println("[EvenementDaoImpl] Erreur save: " + e.getMessage());
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("[EvenementDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         evt.setId((long) (DEMO_EVTS.size() + 1));
         DEMO_EVTS.add(0, evt);

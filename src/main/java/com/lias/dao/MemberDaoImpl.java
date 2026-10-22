@@ -65,37 +65,43 @@ public class MemberDaoImpl implements IMemberDao {
     @Override
     public List<Member> findAll() {
         List<Member> list = new ArrayList<>();
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "SELECT * FROM members ORDER BY lastName ASC";
-            try (PreparedStatement ps = conn.prepareStatement(sql);
-                 ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(extractMember(rs));
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "SELECT * FROM members ORDER BY lastName ASC";
+                try (PreparedStatement ps = conn.prepareStatement(sql);
+                     ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        list.add(extractMember(rs));
+                    }
+                    if (!list.isEmpty()) return list;
+                } catch (SQLException e) {
+                    System.err.println("[MemberDaoImpl] Erreur findAll: " + e.getMessage());
                 }
-                if (!list.isEmpty()) return list;
-            } catch (SQLException e) {
-                System.err.println("[MemberDaoImpl] Erreur findAll: " + e.getMessage());
             }
+        } catch (SQLException e) {
+            System.err.println("[MemberDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         return new ArrayList<>(DEMO_MEMBERS);
     }
 
     @Override
     public Member findById(String id) {
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "SELECT * FROM members WHERE id = ?";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, id);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return extractMember(rs);
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "SELECT * FROM members WHERE id = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, id);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            return extractMember(rs);
+                        }
                     }
+                } catch (SQLException e) {
+                    System.err.println("[MemberDaoImpl] Erreur findById: " + e.getMessage());
                 }
-            } catch (SQLException e) {
-                System.err.println("[MemberDaoImpl] Erreur findById: " + e.getMessage());
             }
+        } catch (SQLException e) {
+            System.err.println("[MemberDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         for (Member m : DEMO_MEMBERS) {
             if (m.getId().equalsIgnoreCase(id)) return m;
@@ -127,27 +133,30 @@ public class MemberDaoImpl implements IMemberDao {
 
     @Override
     public boolean save(Member member) {
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "INSERT INTO members (id, firstName, lastName, email, status, role, team, grade, photo, etablissement_origine, laboratoire_origine, biographie, centres_interet) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, member.getId());
-                ps.setString(2, member.getFirstName());
-                ps.setString(3, member.getLastName());
-                ps.setString(4, member.getEmail());
-                ps.setString(5, member.getStatus());
-                ps.setString(6, member.getRole());
-                ps.setString(7, member.getTeam());
-                ps.setString(8, member.getGrade());
-                ps.setString(9, member.getPhoto());
-                ps.setString(10, member.getEtablissementOrigine());
-                ps.setString(11, member.getLaboratoireOrigine());
-                ps.setString(12, member.getBiographie());
-                ps.setString(13, member.getCentresInteret());
-                return ps.executeUpdate() > 0;
-            } catch (SQLException e) {
-                System.err.println("[MemberDaoImpl] Erreur save: " + e.getMessage());
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "INSERT INTO members (id, firstName, lastName, email, status, role, team, grade, photo, etablissement_origine, laboratoire_origine, biographie, centres_interet) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, member.getId());
+                    ps.setString(2, member.getFirstName());
+                    ps.setString(3, member.getLastName());
+                    ps.setString(4, member.getEmail());
+                    ps.setString(5, member.getStatus());
+                    ps.setString(6, member.getRole());
+                    ps.setString(7, member.getTeam());
+                    ps.setString(8, member.getGrade());
+                    ps.setString(9, member.getPhoto());
+                    ps.setString(10, member.getEtablissementOrigine());
+                    ps.setString(11, member.getLaboratoireOrigine());
+                    ps.setString(12, member.getBiographie());
+                    ps.setString(13, member.getCentresInteret());
+                    return ps.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    System.err.println("[MemberDaoImpl] Erreur save: " + e.getMessage());
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("[MemberDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         DEMO_MEMBERS.add(member);
         return true;
@@ -155,27 +164,30 @@ public class MemberDaoImpl implements IMemberDao {
 
     @Override
     public boolean update(Member member) {
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "UPDATE members SET firstName = ?, lastName = ?, email = ?, status = ?, role = ?, team = ?, grade = ?, photo = ?, etablissement_origine = ?, laboratoire_origine = ?, biographie = ?, centres_interet = ? WHERE id = ?";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, member.getFirstName());
-                ps.setString(2, member.getLastName());
-                ps.setString(3, member.getEmail());
-                ps.setString(4, member.getStatus());
-                ps.setString(5, member.getRole());
-                ps.setString(6, member.getTeam());
-                ps.setString(7, member.getGrade());
-                ps.setString(8, member.getPhoto());
-                ps.setString(9, member.getEtablissementOrigine());
-                ps.setString(10, member.getLaboratoireOrigine());
-                ps.setString(11, member.getBiographie());
-                ps.setString(12, member.getCentresInteret());
-                ps.setString(13, member.getId());
-                return ps.executeUpdate() > 0;
-            } catch (SQLException e) {
-                System.err.println("[MemberDaoImpl] Erreur update: " + e.getMessage());
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "UPDATE members SET firstName = ?, lastName = ?, email = ?, status = ?, role = ?, team = ?, grade = ?, photo = ?, etablissement_origine = ?, laboratoire_origine = ?, biographie = ?, centres_interet = ? WHERE id = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, member.getFirstName());
+                    ps.setString(2, member.getLastName());
+                    ps.setString(3, member.getEmail());
+                    ps.setString(4, member.getStatus());
+                    ps.setString(5, member.getRole());
+                    ps.setString(6, member.getTeam());
+                    ps.setString(7, member.getGrade());
+                    ps.setString(8, member.getPhoto());
+                    ps.setString(9, member.getEtablissementOrigine());
+                    ps.setString(10, member.getLaboratoireOrigine());
+                    ps.setString(11, member.getBiographie());
+                    ps.setString(12, member.getCentresInteret());
+                    ps.setString(13, member.getId());
+                    return ps.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    System.err.println("[MemberDaoImpl] Erreur update: " + e.getMessage());
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("[MemberDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         for (Member m : DEMO_MEMBERS) {
             if (m.getId().equalsIgnoreCase(member.getId())) {

@@ -31,31 +31,34 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public User findByCredentials(String email, String password) {
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            // Le mot de passe n'est plus comparé en SQL : on lit le hash puis on le vérifie (PBKDF2).
-            String sql = "SELECT * FROM users WHERE email = ?";
-            User found = null;
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, email);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        found = mapResultSetToUser(rs);
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                // Le mot de passe n'est plus comparé en SQL : on lit le hash puis on le vérifie (PBKDF2).
+                String sql = "SELECT * FROM users WHERE email = ?";
+                User found = null;
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, email);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            found = mapResultSetToUser(rs);
+                        }
                     }
+                } catch (SQLException e) {
+                    System.err.println("[UserDaoImpl] Erreur SQL findByCredentials : " + e.getMessage());
                 }
-            } catch (SQLException e) {
-                System.err.println("[UserDaoImpl] Erreur SQL findByCredentials : " + e.getMessage());
+                if (found != null) {
+                    if (!PasswordUtil.verify(password, found.getPassword())) {
+                        return null;
+                    }
+                    // Migration transparente : un ancien mot de passe en clair est re-haché à la connexion.
+                    if (!PasswordUtil.isHashed(found.getPassword())) {
+                        updatePassword(found.getId(), password);
+                    }
+                    return found;
+                }
             }
-            if (found != null) {
-                if (!PasswordUtil.verify(password, found.getPassword())) {
-                    return null;
-                }
-                // Migration transparente : un ancien mot de passe en clair est re-haché à la connexion.
-                if (!PasswordUtil.isHashed(found.getPassword())) {
-                    updatePassword(found.getId(), password);
-                }
-                return found;
-            }
+        } catch (SQLException e) {
+            System.err.println("[UserDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
 
         // Fallback en mémoire si la base n'est pas encore connectée
@@ -69,19 +72,22 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public User findByEmail(String email) {
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "SELECT * FROM users WHERE email = ?";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, email);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return mapResultSetToUser(rs);
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "SELECT * FROM users WHERE email = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, email);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            return mapResultSetToUser(rs);
+                        }
                     }
+                } catch (SQLException e) {
+                    System.err.println("[UserDaoImpl] Erreur SQL findByEmail : " + e.getMessage());
                 }
-            } catch (SQLException e) {
-                System.err.println("[UserDaoImpl] Erreur SQL findByEmail : " + e.getMessage());
             }
+        } catch (SQLException e) {
+            System.err.println("[UserDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
 
         for (User u : DEMO_USERS) {
@@ -94,19 +100,22 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public User findById(Long id) {
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "SELECT * FROM users WHERE id = ?";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setLong(1, id);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return mapResultSetToUser(rs);
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "SELECT * FROM users WHERE id = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setLong(1, id);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            return mapResultSetToUser(rs);
+                        }
                     }
+                } catch (SQLException e) {
+                    System.err.println("[UserDaoImpl] Erreur SQL findById : " + e.getMessage());
                 }
-            } catch (SQLException e) {
-                System.err.println("[UserDaoImpl] Erreur SQL findById : " + e.getMessage());
             }
+        } catch (SQLException e) {
+            System.err.println("[UserDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
 
         for (User u : DEMO_USERS) {
@@ -120,38 +129,44 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public List<User> findAll() {
         List<User> list = new ArrayList<>();
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "SELECT * FROM users";
-            try (PreparedStatement ps = conn.prepareStatement(sql);
-                 ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(mapResultSetToUser(rs));
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "SELECT * FROM users";
+                try (PreparedStatement ps = conn.prepareStatement(sql);
+                     ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        list.add(mapResultSetToUser(rs));
+                    }
+                    return list;
+                } catch (SQLException e) {
+                    System.err.println("[UserDaoImpl] Erreur SQL findAll : " + e.getMessage());
                 }
-                return list;
-            } catch (SQLException e) {
-                System.err.println("[UserDaoImpl] Erreur SQL findAll : " + e.getMessage());
             }
+        } catch (SQLException e) {
+            System.err.println("[UserDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         return new ArrayList<>(DEMO_USERS);
     }
 
     @Override
     public boolean save(User user) {
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "INSERT INTO users (nom, prenom, email, password, role, actif) VALUES (?, ?, ?, ?, ?, ?)";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, user.getNom());
-                ps.setString(2, user.getPrenom());
-                ps.setString(3, user.getEmail());
-                ps.setString(4, PasswordUtil.isHashed(user.getPassword()) ? user.getPassword() : PasswordUtil.hash(user.getPassword()));
-                ps.setString(5, user.getRole());
-                ps.setBoolean(6, user.isActif());
-                return ps.executeUpdate() > 0;
-            } catch (SQLException e) {
-                System.err.println("[UserDaoImpl] Erreur SQL save : " + e.getMessage());
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "INSERT INTO users (nom, prenom, email, password, role, actif) VALUES (?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, user.getNom());
+                    ps.setString(2, user.getPrenom());
+                    ps.setString(3, user.getEmail());
+                    ps.setString(4, PasswordUtil.isHashed(user.getPassword()) ? user.getPassword() : PasswordUtil.hash(user.getPassword()));
+                    ps.setString(5, user.getRole());
+                    ps.setBoolean(6, user.isActif());
+                    return ps.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    System.err.println("[UserDaoImpl] Erreur SQL save : " + e.getMessage());
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("[UserDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         DEMO_USERS.add(user);
         return true;
@@ -159,20 +174,23 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public boolean update(User user) {
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "UPDATE users SET nom = ?, prenom = ?, email = ?, role = ?, actif = ? WHERE id = ?";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, user.getNom());
-                ps.setString(2, user.getPrenom());
-                ps.setString(3, user.getEmail());
-                ps.setString(4, user.getRole());
-                ps.setBoolean(5, user.isActif());
-                ps.setLong(6, user.getId());
-                return ps.executeUpdate() > 0;
-            } catch (SQLException e) {
-                System.err.println("[UserDaoImpl] Erreur SQL update : " + e.getMessage());
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "UPDATE users SET nom = ?, prenom = ?, email = ?, role = ?, actif = ? WHERE id = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, user.getNom());
+                    ps.setString(2, user.getPrenom());
+                    ps.setString(3, user.getEmail());
+                    ps.setString(4, user.getRole());
+                    ps.setBoolean(5, user.isActif());
+                    ps.setLong(6, user.getId());
+                    return ps.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    System.err.println("[UserDaoImpl] Erreur SQL update : " + e.getMessage());
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("[UserDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         return false;
     }
@@ -181,16 +199,19 @@ public class UserDaoImpl implements IUserDao {
     public boolean updatePassword(Long id, String newPassword) {
         // Toujours stocké haché (CDC sécurité) ; une valeur déjà hachée est conservée telle quelle.
         newPassword = PasswordUtil.isHashed(newPassword) ? newPassword : PasswordUtil.hash(newPassword);
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "UPDATE users SET password = ? WHERE id = ?";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, newPassword);
-                ps.setLong(2, id);
-                return ps.executeUpdate() > 0;
-            } catch (SQLException e) {
-                System.err.println("[UserDaoImpl] Erreur SQL updatePassword : " + e.getMessage());
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "UPDATE users SET password = ? WHERE id = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, newPassword);
+                    ps.setLong(2, id);
+                    return ps.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    System.err.println("[UserDaoImpl] Erreur SQL updatePassword : " + e.getMessage());
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("[UserDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         for (User u : DEMO_USERS) {
             if (u.getId().equals(id)) {
@@ -203,15 +224,18 @@ public class UserDaoImpl implements IUserDao {
 
     @Override
     public boolean delete(Long id) {
-        Connection conn = DBConnection.getConnection();
-        if (conn != null) {
-            String sql = "DELETE FROM users WHERE id = ?";
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setLong(1, id);
-                return ps.executeUpdate() > 0;
-            } catch (SQLException e) {
-                System.err.println("[UserDaoImpl] Erreur SQL delete : " + e.getMessage());
+        try (Connection conn = DBConnection.getConnection()) {
+            if (conn != null) {
+                String sql = "DELETE FROM users WHERE id = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setLong(1, id);
+                    return ps.executeUpdate() > 0;
+                } catch (SQLException e) {
+                    System.err.println("[UserDaoImpl] Erreur SQL delete : " + e.getMessage());
+                }
             }
+        } catch (SQLException e) {
+            System.err.println("[UserDaoImpl] Erreur fermeture connexion : " + e.getMessage());
         }
         return DEMO_USERS.removeIf(u -> u.getId().equals(id));
     }
